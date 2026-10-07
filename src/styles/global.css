@@ -755,3 +755,37 @@ table.data td {
 .breadcrumbs [aria-current] {
   color: var(--fg);
 }
+
+/* Shared list and two-column helpers (model, installation, guide and brand pages) */
+.note {
+  margin-top: var(--s-3);
+  font-size: var(--fs-small);
+  color: var(--fg-muted);
+  max-width: 40em;
+}
+.two-col {
+  display: grid;
+  gap: var(--s-6);
+}
+.two-col h3 {
+  margin-bottom: var(--s-3);
+}
+@media (min-width: 760px) {
+  .two-col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.plain-list {
+  display: grid;
+  gap: var(--s-2);
+}
+.plain-list li {
+  padding: 0.55rem 0;
+  border-bottom: var(--border);
+}
+@media (min-width: 640px) {
+  .plain-list--cols {
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--s-5);
+  }
+}

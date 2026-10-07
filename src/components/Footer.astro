@@ -3,6 +3,9 @@ import Logo from './Logo.astro';
 import { footerNav, legalNav, site } from '@/content/site';
 import { resolve } from '@/lib/mode';
 import { guidesRouteEnabled } from '@/lib/visibility';
+import { assets } from '@/content/assets';
+
+const usesStock = assets.some((a) => a.kind === 'stock-preview');
 
 const response = resolve(site.responseTime);
 const links = footerNav.map((col) => ({
@@ -39,6 +42,7 @@ const links = footerNav.map((col) => ({
       <ul>
         {legalNav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
         <li><a href="/cookies#preferences">Cookie preferences</a></li>
+        {usesStock && <li><a href="/image-credits">Image credits</a></li>}
       </ul>
       <p>© {new Date().getFullYear()} {site.name}</p>
     </div>

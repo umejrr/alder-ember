@@ -6,16 +6,16 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 
 | Check | Command | Result |
 |---|---|---|
-| Unit tests | `npm test` | **46 passed** in 3 files |
-| Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 82 files (Astro, TypeScript, React) |
+| Unit tests | `npm test` | **49 passed** in 3 files |
+| Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 89 files (Astro, TypeScript, React) |
 | Contrast | `npm run contrast` | **20 pairs pass, 0 fail** (text pairs at 4.5:1, controls and focus at 3:1) |
-| Broken links, anchors, assets | `npm run crawl` on a preview build | **24 pages crawled, none broken** |
-| Same crawl on a production build | server on `dist-prod/`, then `npm run crawl` | **15 pages crawled, none broken** (guides and installations links correctly disappear) |
-| Production leak check | `npm run check:production` | **Pass.** 16 HTML files scanned: no working price, dimension, capacity or lead time, no preview notice, no draft or unapproved route, correct robots rules, sitemap contains only real pages. Reports 6 pages still showing labelled placeholder images as a **launch blocker** (expected) |
-| Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 23 routes at 1440 px and 375 px. The scan was proven able to fail by injecting an alt-less image, which it caught |
+| Broken links, anchors, assets | `npm run crawl` on a preview build | **25 pages crawled, none broken** |
+| Same crawl on a production build | server on `dist-prod/`, then `npm run crawl` | **16 pages crawled, none broken** (guides and installations links correctly disappear) |
+| Production leak check | `npm run check:production` | **Pass.** 17 HTML files scanned: no working price, dimension, capacity or lead time, no preview notice, no draft or unapproved route, correct robots rules, sitemap contains only real pages. Reports 10 pages still showing labelled stock preview images as a **launch blocker** (expected) |
+| Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 24 routes at 1440 px and 375 px. The scan was proven able to fail by injecting an alt-less image, which it caught |
 | Browser journeys | `npm run e2e` | **11 of 11 steps pass** (below) |
 | Horizontal overflow | scripted sweep, 22 routes | **None** at 320, 375, 390, 768, 1024, 1440 and 1920 px |
-| Static bundle from a nested sub-path | `npm run build:static && npm run e2e:static` | **8 of 8 steps pass**, also when wrapped in a simulated host page skeleton: styles and fonts load, islands hydrate, static and React-created links navigate, every page loads, compare and gallery work, the demo form sends no request, the mobile menu works, and **no request escaped the sub-path** |
+| Static bundle from a nested sub-path | `npm run build:static && npm run e2e:static` | **8 of 8 steps pass**, also when wrapped in a simulated host page skeleton: styles and fonts load, islands hydrate, static and React-created links navigate, every page loads, compare and gallery work, the demo form sends no request, the mobile menu works, and **no request escaped the sub-path**. With the stock photos in place this caught a real bug: React's server renderer writes `srcSet` in camelCase, which the build-time URL rewrite missed, so responsive images would have 404ed on a sub-path host. Fixed and covered |
 | Logo SVG validity | `npm run logo` | All 25 files are well-formed XML (this caught a real bug: unescaped `&` made the logo unusable as an image file) |
 
 ### What the unit tests cover (behaviours where a failure would mislead a customer or lose an enquiry)
@@ -61,7 +61,7 @@ The preview is published as a private Artifact. It could not be opened from this
 - **A real HubSpot portal.** None was supplied; the adapter follows the documented endpoint and has only been tested against a mock. Property names are placeholders.
 - **Screen readers and keyboard use on real devices.** Only automated axe checks and scripted keyboard journeys have been run, in Chromium. NVDA, JAWS, VoiceOver and TalkBack have not been used. WCAG 2.2 AA is a target, not a claim.
 - **Other browsers.** Firefox and Safari have not been tested (the `:has()` selected-state styling, `<dialog>` and native `<details>` are all widely supported but unchecked here).
-- **Real photography.** All images are placeholders, so crop, focal points, heading-over-image contrast, responsive `srcset`/AVIF/WebP delivery and image performance are untested against real assets.
+- **Alder & Ember photography.** The site uses 16 openly licensed stock photographs as clearly labelled previews (see [image-credits.md](image-credits.md)). Crop, focal points, heading-over-image contrast and responsive WebP delivery were checked against these, but not against the real product, installation or site photography, which does not exist yet. Stock photos are atmosphere only: none shows the Rowan, Alder or Ember, and every one is tagged on the page. AVIF delivery and image performance budgets are untested.
 - **A deployed environment.** No HTTPS host, CDN, caching, shared rate-limit store or multi-instance behaviour.
 - **Email.** No confirmation or alert emails exist.
 - **Print** reproduction of the logo, and **trademark clearance** of the identity.

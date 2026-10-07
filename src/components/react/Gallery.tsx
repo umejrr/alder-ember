@@ -1,18 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '../../styles/gallery.css';
 import type { ModelView } from './ModelView';
+import { assetSrcset, assetUrl } from '@/lib/asset-url';
 
 type Img = ModelView['asset'];
 
 function Frame({ img, eager = false }: { img: Img; eager?: boolean }) {
   return img.src ? (
-    <img
-      src={img.src}
-      alt={img.alt}
-      style={{ objectPosition: img.pos }}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding="async"
-    />
+    <>
+      <img
+        src={assetUrl(img.src)}
+        srcSet={assetSrcset(img.srcset)}
+        sizes="(min-width: 960px) 58vw, 100vw"
+        alt={img.alt}
+        style={{ objectPosition: img.pos }}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+      {img.tag && <span className="pic__tag">{img.tag}</span>}
+    </>
   ) : (
     <div
       className={`pic ph ph--${img.tone}`}
@@ -96,7 +102,7 @@ export default function Gallery({ images, name }: { images: Img[]; name: string 
               onClick={() => setI(k)}
             >
               {t.src ? (
-                <img src={t.src} alt="" style={{ objectPosition: t.pos }} loading="lazy" decoding="async" />
+                <img src={assetUrl(t.thumb ?? t.src)} alt="" style={{ objectPosition: t.pos }} loading="lazy" decoding="async" />
               ) : (
                 <div className={`pic ph ph--${t.tone}`} aria-hidden="true" />
               )}

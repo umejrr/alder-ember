@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import '../../styles/find-your-fit.css';
 import type { ModelView } from './ModelView';
 import { enquiryHref, readPrefs, writePrefs } from '@/lib/prefs-client';
+import { assetSrcset, assetUrl } from '@/lib/asset-url';
 
 interface Props {
   models: ModelView[];
@@ -14,7 +15,18 @@ function Img({ m, active }: { m: ModelView; active: boolean }) {
   return (
     <div className={`fyf__img${active ? ' is-active' : ''}`} aria-hidden={!active}>
       {a.src ? (
-        <img src={a.src} alt={active ? a.alt : ''} style={{ objectPosition: a.pos }} loading="lazy" decoding="async" />
+        <>
+          <img
+            src={assetUrl(a.src)}
+            srcSet={assetSrcset(a.srcset)}
+            sizes="(min-width: 960px) 58vw, 100vw"
+            alt={active ? a.alt : ''}
+            style={{ objectPosition: a.pos }}
+            loading="lazy"
+            decoding="async"
+          />
+          {a.tag && <span className="pic__tag">{a.tag}</span>}
+        </>
       ) : (
         <div
           className={`pic ph ph--${a.tone}`}

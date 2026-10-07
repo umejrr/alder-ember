@@ -33,7 +33,7 @@ for (const f of html) {
   const text = readFileSync(f, 'utf8');
   // strip scripts/styles and serialised island props (checked separately below)
   const visible = text.replace(/<(script|style)[\s\S]*?<\/\1>/g, '');
-  if (/Preview image|PREVIEW IMAGE/.test(visible)) blockers.add(f.replace(root, ''));
+  if (/Preview image|PREVIEW IMAGE|Stock preview/i.test(visible)) blockers.add(f.replace(root, ''));
   for (const [re, what] of forbidden) if (re.test(visible)) fail(`${f.replace(root, '')} contains ${what}`);
   // serialised island props must not carry working values either
   const props = [...text.matchAll(/props="([^"]*)"/g)].map((m) => m[1]).join(' ');
@@ -57,6 +57,6 @@ else {
 }
 
 console.log(`Scanned ${html.length} HTML files.`);
-if (blockers.size) console.log(`LAUNCH BLOCKER (expected until approved photography is supplied): ${blockers.size} page(s) still show labelled placeholder images.`);
+if (blockers.size) console.log(`LAUNCH BLOCKER (expected until approved photography is supplied): ${blockers.size} page(s) still show labelled placeholder or stock preview images.`);
 if (failures) { console.log(`${failures} problem(s).`); process.exit(1); }
 console.log('Production build publishes no working values, drafts or unapproved routes.');

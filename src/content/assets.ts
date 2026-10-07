@@ -10,8 +10,13 @@
  *
  * Never use another supplier's image as a Rowan / Alder / Ember. Generated images may
  * only be atmosphere in a preview, never product or project evidence.
+ *
+ * kind 'stock-preview' = a real, openly licensed photograph (Wikimedia Commons) standing in for imagery
+ * that has not been supplied. It is always labelled on the page, carries its credit, is never product or
+ * project evidence, and is reported as a launch blocker until replaced. See docs/image-credits.md.
  */
 import type { ApprovalStatus, ProductId } from './types';
+import { previewPhotos, type PreviewPhoto } from './preview-photos.ts';
 
 export type AssetRole =
   | 'hero-wide'
@@ -42,12 +47,17 @@ export interface Asset {
   /** separate focal point when the mobile crop differs */
   mobileFocal?: { x: number; y: number };
   intendedCrop: string;
-  kind: 'placeholder' | 'photo';
+  kind: 'placeholder' | 'stock-preview' | 'photo';
   evidence: 'atmosphere' | 'product-evidence' | 'project-evidence';
   intendedUse: string;
   src?: string;
+  /** responsive candidates, e.g. "/images/x-640.webp 640w, /images/x-1280.webp 1280w" */
+  srcset?: string;
+  /** smallest variant, for thumbnails */
+  thumb?: string;
   width?: number;
   height?: number;
+  credit?: PreviewPhoto['credit'];
   rights: string | null;
   approval: ApprovalStatus;
   /** visual tone for the placeholder frame only */
@@ -66,7 +76,7 @@ const ph = (
   ...a,
 });
 
-export const assets: Asset[] = [
+const baseAssets: Asset[] = [
   ph({
     id: 'hero-wide',
     role: 'hero-wide',
@@ -198,7 +208,69 @@ export const assets: Asset[] = [
   }),
 ];
 
+interface Stock {
+  photo: string;
+  alt: string;
+  focal: { x: number; y: number };
+  mobileFocal?: { x: number; y: number };
+}
+
+/** Which stock preview photo fills which slot, with accurate alt text and focal points. */
+const STOCK: Record<string, Stock> = {
+  'hero-wide': { photo: 'hero', focal: { x: 70, y: 60 }, alt: 'A dark timber A-frame cabin with a large glazed front, standing among pine trees at the edge of a grassy clearing.' },
+  'hero-mobile': { photo: 'hero', focal: { x: 72, y: 55 }, mobileFocal: { x: 72, y: 55 }, alt: 'A dark timber A-frame cabin with a large glazed front, standing among pine trees at the edge of a grassy clearing.' },
+  'rowan-exterior': { photo: 'rowan-exterior', focal: { x: 50, y: 62 }, alt: 'A compact timber cabin with an arched roof and a door with a small window, on a paved lakeside path.' },
+  'alder-exterior': { photo: 'alder-exterior', focal: { x: 56, y: 52 }, alt: 'A modern timber cabin with large glazed corners and a stone chimney stack, set in open moorland with mountains behind.' },
+  'ember-exterior': { photo: 'ember-exterior', focal: { x: 72, y: 55 }, alt: 'A larger octagonal timber cabin lit warmly from inside at dusk, on a lawn beside a wooden hot tub.' },
+  'rowan-interior': { photo: 'rowan-interior', focal: { x: 50, y: 55 }, alt: 'Inside a small sauna: a long bench along a pine-panelled wall and a stainless heater in the corner.' },
+  'alder-interior': { photo: 'alder-interior', focal: { x: 50, y: 50 }, alt: 'A sauna interior panelled in warm timber, with stepped benches and a heater, lit by wall lights.' },
+  'ember-interior': { photo: 'ember-interior', focal: { x: 50, y: 58 }, alt: 'A large sauna with wide stepped benches along timber walls, two small windows and a stone-clad heater.' },
+  'rowan-detail': { photo: 'rowan-detail', focal: { x: 50, y: 50 }, alt: 'Close-up of vertical larch boards with a knot in the grain.' },
+  'alder-detail': { photo: 'alder-detail', focal: { x: 50, y: 40 }, alt: 'Looking out through a tall triangular glazed gable of a timber-lined cabin towards a lake.' },
+  'ember-detail': { photo: 'ember-detail', focal: { x: 50, y: 45 }, alt: 'A modern black heater topped with grey sauna stones.' },
+  'detail-timber': { photo: 'detail-timber', focal: { x: 62, y: 50 }, alt: 'Weathered timber cladding on a wall with a small window, in low sunlight.' },
+  'detail-interior-finish': { photo: 'detail-interior-finish', focal: { x: 55, y: 50 }, alt: 'Smooth timber wall panelling and a bench inside a sauna.' },
+  'detail-construction': { photo: 'detail-construction', focal: { x: 50, y: 50 }, alt: 'Two walls of horizontal timber cladding meeting at an outside corner.' },
+  'detail-glazing-heater': { photo: 'detail-glazing-heater', focal: { x: 50, y: 50 }, alt: 'Inside a barrel sauna: benches, a heater and an arched window looking out to trees.' },
+  'site-access': { photo: 'site-access', focal: { x: 50, y: 64 }, alt: 'A weathered timber gate at the top of stone garden steps between old walls.' },
+  'installation-process': { photo: 'installation-process', focal: { x: 50, y: 55 }, alt: 'A small red timber cabin on a twin-axle trailer, parked on a lawn.' },
+};
+
+function withStock(a: Asset): Asset {
+  const st = STOCK[a.id];
+  if (!st) return a;
+  const ph = previewPhotos[st.photo];
+  const widths = [...ph.widths].sort((x, y) => x - y);
+  return {
+    ...a,
+    kind: 'stock-preview',
+    // a stock photograph is atmosphere at best: never evidence of a Rowan, Alder, Ember or a completed project
+    evidence: 'atmosphere',
+    src: `${ph.file}-${widths[widths.length - 1]}.webp`,
+    srcset: widths.map((w) => `${ph.file}-${w}.webp ${w}w`).join(', '),
+    thumb: `${ph.file}-${widths[0]}.webp`,
+    width: ph.width,
+    height: ph.height,
+    credit: ph.credit,
+    alt: st.alt,
+    focal: st.focal,
+    ...(st.mobileFocal ? { mobileFocal: st.mobileFocal } : {}),
+    rights: `${ph.credit.license}, ${ph.credit.author} (via Wikimedia Commons)`,
+    approval: 'working',
+  };
+}
+
+export const assets: Asset[] = baseAssets.map(withStock);
+
 const byId = new Map(assets.map((a) => [a.id, a]));
+
+const MODEL_NAMES: Record<ProductId, string> = { rowan: 'The Rowan', alder: 'The Alder', ember: 'The Ember' };
+
+/** The visible label a stock preview must carry; null for real photos and placeholders (which label themselves). */
+export function previewTag(a: Asset): string | null {
+  if (a.kind !== 'stock-preview') return null;
+  return a.modelId ? `Stock preview · not ${MODEL_NAMES[a.modelId]}` : 'Stock preview photo';
+}
 
 export function getAsset(id: string): Asset | undefined {
   return byId.get(id);

@@ -9,6 +9,9 @@ import { faqs, homeFaqIds } from '@/content/faqs';
 import { toModelView } from '@/lib/model-view';
 import { installationsRouteEnabled, visibleInstallations } from '@/lib/visibility';
 import { isPreview } from '@/lib/mode';
+import { getAsset } from '@/content/assets';
+
+const heroTag = getAsset('hero-wide')?.kind === 'stock-preview' ? 'Stock preview photo · to be replaced with your own' : 'Preview image · hero photograph to be supplied';
 
 const models = productList.map((p) => toModelView(p));
 const homeFaqs = homeFaqIds.map((id) => faqs.find((f) => f.id === id)!);
@@ -33,7 +36,7 @@ const details = [
       <Picture id="hero-wide" priority fill class="hero__pic hero__pic--wide" quiet />
       <Picture id="hero-mobile" priority fill class="hero__pic hero__pic--narrow" quiet />
       <div class="hero__scrim" aria-hidden="true"></div>
-      {isPreview() && <span class="hero__tag chip">Preview image · hero photograph to be supplied</span>}
+      {isPreview() && <span class="hero__tag chip">{heroTag}</span>}
     </div>
     <div class="container hero__copy">
       <h1 class="display" id="hero-title">Premium outdoor saunas, planned around your space.</h1>
@@ -245,7 +248,7 @@ const details = [
     inset: 0;
     background:
       linear-gradient(0deg, rgba(10, 16, 12, 0.82) 0%, rgba(10, 16, 12, 0.5) 32%, rgba(10, 16, 12, 0) 62%),
-      linear-gradient(90deg, rgba(10, 16, 12, 0.45) 0%, rgba(10, 16, 12, 0) 58%);
+      linear-gradient(90deg, rgba(10, 16, 12, 0.62) 0%, rgba(10, 16, 12, 0.3) 38%, rgba(10, 16, 12, 0) 62%);
   }
   .hero__tag {
     position: absolute;

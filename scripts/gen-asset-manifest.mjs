@@ -9,7 +9,7 @@ const md = `# Photography and asset manifest
 
 Generated from \`src/content/assets.ts\` by \`npm run manifest\`. Do not edit by hand.
 
-**Status today:** no photography has been supplied or commissioned. Every record is a clearly labelled **placeholder** (tonal frame with faint board lines, never a drawn cabin) so the layouts can be reviewed. No generated imagery is used as product or project evidence, and no other supplier's or competitor's image is used for a Rowan, Alder or Ember.
+**Status today:** no approved photography has been supplied or commissioned. The layouts use **stock preview photographs**: real, openly licensed images from Wikimedia Commons (credits in [image-credits.md](image-credits.md)), each labelled on the page as a stock preview and, for model slots, as \"not The Rowan/Alder/Ember\". They are atmosphere only, never product or project evidence, and a production build reports them as launch blockers. No generated imagery is used, and no competitor's photographs are used (one candidate turned out to be a competitor's product and was excluded).
 
 | ID | Role | Model | Ratio | Evidence type | Kind | Rights / credit | Approval | Focal point | Intended use |
 |---|---|---|---|---|---|---|---|---|---|

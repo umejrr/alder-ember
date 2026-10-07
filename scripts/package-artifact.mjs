@@ -2,7 +2,7 @@
 //   node scripts/build-static.mjs && node scripts/package-artifact.mjs   ->  dist-artifact-pkg/ + _files.json
 // The primary page is wrapped in a host skeleton, so it must be a fragment (no <html>/<head>/<body>).
 // The latin fonts are embedded as data: URIs so the look never depends on a font host being reachable.
-import { cpSync, existsSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 
 const SRC = 'dist-static';
@@ -27,7 +27,6 @@ for (const css of walk(join(PKG, ASSETS)).filter((f) => f.endsWith('.css'))) {
 
 // 2. primary page -> fragment
 const html = readFileSync(join(PKG, 'index.html'), 'utf8');
-const title = html.match(/<title>([\s\S]*?)<\/title>/)[1].replace(/\s*\|.*$/, '').trim() + ' (preview)';
 const head = html.match(/<head>([\s\S]*?)<\/head>/)[1];
 const body = html.match(/<body[^>]*>([\s\S]*)<\/body>/)[1];
 const shim = head.match(/<meta name="ae-root"[^>]*><script>[\s\S]*?<\/script>/)[0];

@@ -45,6 +45,7 @@ Derived: `--c-on-forest` (`#F4F0E8`), `--c-on-forest-muted` (`#C3C8BC`), `--c-fo
 | Enquiry form | `react/EnquiryForm.tsx` | Persistent labels, inline errors plus a summary, input preserved on failure, honest demo vs live result, separate optional marketing consent |
 | Accordion | `FaqList.astro` | Native `<details>`: scroll position is kept and state is exposed to assistive tech |
 | Placeholder image | `Picture.astro` | Tonal frame with faint board lines and a visible label; never a drawn cabin |
+| Stock preview image | `Picture.astro` | Real, openly licensed photograph with responsive WebP `srcset`, a visible "Stock preview · not The Alder" tag and a credit on `/image-credits`; atmosphere only, never shown as the product |
 
 States designed for: focus-visible (2 px ring, offset), hover, active, disabled, selected, error (colour plus an icon plus text), loading (spinner and label), empty (preview layouts), success (live and demo variants).
 

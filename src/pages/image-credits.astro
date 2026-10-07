@@ -1,0 +1,53 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { assets } from '@/content/assets';
+
+const stock = assets.filter((a) => a.kind === 'stock-preview' && a.credit);
+// Credits are required whenever these photographs are published; the page exists only while they are in use.
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
+---
+<Base
+  title="Image credits | Alder & Ember"
+  description="Credits and licences for the stock preview photographs used on this preview site."
+  breadcrumbs={crumbs}
+  noindex
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>Image credits</h1>
+    <p class="lead">
+      The photographs on this preview are openly licensed stock images from Wikimedia Commons, standing in until Alder &amp; Ember’s own photography is ready. They are not photographs of our saunas, projects or customers.
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <p class="muted" style="max-width: 44rem; margin-bottom: var(--s-6)">
+        Images were resized and converted to WebP for the web (one also had its colour saturation reduced). Where a licence is “BY-SA”, the adapted image is shared under that same licence.
+      </p>
+      {stock.length === 0 && <p>No stock photographs are in use.</p>}
+      <div class="table-wrap">
+        <table class="data credits">
+          <caption class="sr-only">Photograph credits</caption>
+          <thead><tr><th scope="col">Used for</th><th scope="col">Photograph</th><th scope="col">Author</th><th scope="col">Licence</th></tr></thead>
+          <tbody>
+            {stock.map((a) => (
+              <tr>
+                <th scope="row">{a.label}</th>
+                <td><a href={a.credit!.sourceUrl} rel="noopener">{a.credit!.title.replace(/\.jpe?g$/i, '')}</a></td>
+                <td>{a.credit!.author}</td>
+                <td>{a.credit!.licenseUrl ? <a href={a.credit!.licenseUrl} rel="noopener">{a.credit!.license}</a> : a.credit!.license}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  table.credits td, table.credits th { font-size: var(--fs-small); font-weight: 500; overflow-wrap: anywhere; }
+  table.credits tbody th { width: 16rem; color: var(--fg); font-weight: 600; }
+</style>

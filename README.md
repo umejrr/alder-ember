@@ -1,6 +1,6 @@
 # Alder & Ember
 
-Website and brand system for **Alder & Ember**, a UK supplier and installer of premium outdoor saunas. This is a **reviewable prototype**, built to the master brief. It is not a launched site: prices, dimensions and lead times are working values awaiting approval, images are labelled placeholders, and the enquiry form runs in demo mode until a destination is configured.
+Website and brand system for **Alder & Ember**, a UK supplier and installer of premium outdoor saunas. This is a **reviewable prototype**, built to the master brief. It is not a launched site: prices, dimensions and lead times are working values awaiting approval, photos are labelled, openly licensed stock previews (credits at `/image-credits`) that stand in for real product photography, and the enquiry form runs in demo mode until a destination is configured.
 
 ![Home, desktop](docs/screenshots/home-desktop-hero.jpg)
 

@@ -7,7 +7,7 @@
 //  - a tiny click shim maps the links that React islands create at runtime (/saunas/alder ...) to the right file;
 //  - query strings may be dropped by some hosts, so model choice also travels in sessionStorage (already the case).
 import { execFileSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 
 // the asset folder is 'assets' (some static hosts reserve names starting with an underscore)
@@ -59,11 +59,15 @@ for (const file of walk(OUT)) {
   const relPath = relative(OUT, file).split(sep);
   const d = relPath.length - 1; // directories deep
   let html = readFileSync(file, 'utf8');
+  const d0 = d;
   // attribute URLs
   html = html.replace(/\s(href|src|component-url|renderer-url|before-hydration-url)="(\/[^"]*)"/g, (_m, attr, url) => {
     const dotSlash = attr.endsWith('-url'); // dynamic import() needs an explicit ./ prefix
     return ` ${attr}="${rel(url, d, { dotSlash })}"`;
   });
+  // srcset holds several comma-separated URLs
+  html = html.replace(/\ssrcset="([^"]*)"/gi, (_m, list) => // React's server renderer writes srcSet in camelCase
+    ` srcset="${list.split(',').map((part) => { const [u, ...d] = part.trim().split(/\s+/); return [rel(u, d0), ...d].join(' '); }).join(', ')}"`);
   // any remaining quoted /assets/ references inside inline scripts
   html = html.replace(new RegExp('(["\'`])/' + ASSETS + '/', 'g'), (_m, q) => `${q}${d === 0 ? './' : '../'.repeat(d)}${ASSETS}/`);
   // root marker + runtime link shim, first thing in <head>
@@ -80,6 +84,9 @@ for (const f of walk(OUT).filter((x) => x.endsWith('.html'))) {
     // links created by React at runtime are not in the HTML; static ones must all be relative
     leaks.push(`${f}: ${m[1]}`);
   }
+}
+for (const f of walk(OUT).filter((x) => x.endsWith('.html'))) {
+  for (const m of readFileSync(f, 'utf8').matchAll(/\ssrcset="([^"]*)"/gi)) if (m[1].split(',').some((p) => p.trim().startsWith('/'))) leaks.push(`${f}: srcset ${m[1].slice(0, 60)}`);
 }
 if (leaks.length) { console.error('Root-absolute URLs left:\n' + leaks.slice(0, 10).join('\n')); process.exit(1); }
 console.log(`Static bundle: ${pages} pages, ${walk(OUT).length} files in ${OUT}/ (all links relative)`);

@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
 const base = process.argv[2] || 'http://127.0.0.1:4321';
 const routes = ['/', '/saunas', '/saunas/rowan', '/saunas/alder', '/saunas/ember', '/compare', '/compare#selector', '/installation-delivery',
   '/installations', '/installations/preview-template', '/commercial', '/about', '/care-support', '/guides',
-  '/guides/choosing-a-sauna-for-your-space', '/plan-your-sauna', '/campaigns/meet-the-alder', '/privacy', '/cookies', '/terms', '/warranty', '/brand', '/nope'];
+  '/guides/choosing-a-sauna-for-your-space', '/plan-your-sauna', '/campaigns/meet-the-alder', '/privacy', '/cookies', '/terms', '/warranty', '/brand', '/image-credits', '/nope'];
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' });
 let total = 0;
 for (const [name, vp] of [['desktop', { width: 1440, height: 900 }], ['mobile', { width: 375, height: 800 }]]) {

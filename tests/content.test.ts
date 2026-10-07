@@ -4,7 +4,7 @@ import { options, selectableOptions, heatingChoices, discussableOptions } from '
 import { publicProduct, formatGBP } from '@/lib/format';
 import { resolve } from '@/lib/mode';
 import { visibleGuides, installationsRouteEnabled, visibleInstallations } from '@/lib/visibility';
-import { assets, getAsset } from '@/content/assets';
+import { assets, getAsset, previewTag } from '@/content/assets';
 
 describe('product data is the single source and agrees with the brief', () => {
   it('matches the supplied working values', () => {
@@ -93,13 +93,40 @@ describe('options and compatibility', () => {
 });
 
 describe('asset manifest', () => {
-  it('has no fake photos: every record is a labelled placeholder until real rights exist', () => {
+  it('never presents a stock photo, placeholder or unapproved image as product or project evidence', () => {
     for (const a of assets) {
       if (a.kind === 'photo') {
+        // a real photograph needs a source file, recorded rights and approval
         expect(a.src && a.rights && a.approval === 'approved').toBeTruthy();
+      } else if (a.kind === 'stock-preview') {
+        // stock previews are atmosphere only, carry a full credit and licence, and are never "approved"
+        expect(a.evidence).toBe('atmosphere');
+        expect(a.src && a.srcset && a.credit?.license && a.credit?.author && a.credit?.sourceUrl).toBeTruthy();
+        expect(a.approval).not.toBe('approved');
+        expect(a.alt.length).toBeGreaterThan(20);
       } else {
         expect(a.rights).toBeNull();
       }
+    }
+  });
+
+  it('only uses licences that allow reuse with credit (public domain, CC0, CC BY, CC BY-SA)', () => {
+    for (const a of assets.filter((x) => x.kind === 'stock-preview')) {
+      expect(a.credit!.license).toMatch(/^(CC0|Public domain|CC BY(-SA)? \d\.\d)$/);
+      expect(a.credit!.licenseUrl).toMatch(/^https:\/\/creativecommons\.org\//);
+    }
+  });
+
+  it('labels every model image so it cannot be mistaken for the product', () => {
+    for (const a of assets.filter((x) => x.kind === 'stock-preview' && x.modelId)) {
+      expect(previewTag(a)).toMatch(/not The (Rowan|Alder|Ember)/);
+    }
+  });
+
+  it('does not reuse competitor product photographs', () => {
+    for (const a of assets) {
+      const text = `${a.credit?.title ?? ''} ${a.credit?.sourceUrl ?? ''}`;
+      expect(text).not.toMatch(/okopod|out of the valley|heritage saunas/i);
     }
   });
 

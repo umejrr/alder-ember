@@ -3,7 +3,7 @@
  * Renders an asset from the manifest. A real photo renders an <img> with the focal point
  * as object-position; a placeholder renders a clearly labelled preview frame.
  */
-import { getAsset } from '@/content/assets';
+import { getAsset, previewTag } from '@/content/assets';
 
 interface Props {
   id: string;
@@ -22,12 +22,15 @@ if (!asset) throw new Error(`Unknown asset id: ${id}`);
 const ratio = asset.ratio.replace(':', ' / ');
 const pos = `${asset.focal.x}% ${asset.focal.y}%`;
 const mobilePos = asset.mobileFocal ? `${asset.mobileFocal.x}% ${asset.mobileFocal.y}%` : pos;
+const tag = previewTag(asset);
+const isImage = asset.kind !== 'placeholder' && Boolean(asset.src);
 ---
 {
-  asset.kind === 'photo' && asset.src ? (
+  isImage ? (
     <div class:list={['pic', fill && 'pic--fill', className]} style={`--ratio:${ratio};--pos:${pos};--pos-m:${mobilePos}`}>
       <img
         src={asset.src}
+        srcset={asset.srcset}
         alt={asset.alt}
         width={asset.width}
         height={asset.height}
@@ -36,6 +39,7 @@ const mobilePos = asset.mobileFocal ? `${asset.mobileFocal.x}% ${asset.mobileFoc
         decoding={priority ? 'sync' : 'async'}
         fetchpriority={priority ? 'high' : 'auto'}
       />
+      {tag && !quiet && <span class="pic__tag">{tag}</span>}
     </div>
   ) : (
     <div
@@ -81,6 +85,23 @@ const mobilePos = asset.mobileFocal ? `${asset.mobileFocal.x}% ${asset.mobileFoc
   }
   a:hover .pic img {
     transform: scale(1.025);
+  }
+  /* label carried by every stock preview photo */
+  .pic__tag {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    max-width: calc(100% - 20px);
+    padding: 3px 8px;
+    background: rgba(17, 28, 22, 0.78);
+    color: #f4f0e8;
+    border-radius: var(--radius);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.35;
+    pointer-events: none;
   }
 
   /* Honest placeholder frame: tonal light + faint cladding lines, never a drawn cabin. */

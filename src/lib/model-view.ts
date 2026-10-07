@@ -1,5 +1,5 @@
 import type { Availability, Product } from '@/content/types';
-import { getAsset } from '@/content/assets';
+import { getAsset, previewTag } from '@/content/assets';
 import { publicProduct } from './format';
 import { resolve } from './mode';
 import type { ModelView } from '@/components/react/ModelView';
@@ -18,7 +18,10 @@ export function assetView(id: string): ModelView['asset'] {
     label: a.label,
     tone: a.tone,
     alt: a.alt,
-    src: a.kind === 'photo' && a.src ? a.src : null,
+    src: a.kind !== 'placeholder' && a.src ? a.src : null,
+    srcset: a.kind !== 'placeholder' ? (a.srcset ?? null) : null,
+    thumb: a.kind !== 'placeholder' ? (a.thumb ?? a.src ?? null) : null,
+    tag: previewTag(a),
     ratio: a.ratio.replace(':', ' / '),
     pos: `${a.focal.x}% ${a.focal.y}%`,
     placeholder: a.kind !== 'photo',
@@ -57,7 +60,10 @@ export function toModelView(p: Product, assetId: string = p.heroAsset): ModelVie
       label: a.label,
       tone: a.tone,
       alt: a.alt,
-      src: a.kind === 'photo' && a.src ? a.src : null,
+      src: a.kind !== 'placeholder' && a.src ? a.src : null,
+      srcset: a.kind !== 'placeholder' ? (a.srcset ?? null) : null,
+      thumb: a.kind !== 'placeholder' ? (a.thumb ?? a.src ?? null) : null,
+      tag: previewTag(a),
       ratio: a.ratio.replace(':', ' / '),
       pos: `${a.focal.x}% ${a.focal.y}%`,
       placeholder: a.kind !== 'photo',

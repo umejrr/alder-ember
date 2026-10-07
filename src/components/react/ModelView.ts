@@ -27,6 +27,10 @@ export interface ModelView {
     tone: string;
     alt: string;
     src: string | null;
+    srcset: string | null;
+    thumb: string | null;
+    /** visible label for stock previews, e.g. "Stock preview · not the Alder" */
+    tag: string | null;
     ratio: string;
     pos: string;
     placeholder: boolean;
