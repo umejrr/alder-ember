@@ -40,6 +40,10 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 
 **Astro 7 + React islands + TypeScript.** Pages are prerendered to static HTML, which is what a content-led, indexable site needs, and only the interactive pieces (model showcase, gallery, compare, selector, enquiry form) ship JavaScript. Only `/api/enquiry` runs on the server (`@astrojs/node`). The brief allows a code prototype where no Webflow environment exists; this is **not** an editable Webflow site. [docs/cms-mapping.md](docs/cms-mapping.md) maps every template, collection and interaction to a Webflow build.
 
+## Deploying
+
+`npm run build` produces `dist/client` (static pages) and `dist/server` (the enquiry endpoint). Run it with `npm start` on any Node 22 host behind HTTPS; put `ENQUIRY_*` and `HUBSPOT_*` variables in the host's secret store, never in the repo. A static-only host can serve `dist/client` but cannot run `/api/enquiry`, so use the Node host (or swap in the matching Astro adapter) for the live form. Nothing has been deployed: production deployment needs the agreed environment and authorisation ([docs/launch-dependencies.md](docs/launch-dependencies.md)).
+
 ## Content modes
 
 `PUBLIC_CONTENT_MODE=preview` (default) shows brief and working values with a visible preview notice. `production` shows only approved and brief-supplied values and does not generate routes that lack approved content (guides, installations, campaigns, the brand sheet). Details and the consequences of changing a value are in [docs/content-editing.md](docs/content-editing.md).

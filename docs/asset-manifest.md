@@ -30,6 +30,10 @@ Generated from `src/content/assets.ts` by `npm run manifest`. Do not edit by han
 2. In `src/content/assets.ts` set `src`, `width`, `height`, a real `alt`, the `focal` point (and `mobileFocal` if the mobile crop differs), `rights`, `approval: 'approved'`, and `kind: 'photo'`.
 3. Rebuild. Nothing else changes: product cards, the model showcase, galleries and the hero all read this manifest.
 
+## Image pipeline (to wire when photos exist)
+
+`Picture.astro` renders a single `src` with focal-point cropping and correct loading priority (the hero is eager and high priority; everything else lazy). Responsive `srcset`, AVIF/WebP generation and explicit intrinsic sizes still need to be wired to Astro's image optimisation once real photographs are in the repository. This is untested because no real images exist yet.
+
 ## Image brief (outstanding)
 
 - **Hero (wide, 16:9):** a believable UK garden with the sauna, planting and approach path visible; directional natural light. Cabin in the right two-thirds with clear space lower-left for the headline. **Never put the headline across the door, heater features or a face.**

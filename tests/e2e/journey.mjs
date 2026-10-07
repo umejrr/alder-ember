@@ -90,6 +90,22 @@ await step('Enquiry: inline errors + summary, input preserved, honest demo succe
   assert.ok(!(await page.content()).includes('We’ve received your enquiry'), 'a demo must not claim receipt');
 });
 
+await step('Gallery: keyboard navigation, enlarged view with explicit close, focus restored', async () => {
+  await page.goto(base + '/saunas/alder', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+  const gallery = page.getByRole('group', { name: /The Alder images/ });
+  await gallery.getByRole('button', { name: 'Next image' }).click();
+  await gallery.locator('.gal__count').first().getByText('2 / 3').waitFor();
+  const zoom = gallery.getByRole('button', { name: /View larger/ });
+  await zoom.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog');
+  await dialog.waitFor();
+  await dialog.getByRole('button', { name: 'Close' }).click();
+  await dialog.waitFor({ state: 'hidden' });
+  assert.equal(await page.evaluate(() => document.activeElement?.textContent?.includes('View larger')), true, 'focus must return to the opener');
+});
+
 await step('Direct routes load on refresh, unknown route 404s', async () => {
   for (const p of ['/saunas', '/saunas/rowan', '/compare', '/commercial', '/plan-your-sauna']) {
     const r = await page.goto(base + p);

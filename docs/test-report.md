@@ -13,7 +13,7 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 | Same crawl on a production build | server on `dist-prod/`, then `npm run crawl` | **15 pages crawled, none broken** (guides and installations links correctly disappear) |
 | Production leak check | `npm run check:production` | **Pass.** 16 HTML files scanned: no working price, dimension, capacity or lead time, no preview notice, no draft or unapproved route, correct robots rules, sitemap contains only real pages. Reports 6 pages still showing labelled placeholder images as a **launch blocker** (expected) |
 | Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 23 routes at 1440 px and 375 px. The scan was proven able to fail by injecting an alt-less image, which it caught |
-| Browser journeys | `npm run e2e` | **10 of 10 steps pass** (below) |
+| Browser journeys | `npm run e2e` | **11 of 11 steps pass** (below) |
 | Horizontal overflow | scripted sweep, 22 routes | **None** at 320, 375, 390, 768, 1024, 1440 and 1920 px |
 | Logo SVG validity | `npm run logo` | All 25 files are well-formed XML (this caught a real bug: unescaped `&` made the logo unusable as an image file) |
 
@@ -37,6 +37,7 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 8. Mobile menu: opens, the Close control is not covered by the panel (a bug found by screenshot and fixed), Escape closes, focus returns to the toggle.
 9. Mobile: no horizontal overflow on key pages.
 10. Mobile compare shows two models with every value labelled.
+11. Gallery (model page): next-image button, enlarged view opened from the keyboard, explicit Close, focus returned to the opener.
 
 ## Manual verification
 
@@ -53,7 +54,7 @@ Measured with an unthrottled local browser on a localhost server with **no real 
 - **A real HubSpot portal.** None was supplied; the adapter follows the documented endpoint and has only been tested against a mock. Property names are placeholders.
 - **Screen readers and keyboard use on real devices.** Only automated axe checks and scripted keyboard journeys have been run, in Chromium. NVDA, JAWS, VoiceOver and TalkBack have not been used. WCAG 2.2 AA is a target, not a claim.
 - **Other browsers.** Firefox and Safari have not been tested (the `:has()` selected-state styling, `<dialog>` and native `<details>` are all widely supported but unchecked here).
-- **Real photography.** All images are placeholders, so crop, focal points, heading-over-image contrast and image performance are untested against real assets.
+- **Real photography.** All images are placeholders, so crop, focal points, heading-over-image contrast, responsive `srcset`/AVIF/WebP delivery and image performance are untested against real assets.
 - **A deployed environment.** No HTTPS host, CDN, caching, shared rate-limit store or multi-instance behaviour.
 - **Email.** No confirmation or alert emails exist.
 - **Print** reproduction of the logo, and **trademark clearance** of the identity.
