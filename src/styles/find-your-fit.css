@@ -1,0 +1,159 @@
+.fyf {
+  display: grid;
+  background: var(--c-surface);
+  border: 1px solid var(--c-charcoal);
+  color: var(--c-charcoal);
+}
+.fyf__stage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--c-border);
+}
+.fyf__img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 450ms var(--ease);
+}
+.fyf__img.is-active {
+  opacity: 1;
+}
+.fyf__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fyf__img .ph {
+  width: 100%;
+  height: 100%;
+}
+.fyf__rail {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+}
+.fyf__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--c-charcoal);
+}
+.fyf__tab {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  align-content: center;
+  min-height: 4.25rem;
+  padding: 0.75rem 0.75rem;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--c-border);
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  transition: background-color var(--t-fast) var(--ease);
+}
+.fyf__tab:last-child {
+  border-right: 0;
+}
+.fyf__tab:hover {
+  background: #fff;
+}
+.fyf__tab[aria-selected='true'] {
+  background: #fff;
+  box-shadow: inset 0 -3px 0 var(--c-ember);
+}
+.fyf__tab:focus-visible {
+  outline-offset: -4px;
+}
+.fyf__tab-name {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.15;
+  font-weight: 380;
+}
+.fyf__tab-meta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--c-muted);
+  font-variant-numeric: tabular-nums;
+}
+.fyf__panel {
+  display: grid;
+  gap: var(--s-5);
+  align-content: start;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+}
+.fyf__title {
+  font-size: var(--fs-h2);
+}
+.fyf__position {
+  color: var(--c-muted);
+  max-width: 32em;
+}
+.fyf__price {
+  display: grid;
+  gap: 0.25rem;
+}
+.fyf__price-value {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: 340;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.fyf__price-value small {
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--c-muted);
+  margin-left: 0.4rem;
+}
+.fyf__scope {
+  font-size: var(--fs-small);
+  color: var(--c-muted);
+  max-width: 34em;
+}
+.fyf__actions {
+  display: grid;
+  gap: var(--s-3);
+}
+.fyf__actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+.fyf__actions-row .btn {
+  flex: 1 1 11rem;
+}
+
+@media (min-width: 960px) {
+  .fyf {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+  .fyf__stage {
+    aspect-ratio: auto;
+    min-height: clamp(30rem, 44vw, 40rem);
+  }
+  .fyf__rail {
+    border-left: 1px solid var(--c-charcoal);
+  }
+  .fyf__tabs {
+    grid-template-columns: 1fr;
+    border-top: 0;
+  }
+  .fyf__tab {
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    min-height: 4.5rem;
+    padding: 1rem clamp(1.25rem, 2.4vw, 2rem);
+    border-right: 0;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .fyf__tab[aria-selected='true'] {
+    box-shadow: inset 4px 0 0 var(--c-ember);
+  }
+  .fyf__tab-name {
+    font-size: 1.5rem;
+  }
+}

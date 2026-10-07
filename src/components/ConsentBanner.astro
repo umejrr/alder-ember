@@ -1,0 +1,58 @@
+---
+/**
+ * Rendered only when an analytics provider is configured (PUBLIC_ANALYTICS_PROVIDER).
+ * With no provider there is nothing non-essential to consent to, so no banner is shown.
+ */
+const enabled = Boolean(import.meta.env.PUBLIC_ANALYTICS_PROVIDER);
+---
+{
+  enabled && (
+    <div class="consent" role="region" aria-label="Cookie choices" data-consent hidden>
+      <p>
+        We would like to use analytics to understand which pages are useful. It stays off unless you agree.
+        <a href="/cookies">Cookie information</a>
+      </p>
+      <div class="actions">
+        <button class="btn btn--secondary" type="button" data-consent-choice="reject">Reject analytics</button>
+        <button class="btn" type="button" data-consent-choice="accept">Accept analytics</button>
+      </div>
+    </div>
+  )
+}
+
+<style is:global>
+  .consent {
+    position: fixed;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 1rem;
+    z-index: 150;
+    max-width: 44rem;
+    display: grid;
+    gap: var(--s-3);
+    padding: 1.1rem 1.25rem;
+    background: var(--c-surface);
+    color: var(--c-charcoal);
+    border: 1px solid var(--c-charcoal);
+    border-radius: var(--radius);
+    font-size: var(--fs-small);
+  }
+  .consent .btn { min-height: 44px; padding-block: 0.5rem; }
+  @media (min-width: 720px) {
+    .consent { grid-template-columns: 1fr auto; align-items: center; }
+  }
+</style>
+
+<script>
+  import { getConsent, setConsent } from '@/lib/consent';
+  const el = document.querySelector<HTMLElement>('[data-consent]');
+  if (el) {
+    if (!getConsent()) el.hidden = false;
+    el.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-consent-choice]');
+      if (!btn) return;
+      setConsent({ analytics: btn.dataset.consentChoice === 'accept', marketing: false });
+      el.hidden = true;
+    });
+  }
+</script>

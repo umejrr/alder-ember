@@ -1,0 +1,128 @@
+---
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/manrope/index.css';
+import '../styles/global.css';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import ConsentBanner from '@/components/ConsentBanner.astro';
+import { currentMode, isPreview } from '@/lib/mode';
+import { previewNotice, site } from '@/content/site';
+import { absoluteUrl } from '@/lib/site-url';
+
+export interface Crumb { label: string; href?: string }
+interface Props {
+  title: string;
+  description: string;
+  /** header sits transparent over a hero image (needs an element with [data-hero]) */
+  overHero?: boolean;
+  /** force noindex (e.g. unapproved policy pages, internal review sheets) */
+  noindex?: boolean;
+  breadcrumbs?: Crumb[];
+  bodyClass?: string;
+}
+const { title, description, overHero = false, noindex = false, breadcrumbs, bodyClass = '' } = Astro.props;
+const mode = currentMode();
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const robots = isPreview() || noindex ? 'noindex, nofollow' : 'index, follow';
+const canonical = absoluteUrl(path);
+
+// BreadcrumbList only when the real domain is known and the trail mirrors visible navigation.
+const crumbLd =
+  breadcrumbs && breadcrumbs.length && absoluteUrl('/')
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: breadcrumbs.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: c.label,
+          ...(c.href ? { item: absoluteUrl(c.href) } : {}),
+        })),
+      }
+    : null;
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#111c16" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
+    {crumbLd && <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body class={bodyClass} data-content-mode={mode}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {
+      isPreview() && (
+        <div class="preview-bar" role="note">
+          <span class="chip">Preview</span>
+          <span>{previewNotice}</span>
+        </div>
+      )
+    }
+    <Header overHero={overHero} currentPath={path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <ConsentBanner />
+
+    <script>
+      // Scroll reveal: subtle, and content is never hidden without JS or when motion is reduced.
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!items.length) {
+        /* nothing to do */
+      } else if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        items.forEach((el) => io.observe(el));
+        // safety net: never leave anything hidden
+        window.setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .preview-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem var(--gutter);
+    background: var(--c-charcoal);
+    color: var(--c-canvas);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .preview-bar .chip { color: var(--c-ember-on-forest); }
+  main:focus { outline: none; }
+</style>

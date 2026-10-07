@@ -120,4 +120,4 @@ export const stages: ProcessStage[] = [
 
 /** Internal-only: shown as a short editorial note on preview builds. */
 export const previewNotice =
-  'Preview build. Prices, dimensions and lead times are working values awaiting approval, and images are placeholders. Nothing here is a confirmed offer.';
+  'Preview build: prices, dimensions and lead times are working values awaiting approval, and images are placeholders. Nothing here is a confirmed offer.';

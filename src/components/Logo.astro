@@ -1,0 +1,35 @@
+---
+/**
+ * Inline logo so it inherits colour (currentColor) and --logo-accent from CSS.
+ * `decorative` strips the accessible name for use inside a link that already has one.
+ */
+import horizontal from '../../public/brand/logo-horizontal.svg?raw';
+import compact from '../../public/brand/logo-compact.svg?raw';
+import symbol from '../../public/brand/symbol.svg?raw';
+
+interface Props {
+  variant?: 'horizontal' | 'compact' | 'symbol';
+  decorative?: boolean;
+  class?: string;
+}
+const { variant = 'horizontal', decorative = false, class: className = '' } = Astro.props;
+let svg = { horizontal, compact, symbol }[variant];
+if (decorative) {
+  svg = svg
+    .replace(/ role="img" aria-label="[^"]*"/, ' aria-hidden="true" focusable="false"')
+    .replace(/<title>[^<]*<\/title>\n?/, '');
+}
+---
+<span class:list={['logo', `logo--${variant}`, className]} set:html={svg} />
+
+<style is:global>
+  .logo {
+    display: inline-block;
+    line-height: 0;
+  }
+  .logo svg {
+    display: block;
+    height: 100%;
+    width: auto;
+  }
+</style>

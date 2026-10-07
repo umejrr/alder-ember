@@ -1,0 +1,88 @@
+---
+import Logo from './Logo.astro';
+import { footerNav, legalNav, site } from '@/content/site';
+import { resolve } from '@/lib/mode';
+import { guidesRouteEnabled } from '@/lib/visibility';
+
+const response = resolve(site.responseTime);
+const links = footerNav.map((col) => ({
+  ...col,
+  links: col.links.filter((l) => l.gate !== 'guides' || guidesRouteEnabled()),
+}));
+---
+<footer class="site-footer is-forest" data-site-footer>
+  <div class="container">
+    <div class="site-footer__top grid-12">
+      <div class="c-4 site-footer__about">
+        <p class="serif site-footer__lead">Premium outdoor saunas, planned around your space and installed with care.</p>
+        <p class="muted">{site.description}</p>
+        {response && <p class="muted">{response}</p>}
+        <a class="btn" href="/plan-your-sauna">Plan your sauna</a>
+      </div>
+      <div class="c-8 site-footer__cols">
+        {links.map((col) => (
+          <nav aria-labelledby={`f-${col.heading}`}>
+            <h2 class="label" id={`f-${col.heading}`}>{col.heading}</h2>
+            <ul>
+              {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+            </ul>
+          </nav>
+        ))}
+      </div>
+    </div>
+
+    <div class="site-footer__mark" aria-hidden="true">
+      <Logo variant="horizontal" decorative />
+    </div>
+
+    <div class="site-footer__legal">
+      <ul>
+        {legalNav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        <li><a href="/cookies#preferences">Cookie preferences</a></li>
+      </ul>
+      <p>© {new Date().getFullYear()} {site.name}</p>
+    </div>
+  </div>
+</footer>
+
+<style is:global>
+  .site-footer {
+    padding-top: var(--section);
+    padding-bottom: var(--s-6);
+    --logo-accent: var(--c-ember-on-forest);
+  }
+  .site-footer a { text-decoration: none; }
+  .site-footer a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+  .site-footer__about { display: grid; gap: var(--s-4); align-content: start; max-width: 28rem; }
+  .site-footer__about .btn { justify-self: start; margin-top: var(--s-2); }
+  .site-footer__lead { font-size: var(--fs-h3); line-height: 1.25; font-weight: 300; }
+  .site-footer__about .muted { font-size: var(--fs-small); }
+  .site-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--s-6) var(--s-5);
+  }
+  .site-footer__cols h2 { color: var(--c-on-forest-muted); margin-bottom: var(--s-4); font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.14em; }
+  .site-footer__cols ul { display: grid; gap: 0.25rem; }
+  .site-footer__cols a { display: inline-block; padding: 0.35rem 0; min-height: 32px; }
+  .site-footer__mark {
+    margin-top: clamp(3rem, 8vw, 7rem);
+    padding-top: var(--s-6);
+    border-top: 1px solid rgba(244, 240, 232, 0.2);
+    color: var(--c-on-forest);
+    opacity: 0.92;
+  }
+  .site-footer__mark .logo { width: min(100%, 64rem); height: auto; }
+  .site-footer__mark .logo svg { width: 100%; height: auto; }
+  .site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-6);
+    justify-content: space-between;
+    margin-top: var(--s-6);
+    font-size: var(--fs-small);
+    color: var(--c-on-forest-muted);
+  }
+  .site-footer__legal ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+  .site-footer__legal a { display: inline-block; padding: 0.3rem 0; }
+</style>

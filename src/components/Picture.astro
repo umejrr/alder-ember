@@ -1,0 +1,141 @@
+---
+/**
+ * Renders an asset from the manifest. A real photo renders an <img> with the focal point
+ * as object-position; a placeholder renders a clearly labelled preview frame.
+ */
+import { getAsset } from '@/content/assets';
+
+interface Props {
+  id: string;
+  /** hero-style image: do not lazy-load, high priority */
+  priority?: boolean;
+  /** fill the parent instead of using the asset's aspect ratio */
+  fill?: boolean;
+  class?: string;
+  sizes?: string;
+  /** hide the preview label (e.g. when the surrounding UI already labels it) */
+  quiet?: boolean;
+}
+const { id, priority = false, fill = false, class: className = '', sizes = '100vw', quiet = false } = Astro.props;
+const asset = getAsset(id);
+if (!asset) throw new Error(`Unknown asset id: ${id}`);
+const ratio = asset.ratio.replace(':', ' / ');
+const pos = `${asset.focal.x}% ${asset.focal.y}%`;
+const mobilePos = asset.mobileFocal ? `${asset.mobileFocal.x}% ${asset.mobileFocal.y}%` : pos;
+---
+{
+  asset.kind === 'photo' && asset.src ? (
+    <div class:list={['pic', fill && 'pic--fill', className]} style={`--ratio:${ratio};--pos:${pos};--pos-m:${mobilePos}`}>
+      <img
+        src={asset.src}
+        alt={asset.alt}
+        width={asset.width}
+        height={asset.height}
+        sizes={sizes}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : 'auto'}
+      />
+    </div>
+  ) : (
+    <div
+      class:list={['pic', 'ph', `ph--${asset.tone}`, fill && 'pic--fill', className]}
+      style={`--ratio:${ratio}`}
+      role="img"
+      aria-label={`Placeholder image: ${asset.label}. Photography to be supplied.`}
+      data-asset={asset.id}
+    >
+      {!quiet && (
+        <>
+          <span class="ph__tag">Preview image</span>
+          <span class="ph__label">{asset.label}<span class="ph__ratio"> · {asset.ratio}</span></span>
+        </>
+      )}
+    </div>
+  )
+}
+
+<style is:global>
+  .pic {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--ratio, 4 / 3);
+    background: #d8d2c8;
+  }
+  .pic--fill {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+  }
+  .pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pos, 50% 50%);
+    transition: transform 700ms var(--ease);
+  }
+  @media (max-width: 640px) {
+    .pic img {
+      object-position: var(--pos-m, 50% 50%);
+    }
+  }
+  a:hover .pic img {
+    transform: scale(1.025);
+  }
+
+  /* Honest placeholder frame: tonal light + faint cladding lines, never a drawn cabin. */
+  .ph {
+    --ph-fg: #f4f0e8;
+    --ph-glow: rgba(232, 160, 127, 0.18);
+    isolation: isolate;
+    color: var(--ph-fg);
+    background: var(--ph-bg);
+  }
+  .ph::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 44px);
+    z-index: -1;
+  }
+  .ph::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 72% 18%, var(--ph-glow), transparent 62%);
+    z-index: -1;
+  }
+  .ph--forest { --ph-bg: linear-gradient(185deg, #2a3d31 0%, #172419 55%, #0f1a14 100%); }
+  .ph--timber { --ph-bg: linear-gradient(160deg, #6a4f3b 0%, #3f2f24 100%); --ph-glow: rgba(255, 214, 170, 0.2); }
+  .ph--dusk { --ph-bg: linear-gradient(185deg, #52625a 0%, #26332c 70%, #1a251f 100%); }
+  .ph--mineral {
+    --ph-bg: linear-gradient(185deg, #e0dacd 0%, #c6c0b0 100%);
+    --ph-fg: #252824;
+    --ph-glow: rgba(255, 255, 255, 0.45);
+  }
+  .ph__tag {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+    border-radius: var(--radius);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+  .ph__label {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  .ph__ratio {
+    opacity: 0.8;
+  }
+</style>
