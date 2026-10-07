@@ -1,0 +1,53 @@
+# Publishes the static preview bundle (npm run build:static) to the gh-pages branch, which GitHub Pages serves.
+#
+# One-time setup in the repository (needs repo admin): Settings > Pages > Build and deployment >
+#   Source: "Deploy from a branch", Branch: gh-pages, Folder: / (root). Then Save.
+#
+# This publishes a PREVIEW: placeholder images, working (unapproved) prices, and a demo-only enquiry form.
+# The pages ask search engines not to index them, but anyone with the link can open them.
+name: Publish preview to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - claude/cloud-work-offline-a7jye2
+  workflow_dispatch:
+
+permissions:
+  contents: write # only used to update the gh-pages branch
+
+concurrency:
+  group: pages-preview
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build the static bundle (relative links, demo-only form)
+        run: npm run build:static
+
+      - name: Publish dist-static to the gh-pages branch
+        run: |
+          cd dist-static
+          touch .nojekyll   # Jekyll would silently drop files whose names start with an underscore
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish preview from ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gh-pages
