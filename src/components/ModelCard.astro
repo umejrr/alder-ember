@@ -1,0 +1,35 @@
+---
+import type { Product } from '@/content/types';
+import Picture from './Picture.astro';
+import ModelFacts from './ModelFacts.astro';
+import PriceBlock from './PriceBlock.astro';
+
+interface Props { product: Product }
+const { product } = Astro.props;
+---
+<article class="model-card" id={product.slug} aria-labelledby={`mc-${product.id}`}>
+  <a class="model-card__media" href={`/saunas/${product.slug}`} tabindex="-1" aria-hidden="true">
+    <Picture id={product.heroAsset} sizes="(min-width: 1100px) 30vw, 100vw" />
+  </a>
+  <div class="model-card__body">
+    <header>
+      <h2 class="h3" id={`mc-${product.id}`}><a href={`/saunas/${product.slug}`}>{product.name}</a></h2>
+      <p class="muted">{product.position}</p>
+    </header>
+    <ModelFacts product={product} rows={['capacity', 'exterior', 'interior', 'heating']} />
+    <PriceBlock product={product} />
+    <div class="actions">
+      <a class="btn" href={`/saunas/${product.slug}`}>Explore the {product.shortName}</a>
+      <a class="text-link" href={`/plan-your-sauna?model=${product.id}`}>Plan your {product.shortName} <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<style is:global>
+  .model-card { display: grid; gap: var(--s-5); align-content: start; }
+  .model-card__media { display: block; }
+  .model-card__body { display: grid; gap: var(--s-5); }
+  .model-card h2 a { text-decoration: none; }
+  .model-card h2 a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  .model-card .price-block__value { font-size: var(--fs-h3); }
+</style>

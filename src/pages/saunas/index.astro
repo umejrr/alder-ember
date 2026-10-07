@@ -1,0 +1,94 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ModelCard from '@/components/ModelCard.astro';
+import { productList } from '@/content/products';
+import { site } from '@/content/site';
+import { resolve } from '@/lib/mode';
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'The saunas' }];
+const coverage = resolve(site.coverage);
+const shortcuts = [
+  { label: 'A compact garden', model: productList[0] },
+  { label: 'A household wanting more room', model: productList[1] },
+  { label: 'A larger group or a changing area', model: productList[2] },
+];
+---
+<Base
+  title="Outdoor Sauna Models and Starting Prices | Alder & Ember"
+  description="Three outdoor saunas, compared by comfortable capacity, working dimensions and starting price. Planned around your space and quoted after a site and access check."
+  breadcrumbs={crumbs}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>The saunas</h1>
+    <p class="lead">
+      Three outdoor saunas, described by how many adults sit comfortably, how big the cabin is outside, and where the price starts. Each is quoted after we have checked your space and access.
+    </p>
+    <ul class="shortcuts" aria-label="Find a model by situation">
+      {shortcuts.map((s) => (
+        <li><a class="chip-link" href={`#${s.model.slug}`}><span>{s.label}</span><strong>{s.model.name}</strong></a></li>
+      ))}
+    </ul>
+  </header>
+
+  <section class="section section--flush-top" aria-label="All models">
+    <div class="container models">
+      {productList.map((p) => <ModelCard product={p} />)}
+    </div>
+  </section>
+
+  <section class="section is-surface" aria-labelledby="scope-title">
+    <div class="container grid-12">
+      <div class="c-5">
+        <p class="label muted">What the price means</p>
+        <h2 id="scope-title">A starting point, not an installed total</h2>
+      </div>
+      <div class="c-6 c-start-7 prose">
+        <p>
+          Each starting price is for the cabin, including VAT. Delivery and installation scope, and anything that depends on your site, are set out in your itemised quotation.
+        </p>
+        <p>
+          Ground preparation, electrical connection, specialist lifting and non-standard access work are assessed separately, so we do not show a single all-in price before we have looked at your space.
+        </p>
+        {coverage && <p>{coverage}</p>}
+        <p><a class="text-link" href="/installation-delivery">View installation guidance <span class="arrow" aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="advice-title">
+    <div class="container advice">
+      <div>
+        <h2 class="h2" id="advice-title">Not sure which fits?</h2>
+        <p class="lead muted">Compare the three side by side, or answer a few questions and we will suggest a starting point.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/compare">Compare models</a>
+        <a class="btn btn--secondary" href="/compare#selector">Help me choose</a>
+        <a class="text-link" href="/plan-your-sauna">Plan your sauna <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .shortcuts { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+  .chip-link {
+    display: grid;
+    gap: 0.1rem;
+    min-height: 3.5rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--c-charcoal);
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-size: var(--fs-small);
+    transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+  }
+  .chip-link strong { font-family: var(--font-serif); font-weight: 380; font-size: 1.125rem; }
+  .chip-link:hover { background: var(--c-charcoal); color: var(--c-canvas); }
+  .models { display: grid; gap: clamp(2.5rem, 5vw, 4rem) var(--col-gap); }
+  @media (min-width: 1000px) { .models { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; } }
+  .advice { display: grid; gap: var(--s-5); align-items: end; }
+  @media (min-width: 900px) { .advice { grid-template-columns: 1.2fr 1fr; } }
+</style>

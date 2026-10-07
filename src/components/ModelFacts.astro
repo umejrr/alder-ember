@@ -1,0 +1,55 @@
+---
+import type { Product } from '@/content/types';
+import { publicProduct, FALLBACK } from '@/lib/format';
+import { resolve } from '@/lib/mode';
+
+interface Props {
+  product: Product;
+  /** which rows to show */
+  rows?: ('capacity' | 'exterior' | 'interior' | 'format' | 'heating' | 'changing')[];
+}
+const { product, rows = ['capacity', 'exterior', 'interior', 'heating'] } = Astro.props;
+const pub = publicProduct(product);
+const electric = resolve(product.electric);
+const wood = resolve(product.woodBurning);
+const heating =
+  electric || wood
+    ? [
+        electric === 'available' ? 'Electric available' : null,
+        wood === 'selected-configurations'
+          ? 'Wood-burning in selected configurations, subject to assessment'
+          : wood === 'not-offered'
+            ? 'Wood-burning not offered'
+            : null,
+      ].filter(Boolean)
+    : [];
+---
+<dl class="facts">
+  {rows.includes('format') && (
+    <div><dt>Format</dt><dd>{pub.format ?? <span class="pending">{FALLBACK.unknown}</span>}</dd></div>
+  )}
+  {rows.includes('capacity') && (
+    <div>
+      <dt>Comfortable capacity</dt>
+      <dd>{pub.capacity ?? <span class="pending">{FALLBACK.dimension}</span>}<span class="sub">Seated comfortably, not maximum occupancy</span></dd>
+    </div>
+  )}
+  {rows.includes('exterior') && (
+    <div>
+      <dt>External size</dt>
+      <dd>{pub.exterior ?? <span class="pending">{FALLBACK.dimension}</span>}<span class="sub">Width × depth × height. Not the installation footprint.</span></dd>
+    </div>
+  )}
+  {rows.includes('interior') && (
+    <div>
+      <dt>Sauna room</dt>
+      <dd>{pub.interior ?? <span class="pending">{FALLBACK.dimension}</span>}<span class="sub">Approximate</span></dd>
+    </div>
+  )}
+  {rows.includes('changing') && pub.changingArea && (
+    <div><dt>Changing area</dt><dd>{pub.changingArea}</dd></div>
+  )}
+  {rows.includes('heating') && heating.length > 0 && (
+    <div><dt>Heating</dt><dd>{heating.map((h) => <span class="sub" style="color:inherit;font-weight:600">{h}</span>)}</dd></div>
+  )}
+</dl>

@@ -10,6 +10,21 @@ const AVAIL: Record<Availability, string> = {
   'not-offered': 'Not offered in the supplied range',
 };
 
+export function assetView(id: string): ModelView['asset'] {
+  const a = getAsset(id);
+  if (!a) throw new Error(`Unknown asset ${id}`);
+  return {
+    id: a.id,
+    label: a.label,
+    tone: a.tone,
+    alt: a.alt,
+    src: a.kind === 'photo' && a.src ? a.src : null,
+    ratio: a.ratio.replace(':', ' / '),
+    pos: `${a.focal.x}% ${a.focal.y}%`,
+    placeholder: a.kind !== 'photo',
+  };
+}
+
 /** Build the display-ready view of a product for the current content mode. */
 export function toModelView(p: Product, assetId: string = p.heroAsset): ModelView {
   const pub = publicProduct(p);

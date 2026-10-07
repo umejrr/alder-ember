@@ -9,7 +9,7 @@ export default defineConfig({
   output: 'static',
   adapter: node({ mode: 'standalone' }),
   integrations: [react()],
-  trailingSlash: 'never',
-  build: { format: 'file' },
+  trailingSlash: 'ignore',
+  build: { format: 'directory' },
   devToolbar: { enabled: false },
 });

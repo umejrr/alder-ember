@@ -1,0 +1,52 @@
+---
+import type { Product } from '@/content/types';
+import { publicProduct, FALLBACK } from '@/lib/format';
+import { isWorking } from '@/lib/mode';
+
+interface Props {
+  product: Product;
+  /** show the long scope sentence (default) or only the short VAT line */
+  compact?: boolean;
+}
+const { product, compact = false } = Astro.props;
+const pub = publicProduct(product);
+const working = isWorking(product.priceFromMinor);
+---
+<div class="price-block">
+  <span class="label muted">Starting price{working ? ' (working figure)' : ''}</span>
+  <p class="price-block__value tnum">
+    {
+      pub.price ? (
+        <>
+          From {pub.price}
+          {pub.vat && <small>{pub.vat.toLowerCase()}</small>}
+        </>
+      ) : (
+        <span class="pending">{FALLBACK.price}</span>
+      )
+    }
+  </p>
+  <p class="price-block__scope">
+    {pub.priceScope ?? 'Delivery and installation scope are confirmed in your itemised quotation.'}
+  </p>
+</div>
+
+<style is:global>
+  .price-block { display: grid; gap: 0.3rem; }
+  .price-block__value {
+    font-family: var(--font-serif);
+    font-size: var(--fs-h2);
+    font-weight: 320;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .price-block__value small {
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--fg-muted);
+    margin-left: 0.5rem;
+  }
+  .price-block__scope { font-size: var(--fs-small); color: var(--fg-muted); max-width: 36em; }
+</style>
