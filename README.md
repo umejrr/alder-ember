@@ -49,7 +49,7 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 
 `npm run build:static` builds `dist-static/`: a fully static copy that works from any URL or sub-path (every link is relative, no server). The enquiry form there is a **client-side demo**: it validates for real, then says plainly that nothing was sent. `npm run package:artifact` prepares it for publishing as a hosted Artifact, and `npm run e2e:static` tests it from a nested sub-path, failing if any request escapes that path. The same bundle can go on any static host (for example GitHub Pages, Netlify or Vercel). A static host cannot run `/api/enquiry`, so live enquiries still need the Node build.
 
-**GitHub Pages:** `.github/workflows/pages.yml` runs the unit tests, builds the bundle and publishes it to the `gh-pages` branch on every push to `main` (and to the working branch named in the file). One-time setup, which needs repo admin: Settings, Pages, Source "Deploy from a branch", branch `gh-pages`, folder `/ (root)`. The result is a public preview at `https://<owner>.github.io/<repo>/`: the pages ask search engines not to index them, but anyone with the link can open them.
+**GitHub Pages:** `.github/workflows/pages.yml` runs the unit tests, builds the bundle and publishes it to the `gh-pages` branch on every push to `main` (and to the working branch named in the file). One-time setup, which needs repo admin: Settings, Pages, Source "Deploy from a branch", branch `gh-pages`, folder `/ (root)`. The result is a public preview (live at https://umejrr.github.io/alder-ember/): the pages ask search engines not to index them, but anyone with the link can open them.
 
 ## Content modes
 

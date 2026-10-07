@@ -19,8 +19,10 @@ const server = http.createServer(async (req, res) => {
   try { if ((await stat(p)).isDirectory()) p = join(p, 'index.html'); const b = await readFile(p); res.setHeader('content-type', MIME[extname(p)] || 'application/octet-stream'); res.end(b); }
   catch { res.statusCode = 404; res.end('not found'); }
 });
-await new Promise((r) => server.listen(5055, '127.0.0.1', r));
-const base = `http://127.0.0.1:5055${PREFIX}`;
+// LIVE_URL=https://owner.github.io/repo/ runs the same checks against a real deployment instead of the local server
+const LIVE = process.env.LIVE_URL ? process.env.LIVE_URL.replace(/\/?$/, '/') : null;
+if (!LIVE) await new Promise((r) => server.listen(5055, '127.0.0.1', r));
+const base = LIVE ?? `http://127.0.0.1:5055${PREFIX}`;
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' });
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -101,5 +103,5 @@ await step('mobile menu works and nothing escaped the sub-path', async () => {
 
 await step('no console, page or network errors', async () => { assert.deepEqual(errors, [], errors.slice(0, 6).join(' | ')); });
 
-await browser.close(); server.close();
+await browser.close(); if (!LIVE) server.close();
 console.log(`\n${passed} steps passed`);

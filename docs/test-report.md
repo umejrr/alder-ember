@@ -52,6 +52,8 @@ Measured with an unthrottled local browser on a localhost server with **no real 
 
 ## Hosted preview
 
+**GitHub Pages (public):** https://umejrr.github.io/alder-ember/ . The browser checks above were run against the live address (`LIVE_URL=https://umejrr.github.io/alder-ember/ npm run e2e:static`) on 7 October 2026: **8 of 8 steps passed**, including every page loading, hydration, navigation, the demo form and the mobile menu, with no console or network errors.
+
 The preview is published as a private Artifact. It could not be opened from this container (claude.ai needs a login), so the hosted page itself has **not** been seen rendering. What was verified instead is that the identical files work from a nested sub-path behind a host-style page wrapper (above). Not verified there: the host's content-security policy and sandbox behaviour with the island scripts, whether the host keeps query strings on in-page navigation (model choice also travels in session storage, so the main flows do not depend on them), and printing or embedding.
 
 ## Not verified, and why
