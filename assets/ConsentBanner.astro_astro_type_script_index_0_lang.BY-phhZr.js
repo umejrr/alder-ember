@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./consent.CvXMGrqq.js";var n=document.querySelector(`[data-consent]`);n&&(e()||(n.hidden=!1),n.addEventListener(`click`,e=>{let r=e.target.closest(`[data-consent-choice]`);r&&(t({analytics:r.dataset.consentChoice===`accept`,marketing:!1}),n.hidden=!0)}));
