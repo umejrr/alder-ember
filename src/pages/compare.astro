@@ -1,0 +1,48 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import CompareTool from '@/components/react/CompareTool';
+import ModelSelector from '@/components/react/ModelSelector';
+import { productList } from '@/content/products';
+import { toModelView } from '@/lib/model-view';
+
+const models = productList.map((p) => toModelView(p));
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'The saunas', href: '/saunas' }, { label: 'Compare models' }];
+---
+<Base
+  title="Compare Outdoor Sauna Models | Alder & Ember"
+  description="Compare the Rowan, Alder and Ember outdoor saunas by comfortable capacity, working dimensions, heating availability and starting price."
+  breadcrumbs={crumbs}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>Compare the models</h1>
+    <p class="lead">
+      The practical differences side by side. Comfortable capacity means seated comfortably, not the most people who could fit, and exterior size is not the space you need to set aside.
+    </p>
+  </header>
+
+  <section class="section section--flush-top" aria-label="Model comparison">
+    <div class="container">
+      <CompareTool client:load models={models} />
+      <p class="muted" style="margin-top: var(--s-5); max-width: 44rem; font-size: var(--fs-small)">
+        Where a value is not yet confirmed we say so rather than guess. Starting prices include VAT and are not confirmed installed totals: delivery, installation scope and site-dependent work are set out in your itemised quotation.
+      </p>
+    </div>
+  </section>
+
+  <section class="section is-surface" id="selector" aria-labelledby="selector-title">
+    <div class="container grid-12">
+      <div class="c-4">
+        <p class="label muted">Not sure?</p>
+        <h2 id="selector-title">Help me choose</h2>
+        <p class="muted" style="margin-top: var(--s-4)">
+          Answer a few questions for a shortlist. It does not check your site or give a price, and your answers stay in this browser tab until you send an enquiry.
+        </p>
+      </div>
+      <div class="c-8">
+        <ModelSelector client:visible models={models} />
+      </div>
+    </div>
+  </section>
+</Base>

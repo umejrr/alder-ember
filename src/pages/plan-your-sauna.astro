@@ -1,0 +1,50 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import EnquiryForm from '@/components/react/EnquiryForm';
+import { productList } from '@/content/products';
+import { toModelView } from '@/lib/model-view';
+import { site } from '@/content/site';
+import { resolve } from '@/lib/mode';
+
+const models = productList.map((p) => toModelView(p));
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Plan your sauna' }];
+const mode = import.meta.env.PUBLIC_ENQUIRY_MODE === 'live' ? 'live' : 'demo';
+---
+<Base
+  title="Plan Your Sauna | Alder & Ember"
+  description="Tell us where you're based and what you have in mind. We'll help you choose a model, check your space and access, and plan the next step."
+  breadcrumbs={crumbs}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>Plan your sauna</h1>
+    <p class="lead">Tell us where you’re based and what you have in mind. We’ll help you choose the next step.</p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container grid-12">
+      <div class="c-7">
+        <EnquiryForm client:load kind="residential" models={models} submissionMode={mode} responseTime={resolve(site.responseTime)} />
+      </div>
+      <aside class="c-4 c-start-9 enq-aside" aria-label="What to expect">
+        <div class="enq-aside__sticky stack">
+          <h2 class="h3">What happens next</h2>
+          <ol class="enq-aside__steps">
+            <li><strong>We review.</strong> The team looks at your project and where you are.</li>
+            <li><strong>We talk it through.</strong> We help you choose a model and check space and access, usually from photos or a video call.</li>
+            <li><strong>You get a quotation.</strong> It sets out the specification, what we do and what is assessed separately.</li>
+          </ol>
+          <p class="muted">Not sure which model? <a href="/compare#selector">Try the model selector</a> first. Your answers carry over to this form.</p>
+          <p class="muted">Planning for a business? <a href="/commercial">Discuss a commercial project</a>.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .enq-aside__sticky { padding: var(--s-5); background: var(--c-surface); border: var(--border); }
+  .enq-aside__steps { display: grid; gap: var(--s-3); list-style: decimal; padding-left: 1.25rem; }
+  @media (min-width: 960px) { .enq-aside__sticky { position: sticky; top: calc(var(--header-h) + 1.25rem); } }
+</style>

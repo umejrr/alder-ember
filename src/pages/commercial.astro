@@ -1,0 +1,96 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import EnquiryForm from '@/components/react/EnquiryForm';
+import { productList } from '@/content/products';
+import { toModelView } from '@/lib/model-view';
+import { site } from '@/content/site';
+import { resolve } from '@/lib/mode';
+
+const models = productList.map((p) => toModelView(p));
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Commercial projects' }];
+const mode = import.meta.env.PUBLIC_ENQUIRY_MODE === 'live' ? 'live' : 'demo';
+const factors = [
+  ['How it will be used', 'Use intensity, occupancy and how often the sauna is used.'],
+  ['Maintenance and cleaning', 'Who looks after it, and what that routine involves day to day.'],
+  ['Operating arrangements', 'How guests or clients use it and how it is run.'],
+  ['Equipment suitability', 'Whether the heating and equipment suit the way it will be used.'],
+  ['Contractors and operators', 'Coordination with the people already involved in the venue.'],
+];
+const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels', 'Appointment-based wellness venues'];
+---
+<Base
+  title="Commercial Outdoor Saunas | Alder & Ember"
+  description="Outdoor saunas for boutique stays, small hotels and wellness venues, assessed individually. See how we approach a commercial project and start an enquiry."
+  breadcrumbs={crumbs}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>Commercial projects</h1>
+    <p class="lead">
+      We take on selected projects for venues where guests or clients use the sauna. Each one is assessed individually, because a standard model does not suit every venue.
+    </p>
+  </header>
+
+  <section class="section section--flush-top" aria-labelledby="types-title">
+    <div class="container grid-12">
+      <div class="c-4">
+        <p class="label muted">Intended project types</p>
+        <h2 id="types-title">Who this is for</h2>
+      </div>
+      <ul class="c-7 c-start-6 type-list">
+        {types.map((t) => <li>{t}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section is-surface" aria-labelledby="factors-title">
+    <div class="container grid-12">
+      <div class="c-4">
+        <p class="label muted">How we assess</p>
+        <h2 id="factors-title">What we look at</h2>
+        <p class="muted" style="margin-top: var(--s-4)">We would rather assess a project with you than promise that a standard model will work.</p>
+      </div>
+      <dl class="c-7 c-start-6 facts factor-list">
+        {factors.map(([t, d]) => <div><dt>{t}</dt><dd><span class="sub" style="color: inherit; font-weight: 500">{d}</span></dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="range-title">
+    <div class="container grid-12">
+      <div class="c-4">
+        <p class="label muted">The range as a starting point</p>
+        <h2 id="range-title">Three models to start the conversation</h2>
+      </div>
+      <div class="c-7 c-start-6 prose">
+        <p>
+          The Rowan, Alder and Ember are a starting point. Commercial suitability requires separate assessment for each project, and bespoke changes need manufacturer confirmation before we can quote.
+        </p>
+        <p><a class="text-link" href="/compare">Compare the models <span class="arrow" aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-surface" id="enquire" aria-labelledby="enquire-title">
+    <div class="container grid-12">
+      <div class="c-4">
+        <p class="label muted">Start a conversation</p>
+        <h2 id="enquire-title">Commercial enquiry</h2>
+        <p class="muted" style="margin-top: var(--s-4)">
+          Tell us about the venue and the project. Keep it brief; we will ask for more detail when we reply.
+        </p>
+      </div>
+      <div class="c-8">
+        <EnquiryForm client:load kind="commercial" models={models} submissionMode={mode} responseTime={resolve(site.responseTime)} />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .type-list { display: grid; border-top: var(--border); }
+  .type-list li { padding: 1rem 0; border-bottom: var(--border); font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; }
+  .factor-list dt { font-weight: 700; color: var(--fg); font-size: var(--fs-body); }
+  .factor-list > div { grid-template-columns: minmax(10rem, 14rem) 1fr; }
+</style>
