@@ -402,7 +402,7 @@ fieldset > legend {
   font-weight: 600;
   font-size: var(--fs-small);
 }
-.field .hint {
+.hint {
   font-size: var(--fs-small);
   color: var(--fg-muted);
 }

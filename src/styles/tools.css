@@ -52,7 +52,7 @@
 .enq { display: grid; gap: var(--s-7); }
 .enq fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--s-5); }
 .enq legend { padding: 0; font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; margin-bottom: var(--s-4); }
-.enq__row { display: grid; gap: var(--s-5) var(--col-gap); }
+.enq__row { display: grid; gap: var(--s-5) var(--col-gap); align-items: start; }
 @media (min-width: 720px) { .enq__row--2 { grid-template-columns: 1fr 1fr; } }
 .enq__prefill {
   display: grid; gap: var(--s-3); padding: 1rem 1.25rem; background: var(--c-surface);
