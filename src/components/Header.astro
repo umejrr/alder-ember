@@ -316,6 +316,9 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     label.textContent = open ? 'Close' : 'Menu';
     document.documentElement.classList.toggle('menu-open', open);
     if (open) {
+      // The preview bar (or any content above the header) can push it down at scroll 0:
+      // start the panel exactly at the header's bottom edge so the Close control is never covered.
+      panel.style.top = `${Math.max(0, header.getBoundingClientRect().bottom)}px`;
       panel.hidden = false;
       requestAnimationFrame(() => panel.classList.add('is-open'));
       (panel.querySelector('a') as HTMLElement | null)?.focus();

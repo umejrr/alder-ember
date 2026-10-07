@@ -111,6 +111,10 @@ await step('Mobile menu: opens, traps focus, Escape closes and restores focus', 
   const toggle = mp.locator('[data-menu-toggle]');
   await toggle.click();
   assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
+  // regression: with the preview bar above the header, the open panel must not cover the Close control
+  const box = await toggle.boundingBox();
+  const hit = await mp.evaluate(({ x, y }) => !!document.elementFromPoint(x, y)?.closest('[data-menu-toggle]'), { x: box.x + box.width / 2, y: box.y + box.height / 2 });
+  assert.equal(hit, true, 'the Close control is covered by the menu panel');
   await mp.getByRole('link', { name: 'Plan your sauna' }).last().waitFor();
   await mp.keyboard.press('Escape');
   assert.equal(await toggle.getAttribute('aria-expanded'), 'false');

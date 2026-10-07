@@ -34,14 +34,14 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 5. Enquiry: empty submit shows an error summary and inline errors (`aria-invalid`); input is preserved; a valid demo submission says "Demo mode: nothing was sent" and never claims receipt.
 6. Direct load and refresh work for key routes; an unknown route returns 404.
 7. No unexpected console or page errors.
-8. Mobile menu: opens, Escape closes, focus returns to the toggle.
+8. Mobile menu: opens, the Close control is not covered by the panel (a bug found by screenshot and fixed), Escape closes, focus returns to the toggle.
 9. Mobile: no horizontal overflow on key pages.
 10. Mobile compare shows two models with every value labelled.
 
 ## Manual verification
 
 - **Live enquiry path against a local mock of HubSpot** (the real server, `ENQUIRY_MODE=live`): delivered when the CRM is up; the same idempotency key returned the same response with no second record; with the CRM failing the enquiry was accepted but reported **queued** (and recorded as failed, attempts 1) rather than delivered; `npm run outbox:retry` then delivered it (attempts 2); cross-origin and honeypot requests were rejected (403 and 400); invalid bodies returned field errors; outbox files were created with mode 600. The mock received the mapped fields.
-- **Visual review** of the home page, collection, a model page, compare, enquiry, installation & delivery and the brand sheet at 1440 px and 390 px, in full-page screenshots (see `docs/screenshots/`). This found and fixed: collapsing grid columns, double gutters on mobile, an overlapping zoom button, the product enquiry action sitting too far down on mobile, and missing field alignment.
+- **Visual review** of the home page, collection, a model page, compare, enquiry, installation & delivery and the brand sheet at 1440 px and 390 px, in full-page screenshots (see `docs/screenshots/`). This found and fixed: collapsing grid columns, double gutters on mobile, an overlapping zoom button, the product enquiry action sitting too far down on mobile, misaligned form fields, and a mobile menu that covered its own Close button when the preview bar was above the header.
 - **Logo** inspected at 16, 24, 32 and 48 px, as a favicon, in the header, on forest, on a photographic gradient and as an avatar. Three directions were drawn and compared; one was rejected.
 
 ## Local indicators (not performance guarantees)
