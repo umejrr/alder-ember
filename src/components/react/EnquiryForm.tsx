@@ -111,7 +111,7 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
 
   const focusSummary = () => requestAnimationFrame(() => summaryRef.current?.focus());
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     if (status.s === 'submitting') return;
     const check = validateEnquiry({ ...payload, idempotencyKey: key.current || 'pending-key-00' });

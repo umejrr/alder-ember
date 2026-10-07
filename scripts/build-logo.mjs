@@ -70,8 +70,9 @@ const fills = {
   'brand-on-dark': { base: C.canvas, accent: C.emberOnDark, text: C.canvas },
 };
 
+const xml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 const svgWrap = (vb, inner, title, extra = '') =>
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" role="img" aria-label="${title}"${extra}>\n<title>${title}</title>\n${inner}\n</svg>\n`;
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" role="img" aria-label="${xml(title)}"${extra}>\n<title>${xml(title)}</title>\n${inner}\n</svg>\n`;
 
 // ---- Final lockups (direction C) ------------------------------------------------------
 function horizontal(f) {
@@ -195,4 +196,14 @@ await png(favicon, 180, 'apple-touch-icon.png');
 await png(favicon, 512, 'icon-512.png');
 await browser.close();
 
-console.log('Wrote', written.length, 'files to public/brand/');
+// Every SVG must be well-formed XML, or it breaks when loaded as an <img> or opened in an editor.
+const { execFileSync } = await import('node:child_process');
+for (const f of written.filter((n) => n.endsWith('.svg'))) {
+  try {
+    execFileSync('python3', ['-I', '-c', 'import sys,xml.etree.ElementTree as E; E.parse(sys.argv[1])', join(out, f)], { stdio: 'pipe' });
+  } catch (e) {
+    console.error('INVALID SVG:', f, String(e.stderr || e.message).split('\n').slice(-2).join(' '));
+    process.exitCode = 1;
+  }
+}
+console.log('Wrote', written.length, 'files to public/brand/ (all SVGs are well-formed XML)');

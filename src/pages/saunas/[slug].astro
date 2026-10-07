@@ -13,7 +13,7 @@ import { faqs, modelFaqs } from '@/content/faqs';
 import { stages, site } from '@/content/site';
 import { assetView } from '@/lib/model-view';
 import { toModelView } from '@/lib/model-view';
-import { publicProduct, FALLBACK, capacityInWords } from '@/lib/format';
+import { publicProduct, capacityInWords } from '@/lib/format';
 import { resolve, isWorking } from '@/lib/mode';
 import { visibleInstallations } from '@/lib/visibility';
 import type { Product } from '@/content/types';
@@ -31,11 +31,12 @@ const heating = heatingChoices(id);
 const options = discussableOptions(id);
 const standard = resolve(product.standardPackage);
 const leadTime = resolve(product.leadTime);
+const highlights = resolve(product.highlights);
 const coverage = resolve(site.coverage);
 const projects = visibleInstallations().filter((p) => p.productId === id);
 const relevantFaqs = [faqs.find((f) => f.id === 'price')!, ...modelFaqs, faqs.find((f) => f.id === 'next')!];
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'The saunas', href: '/saunas' }, { label: product.name }];
-const cap = product.capacity.value;
+const cap = resolve(product.capacity);
 const pendingText = 'Confirmed against the approved drawings during your site review';
 ---
 <Base title={product.seoTitle} description={product.seoDescription} breadcrumbs={crumbs} bodyClass="has-sticky-cta">
@@ -82,9 +83,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
         <p class="label">Why the {product.shortName}</p>
         <h2 id="why-title">{product.shortName === 'Rowan' ? 'Compact, for a smaller garden' : product.shortName === 'Alder' ? 'Room to share, with a glazed front' : 'Space for the whole household'}</h2>
         {pub.fit && <p class="lead">Suits: {pub.fit.charAt(0).toLowerCase() + pub.fit.slice(1)}.</p>}
-        <ul class="tick-list">
-          {product.highlights.map((h) => <li>{h}</li>)}
-        </ul>
+        {highlights && <ul class="tick-list">{highlights.map((h) => <li>{h}</li>)}</ul>}
       </div>
     </div>
   </section>

@@ -41,6 +41,16 @@ export function policyList(): Policy[] {
   return Object.values(policies);
 }
 
+/** True when an internal link target exists in the current build (guides and installations are gated). */
+export function linkAvailable(href: string, mode: ContentMode = currentMode()): boolean {
+  const path = href.split('#')[0];
+  if (path === '/guides') return guidesRouteEnabled(mode);
+  if (path.startsWith('/guides/')) return visibleGuides(mode).some((g) => path === `/guides/${g.slug}`);
+  if (path === '/installations') return installationsRouteEnabled(mode);
+  if (path.startsWith('/installations/')) return visibleInstallations(mode).some((i) => path === `/installations/${i.slug}`);
+  return true;
+}
+
 export function shouldIndex(mode: ContentMode = currentMode()): boolean {
   return mode === 'production';
 }

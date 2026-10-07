@@ -50,7 +50,7 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
     space,
   });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = (e: { preventDefault(): void }) => {
     e.preventDefault();
     const i = input();
     const r = runSelector(i);

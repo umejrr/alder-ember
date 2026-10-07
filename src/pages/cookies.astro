@@ -1,0 +1,54 @@
+---
+import PolicyPage from '@/components/PolicyPage.astro';
+---
+<PolicyPage slug="cookies">
+  <section id="preferences" class="cookie-prefs" aria-labelledby="prefs-title">
+    <h2 id="prefs-title">Your choices</h2>
+    <p>
+      In this preview no analytics or marketing tools are loaded, so there is nothing non-essential to switch on yet. Your choice is still saved in this browser, and will apply when a tool is added.
+    </p>
+    <form data-consent-form>
+      <div class="choice-group">
+        <label class="choice">
+          <input type="checkbox" checked disabled />
+          <span><span class="choice-title">Essential</span><span class="choice-note">Needed for the site to work, such as remembering the model you picked during this visit. Always on.</span></span>
+        </label>
+        <label class="choice">
+          <input type="checkbox" name="analytics" />
+          <span><span class="choice-title">Analytics</span><span class="choice-note">Helps us see which pages are useful. Off unless you choose it.</span></span>
+        </label>
+        <label class="choice">
+          <input type="checkbox" name="marketing" />
+          <span><span class="choice-title">Marketing</span><span class="choice-note">Off unless you choose it. No marketing tool is connected yet.</span></span>
+        </label>
+      </div>
+      <div class="actions" style="margin-top: var(--s-5)">
+        <button class="btn" type="submit">Save my choices</button>
+        <button class="btn btn--secondary" type="button" data-consent-reject>Reject non-essential</button>
+      </div>
+      <p class="muted" role="status" aria-live="polite" data-consent-status></p>
+    </form>
+  </section>
+</PolicyPage>
+
+<script>
+  import { getConsent, setConsent } from '@/lib/consent';
+  const form = document.querySelector<HTMLFormElement>('[data-consent-form]');
+  const status = document.querySelector<HTMLElement>('[data-consent-status]');
+  if (form && status) {
+    const a = form.elements.namedItem('analytics') as HTMLInputElement;
+    const m = form.elements.namedItem('marketing') as HTMLInputElement;
+    const c = getConsent();
+    if (c) { a.checked = c.analytics; m.checked = c.marketing; }
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      setConsent({ analytics: a.checked, marketing: m.checked });
+      status.textContent = 'Your choices have been saved in this browser.';
+    });
+    form.querySelector('[data-consent-reject]')?.addEventListener('click', () => {
+      a.checked = false; m.checked = false;
+      setConsent({ analytics: false, marketing: false });
+      status.textContent = 'Non-essential tools are off. Your choice has been saved in this browser.';
+    });
+  }
+</script>

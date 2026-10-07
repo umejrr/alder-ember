@@ -27,3 +27,24 @@ export interface Installation {
 }
 
 export const installations: Installation[] = [];
+
+/**
+ * Preview-only layout fixture for /installations/preview-template. It is NOT a project:
+ * every field is empty so the page renders labelled gaps. Never built for production.
+ */
+export const installationTemplate: Installation = {
+  slug: 'preview-template',
+  title: 'Installation story template',
+  productId: 'alder',
+  region: null,
+  summary: 'The layout for an approved installation story.',
+  customerGoal: null,
+  siteConstraints: [],
+  deliveredScope: [],
+  quotation: null,
+  gallery: ['installation-process', 'alder-exterior'],
+  permission: { property: false, people: false, location: false, testimonial: false },
+  imageRights: null,
+  approval: 'missing',
+  published: true,
+};

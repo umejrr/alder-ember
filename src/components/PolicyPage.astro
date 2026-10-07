@@ -1,0 +1,44 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { policies } from '@/content/policies';
+import { policyIsApproved } from '@/lib/visibility';
+import { isPreview } from '@/lib/mode';
+
+interface Props { slug: keyof typeof policies }
+const { slug } = Astro.props;
+const policy = policies[slug];
+const approved = policyIsApproved(policy);
+const crumbs = [{ label: 'Home', href: '/' }, { label: policy.title }];
+---
+<Base title={policy.seoTitle} description={policy.summary} breadcrumbs={crumbs} noindex={!approved}>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>{policy.title}</h1>
+    <p class="lead">{policy.summary}</p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container grid-12">
+      <div class="c-8 prose">
+        {approved ? (
+          policy.body.map((s) => (<section><h2>{s.heading}</h2>{s.paragraphs.map((p) => <p>{p}</p>)}</section>))
+        ) : (
+          <div class="alert alert--info" role="note">
+            <h2>This page is being finalised</h2>
+            <p>
+              The {policy.title.toLowerCase()} text has not been approved yet, so we are not publishing one. We would rather show nothing than something made up.
+            </p>
+            {isPreview() && (
+              <>
+                <p><strong>Preview note for the team.</strong> The approved text from {policy.approver} must cover:</p>
+                <ul>{policy.openItems.map((i) => <li>{i}</li>)}</ul>
+              </>
+            )}
+          </div>
+        )}
+        <slot />
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,69 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Picture from '@/components/Picture.astro';
+import FaqList from '@/components/FaqList.astro';
+import ModelFacts from '@/components/ModelFacts.astro';
+import PriceBlock from '@/components/PriceBlock.astro';
+import EnquiryForm from '@/components/react/EnquiryForm';
+import { visibleCampaigns } from '@/lib/visibility';
+import { products, productList } from '@/content/products';
+import { faqs } from '@/content/faqs';
+import { site } from '@/content/site';
+import { resolve } from '@/lib/mode';
+import { toModelView } from '@/lib/model-view';
+import type { Campaign } from '@/content/campaigns';
+
+export function getStaticPaths() {
+  return visibleCampaigns().map((c) => ({ params: { slug: c.slug }, props: { campaign: c } }));
+}
+const { campaign } = Astro.props as { campaign: Campaign };
+const product = products[campaign.productId];
+const models = productList.map((p) => toModelView(p));
+const crumbs = [{ label: 'Home', href: '/' }, { label: campaign.title }];
+const mode = import.meta.env.PUBLIC_ENQUIRY_MODE === 'live' ? 'live' : 'demo';
+const campFaqs = [faqs.find((f) => f.id === 'price')!, faqs.find((f) => f.id === 'access')!, faqs.find((f) => f.id === 'next')!];
+---
+<Base
+  title={`${campaign.title} | Alder & Ember`}
+  description={campaign.intro}
+  breadcrumbs={crumbs}
+  noindex={campaign.approval !== 'approved'}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>{campaign.headline}</h1>
+    <p class="lead">{campaign.intro}</p>
+    {campaign.offer && <p class="alert alert--info" role="note" style="max-width: 40rem">{campaign.offer}</p>}
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container grid-12">
+      <div class="c-7"><Picture id={product.heroAsset} sizes="(min-width: 960px) 58vw, 100vw" priority /></div>
+      <div class="c-5 stack" style="--stack: var(--s-5)">
+        <ModelFacts product={product} rows={['capacity', 'exterior', 'heating']} />
+        <PriceBlock product={product} />
+        <div class="actions">
+          <a class="btn" href="#enquire">Plan your {product.shortName}</a>
+          <a class="btn btn--secondary" href={`/saunas/${product.slug}`}>See the full details</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-surface" aria-labelledby="faq-title">
+    <div class="container grid-12">
+      <div class="c-4"><h2 id="faq-title">Questions</h2></div>
+      <div class="c-7 c-start-6"><FaqList items={campFaqs} /></div>
+    </div>
+  </section>
+
+  <section class="section" id="enquire" aria-labelledby="enq-title">
+    <div class="container grid-12">
+      <div class="c-4"><h2 id="enq-title">Plan your {product.shortName}</h2><p class="muted" style="margin-top: var(--s-4)">Tell us where you’re based and what you have in mind.</p></div>
+      <div class="c-8">
+        <EnquiryForm client:visible kind="residential" models={models} campaignId={campaign.attributionId} submissionMode={mode} responseTime={resolve(site.responseTime)} />
+      </div>
+    </div>
+  </section>
+</Base>

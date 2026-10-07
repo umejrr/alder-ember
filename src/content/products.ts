@@ -51,16 +51,19 @@ export const products: Record<ProductId, Product> = {
     accessRequirement: missing('Operations: approved access requirements'),
     clearances: missing('Operations: approved equipment and maintenance clearances'),
     standardPackage: field(STANDARD_PACKAGE, 'working', 'Publish only after approval against this model'),
-    highlights: [
+    highlights: field(
+      [
       'Sized for solo use or a couple, with comfortable seating for two to three adults.',
       'The smallest footprint in the range, for a compact garden.',
       'Electric heating, for straightforward controls and regular use.',
     ],
+      'working',
+    ),
     gallery: ['rowan-exterior', 'rowan-interior', 'rowan-detail'],
     heroAsset: 'rowan-exterior',
     seoTitle: 'The Rowan Outdoor Sauna | Alder & Ember',
     seoDescription:
-      'The Rowan is a compact outdoor sauna for a smaller garden. See comfortable capacity, working dimensions and how planning and installation work.',
+      'The Rowan is a compact outdoor sauna for a smaller garden, suited to solo use or a couple. See heating options and how planning and installation work.',
     published: true,
     approval: { status: 'working', lastApproved: null },
   },
@@ -89,16 +92,19 @@ export const products: Record<ProductId, Product> = {
     accessRequirement: missing('Operations: approved access requirements'),
     clearances: missing('Operations: approved equipment and maintenance clearances'),
     standardPackage: field(STANDARD_PACKAGE, 'working', 'Publish only after approval against this model'),
-    highlights: [
+    highlights: field(
+      [
       'Comfortable seating for four to five adults.',
       'A glazed front. Glazing specification is confirmed per configuration.',
       'Electric heating, with wood-burning in selected configurations subject to assessment.',
     ],
+      'working',
+    ),
     gallery: ['alder-exterior', 'alder-interior', 'alder-detail'],
     heroAsset: 'alder-exterior',
     seoTitle: 'The Alder Outdoor Sauna | Alder & Ember',
     seoDescription:
-      'The Alder is a glazed-front outdoor sauna with comfortable seating for four to five adults. See working dimensions, heating options and installation planning.',
+      'The Alder is a glazed-front outdoor sauna for a household wanting more room. See heating options and how planning and installation work.',
     published: true,
     approval: { status: 'working', lastApproved: null },
   },
@@ -131,16 +137,19 @@ export const products: Record<ProductId, Product> = {
     accessRequirement: missing('Operations: approved access requirements'),
     clearances: missing('Operations: approved equipment and maintenance clearances'),
     standardPackage: field(STANDARD_PACKAGE, 'working', 'Publish only after approval against this model'),
-    highlights: [
+    highlights: field(
+      [
       'Comfortable seating for six to eight adults.',
       'The largest cabin in the range, described with a changing area. How the changing area is specified is still being confirmed.',
       'Electric heating, with wood-burning in selected configurations subject to assessment.',
     ],
+      'working',
+    ),
     gallery: ['ember-exterior', 'ember-interior', 'ember-detail'],
     heroAsset: 'ember-exterior',
     seoTitle: 'The Ember Outdoor Sauna | Alder & Ember',
     seoDescription:
-      'The Ember is our largest outdoor sauna, with comfortable seating for six to eight adults. See working dimensions, heating options and installation planning.',
+      'The Ember is our largest outdoor sauna, described with a changing area. See heating options and how planning and installation work.',
     published: true,
     approval: { status: 'working', lastApproved: null },
   },

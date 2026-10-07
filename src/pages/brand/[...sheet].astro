@@ -1,0 +1,212 @@
+---
+import Base from '@/layouts/Base.astro';
+import Logo from '@/components/Logo.astro';
+import { isPreview } from '@/lib/mode';
+
+// Internal review sheet: never generated in a production build.
+export function getStaticPaths() {
+  return isPreview() ? [{ params: { sheet: undefined } }] : [];
+}
+
+const hex = (h: string) => h.replace('#', '').match(/../g)!.map((x) => parseInt(x, 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+const lum = (h: string) => { const [r, g, b] = hex(h); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+const ratio = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+const palette = [
+  { name: 'Warm canvas', hex: '#F4F0E8', role: 'Main backgrounds', on: '#252824' },
+  { name: 'Light surface', hex: '#FFFCF7', role: 'Cards and quiet surfaces', on: '#252824' },
+  { name: 'Charcoal', hex: '#252824', role: 'Primary text, buttons', on: '#F4F0E8' },
+  { name: 'Muted text', hex: '#5B6056', role: 'Supporting text, form borders', on: '#F4F0E8' },
+  { name: 'Timber', hex: '#795B45', role: 'Supporting accent, focus rings', on: '#F4F0E8' },
+  { name: 'Ember', hex: '#A54F32', role: 'Selected state and one fine detail', on: '#F4F0E8' },
+  { name: 'Deep forest', hex: '#111C16', role: 'Dark chapters, footer', on: '#F4F0E8' },
+  { name: 'Ember on forest', hex: '#E8A07F', role: 'Ember accent on dark', on: '#111C16' },
+];
+const directions = [
+  { file: 'direction-a-architectural-wordmark.svg', t: 'A. Architectural wordmark', v: 'Elegant and calm, but the cabin-frame mark reads as a generic window icon and adds little.' },
+  { file: 'direction-b-timber-and-warmth.svg', t: 'B. Timber and warmth', v: 'Rejected. Stepped boards with an accent read as a bar chart, which is the wrong kind of product.' },
+  { file: 'direction-c-ae-construction.svg', t: 'C. A / E construction', v: 'Chosen. Distinctive at small sizes, built from simple structural geometry, and the accent has one job.' },
+];
+---
+<Base
+  title="Brand review sheet | Alder & Ember"
+  description="Internal review sheet for the Alder & Ember logo system, palette and type."
+  noindex
+>
+  <header class="page-head container">
+    <p class="label muted">Internal review sheet</p>
+    <h1>Logo, palette and type</h1>
+    <p class="lead">
+      Three directions were drawn and checked in the real header, footer, favicon and small-size contexts. Direction C is implemented.
+    </p>
+  </header>
+
+  <section class="section section--flush-top container" aria-labelledby="choice-title">
+    <h2 class="h3" id="choice-title">The chosen design</h2>
+    <div class="prose" style="margin-top: var(--s-4)">
+      <p>
+        The symbol is an A and an E sharing one upright: a leaning leg and a vertical stem, with a single bar that is both the A’s crossbar and the E’s middle arm. It is plain structural geometry, so it holds at favicon size, and the ember bar is the only place the accent colour appears in the mark.
+      </p>
+      <p>
+        The wordmark is set in Newsreader, outlined so it needs no installed font, with the typeface’s own italic ampersand. It is typeset, not hand-drawn lettering, and the ampersand is the typeface’s, not a custom character. A hand-drawn ampersand was tried and rejected because it looked clumsy next to the letters.
+      </p>
+    </div>
+  </section>
+
+  <section class="section is-surface" aria-labelledby="dir-title">
+    <div class="container">
+      <h2 class="h3" id="dir-title">Three directions</h2>
+      <ul class="dirs">
+        {directions.map((d) => (
+          <li>
+            <div class="dirs__art"><img src={`/brand/explorations/${d.file}`} alt={d.t} /></div>
+            <div><h3 class="h4">{d.t}</h3><p class="muted">{d.v}</p></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="lock-title">
+    <h2 class="h3" id="lock-title">Lockups and colour versions</h2>
+    <div class="bg-grid">
+      <figure class="bg bg--canvas"><div class="bg__logo bg__logo--h"><Logo variant="horizontal" decorative /></div><figcaption>Horizontal, one colour (currentColor), on canvas</figcaption></figure>
+      <figure class="bg bg--canvas bg--brand"><div class="bg__logo bg__logo--h"><Logo variant="horizontal" decorative /></div><figcaption>Horizontal, brand colour (ember bar)</figcaption></figure>
+      <figure class="bg bg--forest"><div class="bg__logo bg__logo--h"><Logo variant="horizontal" decorative /></div><figcaption>Horizontal on deep forest (footer)</figcaption></figure>
+      <figure class="bg bg--photo"><div class="bg__logo bg__logo--h"><Logo variant="horizontal" decorative /></div><figcaption>Over a photographic area (placeholder gradient)</figcaption></figure>
+      <figure class="bg bg--canvas"><div class="bg__logo bg__logo--c"><Logo variant="compact" decorative /></div><figcaption>Compact lockup</figcaption></figure>
+      <figure class="bg bg--canvas bg--brand"><div class="bg__logo bg__logo--s"><Logo variant="symbol" decorative /></div><figcaption>Standalone symbol</figcaption></figure>
+    </div>
+    <p class="muted" style="margin-top: var(--s-4)">
+      Files in <code>/public/brand</code>: <code>logo-horizontal*.svg</code>, <code>logo-compact*.svg</code>, <code>symbol*.svg</code> (each in currentColor, -dark, -light, -brand and -brand-on-dark), <code>favicon.svg</code>, PNG favicons, and <code>logo-horizontal.source.svg</code> (editable live-text source).
+    </p>
+  </section>
+
+  <section class="section is-surface" aria-labelledby="ctx-title">
+    <div class="container">
+      <h2 class="h3" id="ctx-title">In context</h2>
+      <div class="ctx">
+        <div class="ctx__item">
+          <span class="label muted">Desktop header</span>
+          <div class="mock-header"><span class="mock-header__logo"><Logo variant="horizontal" decorative /></span><span class="mock-header__nav">SAUNAS &nbsp; INSTALLATION &nbsp; ABOUT</span><span class="btn" style="min-height:36px;padding:.3rem .9rem;font-size:.8125rem">Plan your sauna</span></div>
+        </div>
+        <div class="ctx__item" style="max-width: 360px">
+          <span class="label muted">Mobile header (360 px)</span>
+          <div class="mock-header mock-header--m"><span class="mock-header__logo"><Logo variant="horizontal" decorative /></span><span class="label">Menu ☰</span></div>
+        </div>
+        <div class="ctx__item">
+          <span class="label muted">Avatar and product label</span>
+          <div class="avatars">
+            <span class="avatar"><img src="/brand/icon-512.png" alt="" width="96" height="96" /></span>
+            <span class="avatar avatar--sm"><img src="/brand/icon-512.png" alt="" width="48" height="48" /></span>
+            <span class="plate"><span class="plate__sym"><Logo variant="symbol" decorative /></span><span><strong>The Alder</strong><br />Alder &amp; Ember</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="size-title">
+    <h2 class="h3" id="size-title">Small sizes, clear space and minimums</h2>
+    <div class="sizes">
+      <div>
+        <span class="label muted">Symbol</span>
+        <div class="sizes__row">
+          {[16, 24, 32, 48].map((s) => <span class="sizes__item"><span style={`width:${s}px;height:${s}px;display:block`}><Logo variant="symbol" decorative /></span><small>{s}px</small></span>)}
+        </div>
+      </div>
+      <div>
+        <span class="label muted">Favicon (simplified, heavier parts)</span>
+        <div class="sizes__row">
+          {[16, 32, 48].map((s) => <span class="sizes__item"><img src={`/brand/favicon-${s}.png`} alt="" width={s} height={s} /><small>{s}px</small></span>)}
+        </div>
+      </div>
+      <div>
+        <span class="label muted">Wordmark</span>
+        <div class="sizes__row sizes__row--w">
+          {[110, 140, 180, 260].map((w) => <span class="sizes__item"><span style={`width:${w}px;display:block`}><Logo variant="horizontal" decorative /></span><small>{w}px wide</small></span>)}
+        </div>
+      </div>
+    </div>
+    <ul class="plain-list" style="margin-top: var(--s-5); max-width: 44rem">
+      <li><strong>Clear space:</strong> half the height of the symbol on every side. This is what the header and footer layouts use.</li>
+      <li><strong>Minimum sizes (digital, from the renders above):</strong> symbol 24 px; favicon treatment below that; horizontal lockup 110 px wide.</li>
+      <li><strong>Not yet tested:</strong> print reproduction and minimum print sizes.</li>
+    </ul>
+  </section>
+
+  <section class="section is-surface" aria-labelledby="pal-title">
+    <div class="container">
+      <h2 class="h3" id="pal-title">Palette</h2>
+      <ul class="swatches">
+        {palette.map((p) => (
+          <li style={`background:${p.hex};color:${p.on}`}>
+            <strong>{p.name}</strong>
+            <span class="tnum">{p.hex}</span>
+            <span>{p.role}</span>
+            <span class="tnum">{ratio(p.hex, p.on).toFixed(1)}:1 with {p.on}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="muted" style="margin-top: var(--s-4)">Contrast figures are computed for the pairs shown. <code>npm run contrast</code> checks every text pair used in the UI.</p>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="type-title">
+    <h2 class="h3" id="type-title">Type</h2>
+    <div class="spec">
+      <div><span class="label muted">Newsreader, display</span><p class="display" style="font-size: clamp(2.5rem, 6vw, 4.5rem)">Alder &amp; Ember</p></div>
+      <div><span class="label muted">Newsreader, heading</span><p class="h2">Premium outdoor saunas, planned around your space.</p></div>
+      <div><span class="label muted">Manrope, body and facts (tabular numerals)</span>
+        <p class="tnum" style="font-size: var(--fs-lead)">From £8,950 · From £12,950 · From £18,950 &nbsp;|&nbsp; 2.0 × 2.0 × 2.4 m · 2.6 × 2.2 × 2.4 m · 3.6 × 2.6 × 2.5 m</p>
+        <p class="muted" style="max-width: 40rem; margin-top: var(--s-3)">The starting price is for the cabin, including VAT. Delivery and installation scope are confirmed in your itemised quotation.</p>
+      </div>
+    </div>
+    <ul class="plain-list" style="margin-top: var(--s-5); max-width: 44rem">
+      <li>Newsreader and Manrope are open-source (SIL Open Font License 1.1), self-hosted through the Fontsource npm packages. The licence text ships in the npm packages and with the outlined logo source in <code>scripts/logo/fonts</code>.</li>
+      <li>No claim is made about trademark clearance or legal uniqueness of the identity. No such research has been done.</li>
+    </ul>
+  </section>
+</Base>
+
+<style is:global>
+  .dirs { display: grid; gap: var(--s-6); margin-top: var(--s-5); }
+  .dirs li { display: grid; gap: var(--s-4); align-items: center; padding: var(--s-5); background: var(--c-canvas); border: var(--border); }
+  .dirs__art { max-width: 520px; }
+  .dirs__art img { width: 100%; height: auto; }
+  @media (min-width: 900px) { .dirs li { grid-template-columns: 1.2fr 1fr; } }
+  .bg-grid { display: grid; gap: var(--s-4); margin-top: var(--s-5); }
+  @media (min-width: 800px) { .bg-grid { grid-template-columns: 1fr 1fr; } }
+  .bg { margin: 0; padding: var(--s-5); display: grid; gap: var(--s-4); align-content: space-between; min-height: 11rem; border: var(--border); }
+  .bg--canvas { background: var(--c-canvas); color: var(--c-charcoal); }
+  .bg--brand { --logo-accent: var(--c-ember); }
+  .bg--forest { background: var(--c-forest); color: var(--c-on-forest); --logo-accent: var(--c-ember-on-forest); }
+  .bg--photo { background: linear-gradient(185deg, #52625a, #1a251f); color: var(--c-on-forest); --logo-accent: var(--c-ember-on-forest); }
+  .bg figcaption { font-size: var(--fs-small); opacity: 0.8; }
+  .bg__logo--h { height: 2.2rem; }
+  .bg__logo--c { height: 4.5rem; }
+  .bg__logo--s { height: 4.5rem; }
+  .bg__logo .logo { height: 100%; }
+  .ctx { display: grid; gap: var(--s-6); margin-top: var(--s-5); }
+  .mock-header { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); height: 72px; padding: 0 var(--s-5); background: var(--c-canvas); border: var(--border); }
+  .mock-header--m { height: 64px; }
+  .mock-header__logo { height: 1.35rem; display: block; }
+  .mock-header--m .mock-header__logo { height: 1.2rem; }
+  .mock-header__logo .logo { height: 100%; }
+  .mock-header__nav { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; }
+  .avatars { display: flex; flex-wrap: wrap; gap: var(--s-5); align-items: center; }
+  .avatar img { border-radius: 50%; width: 96px; height: 96px; }
+  .avatar--sm img { width: 48px; height: 48px; }
+  .plate { display: inline-flex; gap: 0.75rem; align-items: center; padding: 0.75rem 1rem; border: 1px solid var(--c-charcoal); background: var(--c-canvas); --logo-accent: var(--c-ember); font-size: var(--fs-small); line-height: 1.3; }
+  .plate__sym { display: block; height: 2rem; width: 2rem; }
+  .plate__sym .logo { height: 100%; }
+  .sizes { display: grid; gap: var(--s-6); margin-top: var(--s-5); }
+  .sizes__item .logo { display: block; width: 100%; height: 100%; }
+  .sizes__item .logo svg { width: 100%; height: auto; }
+  .sizes__row { display: flex; flex-wrap: wrap; gap: var(--s-6); align-items: end; margin-top: var(--s-3); }
+  .sizes__item { display: grid; gap: 0.4rem; justify-items: start; }
+  .sizes__item small { color: var(--c-muted); font-size: 0.75rem; }
+  .swatches { display: grid; gap: var(--s-3); margin-top: var(--s-5); grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+  .swatches li { display: grid; gap: 0.2rem; padding: var(--s-4); border: 1px solid var(--c-border); font-size: var(--fs-small); min-height: 9rem; align-content: end; }
+  .spec { display: grid; gap: var(--s-6); margin-top: var(--s-5); }
+</style>

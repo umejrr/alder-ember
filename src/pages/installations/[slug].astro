@@ -1,0 +1,71 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Picture from '@/components/Picture.astro';
+import { visibleInstallations } from '@/lib/visibility';
+import { isPreview } from '@/lib/mode';
+import { products } from '@/content/products';
+import { installationTemplate as TEMPLATE, type Installation } from '@/content/installations';
+
+export function getStaticPaths() {
+  const real = visibleInstallations().map((i) => ({ params: { slug: i.slug }, props: { story: i, template: false } }));
+  return isPreview() ? [...real, { params: { slug: TEMPLATE.slug }, props: { story: TEMPLATE, template: true } }] : real;
+}
+const { story, template } = Astro.props as { story: Installation; template: boolean };
+const product = products[story.productId];
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Our installations', href: '/installations' }, { label: story.title }];
+const gap = (what: string) => `${what} to be added once approved`;
+---
+<Base title={`${story.title} | Alder & Ember`} description={story.summary} breadcrumbs={crumbs} noindex={template}>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    {template && <p class="alert alert--info" role="note" style="max-width: 44rem; margin-bottom: var(--s-5)"><strong>Template preview.</strong> This is not a real project. Every field below is a labelled gap, shown so the layout can be reviewed.</p>}
+    <p class="label muted">{product.name}{story.region ? `, ${story.region}` : ''}</p>
+    <h1>{story.title}</h1>
+    <p class="lead">{story.summary}</p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container grid-12">
+      <div class="c-8"><Picture id={story.gallery[0]} sizes="(min-width: 960px) 62vw, 100vw" /></div>
+      <div class="c-4 stack">
+        <dl class="facts">
+          <div><dt>Model</dt><dd><a href={`/saunas/${product.slug}`}>{product.name}</a></dd></div>
+          <div><dt>Region</dt><dd>{story.region ?? <span class="pending">{gap('General region')}</span>}</dd></div>
+          <div><dt>Customer goal</dt><dd>{story.customerGoal ?? <span class="pending">{gap('The customer’s goal')}</span>}</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-surface">
+    <div class="container grid-12">
+      <div class="c-4"><h2 class="h3">Site and access</h2></div>
+      <div class="c-7 c-start-6 prose">
+        {story.siteConstraints.length ? <ul>{story.siteConstraints.map((c) => <li>{c}</li>)}</ul> : <p class="pending">{gap('Relevant access or preparation considerations')}</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid-12">
+      <div class="c-4"><h2 class="h3">What the team delivered</h2></div>
+      <div class="c-7 c-start-6 prose">
+        {story.deliveredScope.length ? <ul>{story.deliveredScope.map((c) => <li>{c}</li>)}</ul> : <p class="pending">{gap('What was delivered, within the actual scope')}</p>}
+        {story.quotation
+          ? <blockquote><p>{story.quotation.text}</p><footer>{story.quotation.attribution}</footer></blockquote>
+          : <p class="pending">{gap('Approved customer wording, only if permission is recorded')}</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="closing is-forest is-forest-gradient">
+    <div class="container closing__inner">
+      <h2 class="display">Plan your {product.shortName}.</h2>
+      <div class="closing__copy">
+        <p class="lead">Tell us where you’re based and what you have in mind.</p>
+        <a class="btn" href={`/plan-your-sauna?model=${product.id}`}>Plan your {product.shortName}</a>
+      </div>
+    </div>
+  </section>
+</Base>

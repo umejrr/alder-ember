@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Alder & Ember">
-<title>Alder & Ember</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Alder &amp; Ember">
+<title>Alder &amp; Ember</title>
 <rect width="64" height="64" rx="8" fill="#252824"/><g transform="translate(6 6) scale(0.8125)"><path fill="#F4F0E8" d="M5 60L18 60L46 4L34 4ZM34 4L46 4L46 60L34 60ZM46 4L62 4L62 16L46 16ZM46 48L62 48L62 60L46 60Z"/><path fill="#E8A07F" d="M19 30L62 30L62 42L19 42Z"/></g>
 </svg>

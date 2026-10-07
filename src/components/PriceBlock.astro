@@ -5,10 +5,8 @@ import { isWorking } from '@/lib/mode';
 
 interface Props {
   product: Product;
-  /** show the long scope sentence (default) or only the short VAT line */
-  compact?: boolean;
 }
-const { product, compact = false } = Astro.props;
+const { product } = Astro.props;
 const pub = publicProduct(product);
 const working = isWorking(product.priceFromMinor);
 ---

@@ -1,0 +1,50 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { visibleGuides, guidesRouteEnabled } from '@/lib/visibility';
+import { isPreview } from '@/lib/mode';
+
+// Not generated at all when there is no approved guide (no soft-404 page is published).
+export function getStaticPaths() {
+  return guidesRouteEnabled() ? [{ params: { index: undefined } }] : [];
+}
+const guides = visibleGuides();
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Planning guides' }];
+---
+<Base
+  title="Outdoor Sauna Planning Guides | Alder & Ember"
+  description="Practical guides to choosing a sauna for your space, heating preferences, base and access planning, quotations, aftercare and commercial projects."
+  breadcrumbs={crumbs}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>Planning guides</h1>
+    <p class="lead">Practical answers to the questions people ask before they buy. We write only what we can stand behind, and say where something depends on your site.</p>
+    {isPreview() && <p class="alert alert--info" role="note" style="max-width: 40rem; margin-top: var(--s-5)">Preview: these guides are drafts. Technical content needs expert approval before it appears in a production build.</p>}
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <ul class="guide-list">
+        {guides.map((g) => (
+          <li>
+            <a href={`/guides/${g.slug}`}>
+              <span class="label muted">{g.topic}</span>
+              <span class="guide-list__t serif">{g.title}</span>
+              <span class="muted">{g.summary}</span>
+              <span class="text-link guide-list__more">Read the guide <span class="arrow" aria-hidden="true">→</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .guide-list { display: grid; border-top: var(--border); }
+  .guide-list a { display: grid; gap: var(--s-2); padding: clamp(1.25rem, 3vw, 2rem) 0; border-bottom: var(--border); text-decoration: none; max-width: 52rem; }
+  .guide-list__t { font-size: var(--fs-h2); line-height: 1.15; font-weight: 320; letter-spacing: -0.01em; }
+  .guide-list a:hover .guide-list__t { text-decoration: underline; text-underline-offset: 0.12em; text-decoration-thickness: 1px; }
+  .guide-list__more { justify-self: start; margin-top: var(--s-2); }
+</style>

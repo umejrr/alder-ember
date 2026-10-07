@@ -1,0 +1,25 @@
+---
+import Base from '@/layouts/Base.astro';
+import { productList } from '@/content/products';
+---
+<Base title="Page Not Found | Alder & Ember" description="We could not find that page. Explore the saunas or plan your sauna." noindex>
+  <section class="section nf container">
+    <p class="label muted">404</p>
+    <h1>We can’t find that page.</h1>
+    <p class="lead muted">It may have moved, or the link may be wrong. These will get you back on track.</p>
+    <div class="actions" style="margin-top: var(--s-6)">
+      <a class="btn" href="/saunas">Explore the saunas</a>
+      <a class="btn btn--secondary" href="/plan-your-sauna">Plan your sauna</a>
+    </div>
+    <ul class="nf__links">
+      {productList.map((p) => <li><a class="text-link" href={`/saunas/${p.slug}`}>{p.name} <span class="arrow" aria-hidden="true">→</span></a></li>)}
+      <li><a class="text-link" href="/compare">Compare models <span class="arrow" aria-hidden="true">→</span></a></li>
+      <li><a class="text-link" href="/installation-delivery">Installation &amp; delivery <span class="arrow" aria-hidden="true">→</span></a></li>
+    </ul>
+  </section>
+</Base>
+
+<style is:global>
+  .nf { padding-top: calc(var(--header-h) + clamp(3rem, 8vw, 7rem)); min-height: 60vh; }
+  .nf__links { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-6); margin-top: var(--s-7); }
+</style>

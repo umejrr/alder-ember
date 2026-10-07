@@ -16,7 +16,11 @@
     "contrast": "node scripts/contrast-check.mjs",
     "crawl": "node scripts/crawl-dist.mjs",
     "outbox:retry": "node scripts/outbox-retry.mjs",
-    "shots": "node scripts/screenshots.mjs"
+    "shots": "node scripts/screenshots.mjs",
+    "check:production": "node scripts/check-production.mjs",
+    "e2e": "node tests/e2e/journey.mjs",
+    "a11y": "node tests/e2e/a11y.mjs",
+    "serve": "scripts/serve-dist.sh start"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",
@@ -35,7 +39,7 @@
     "@types/react-dom": "^19.3.0",
     "fontkit": "^2.0.4",
     "playwright": "^1.63.0",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "vitest": "^5.0.3"
   }
 }

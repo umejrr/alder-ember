@@ -1,5 +1,6 @@
 ---
 import type { Faq } from '@/content/types';
+import { linkAvailable } from '@/lib/visibility';
 interface Props {
   items: Faq[];
   /** open the first item by default */
@@ -16,7 +17,7 @@ const { items, openFirst = false } = Astro.props;
       </summary>
       <div class="answer">
         {f.answer.map((p) => <p>{p}</p>)}
-        {f.linkHref && (
+        {f.linkHref && linkAvailable(f.linkHref) && (
           <p><a class="text-link" href={f.linkHref}>{f.linkLabel ?? 'Read more'} <span class="arrow" aria-hidden="true">→</span></a></p>
         )}
       </div>

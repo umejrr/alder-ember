@@ -1,0 +1,63 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Picture from '@/components/Picture.astro';
+import { visibleInstallations, installationsRouteEnabled } from '@/lib/visibility';
+import { isPreview } from '@/lib/mode';
+import { products } from '@/content/products';
+
+export function getStaticPaths() {
+  return installationsRouteEnabled() ? [{ params: { index: undefined } }] : [];
+}
+const items = visibleInstallations();
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Our installations' }];
+---
+<Base
+  title="Our Outdoor Sauna Installations | Alder & Ember"
+  description="Real completed outdoor sauna installations: the model, the site and what the team delivered."
+  breadcrumbs={crumbs}
+  noindex={items.length === 0}
+>
+  <header class="page-head container">
+    <Breadcrumbs items={crumbs} />
+    <h1>Our installations</h1>
+    <p class="lead">Genuine completed projects, with the model, the general region, the site and what the team delivered.</p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="container">
+      {items.length > 0 ? (
+        <ul class="proj-grid">
+          {items.map((p) => (
+            <li>
+              <a href={`/installations/${p.slug}`}>
+                <Picture id={p.gallery[0]} />
+                <h2 class="h3">{p.title}</h2>
+                <p class="muted">{products[p.productId].name}{p.region ? `, ${p.region}` : ''}</p>
+                <p>{p.summary}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : isPreview() ? (
+        <div class="empty-state" role="note">
+          <div class="empty-state__pic"><Picture id="installation-process" quiet /></div>
+          <div class="empty-state__copy">
+            <span class="chip">Preview layout</span>
+            <h2 class="h3">No installation stories yet</h2>
+            <p>
+              None has been supplied, so none is shown. Each story will cover the customer’s goal, the chosen model, the site and access considerations, what the team delivered, and approved photography and wording only, once property, people, location and testimonial permissions are recorded.
+            </p>
+            <a class="text-link" href="/installations/preview-template">See the story template <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .proj-grid { display: grid; gap: var(--s-7) var(--col-gap); }
+  @media (min-width: 800px) { .proj-grid { grid-template-columns: 1fr 1fr; } }
+  .proj-grid a { display: grid; gap: var(--s-3); text-decoration: none; }
+</style>

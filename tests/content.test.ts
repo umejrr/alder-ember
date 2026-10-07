@@ -110,3 +110,14 @@ describe('asset manifest', () => {
     }
   });
 });
+
+import { linkAvailable } from '@/lib/visibility';
+describe('link availability follows gated routes', () => {
+  it('does not link to unapproved guides or empty installations in production', () => {
+    expect(linkAvailable('/guides/planning-base-and-access', 'production')).toBe(false);
+    expect(linkAvailable('/guides', 'production')).toBe(false);
+    expect(linkAvailable('/installations', 'production')).toBe(false);
+    expect(linkAvailable('/guides/planning-base-and-access', 'preview')).toBe(true);
+    expect(linkAvailable('/compare', 'production')).toBe(true);
+  });
+});

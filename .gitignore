@@ -8,3 +8,4 @@ data/outbox
 test-results
 screenshots
 *.log
+dist-prod

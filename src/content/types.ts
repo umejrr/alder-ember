@@ -74,7 +74,8 @@ export interface Product {
   accessRequirement: Field<string>;
   clearances: Field<string>;
   standardPackage: Field<string[]>;
-  highlights: string[];
+  /** feature bullets; they state capacity, so they are 'working' until capacity is approved */
+  highlights: Field<string[]>;
   gallery: string[];
   heroAsset: string;
   seoTitle: string;
