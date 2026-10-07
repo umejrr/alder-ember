@@ -52,7 +52,11 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
 
   const sync = useCallback((next: string[]) => {
     const q = next.length === ids.length ? '' : `?m=${next.join(',')}`;
-    window.history.replaceState(null, '', `${window.location.pathname}${q}${window.location.hash}`);
+    try {
+      window.history.replaceState(null, '', `${window.location.pathname}${q}${window.location.hash}`);
+    } catch {
+      /* sandboxed or embedded frames may refuse; the comparison still works */
+    }
   }, [ids.length]);
 
   // initial: URL (shareable) -> otherwise a sensible default for the screen

@@ -10,7 +10,7 @@
 }
 .cmp__toggle:hover { background: #fff; }
 .cmp__toggle[aria-pressed='true'] { background: var(--c-charcoal); color: var(--c-canvas); }
-.cmp__toggle[aria-pressed='true']::before { content: '✓'; font-size: 0.85em; }
+.cmp__toggle[aria-pressed='true']::before { content: '✓'; content: '✓' / ''; font-size: 0.85em; }
 .cmp__hint { font-size: var(--fs-small); color: var(--c-muted); }
 .cmp-table { display: block; }
 .cmp-stack { display: none; }

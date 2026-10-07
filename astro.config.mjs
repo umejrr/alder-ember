@@ -10,6 +10,7 @@ export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   integrations: [react()],
   trailingSlash: 'ignore',
-  build: { format: 'directory' },
+  // ASSETS_DIR lets static hosts that reserve a leading underscore use a different folder name
+  build: { format: 'directory', assets: process.env.ASSETS_DIR || '_astro' },
   devToolbar: { enabled: false },
 });

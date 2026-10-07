@@ -21,7 +21,10 @@
     "e2e": "node tests/e2e/journey.mjs",
     "a11y": "node tests/e2e/a11y.mjs",
     "serve": "scripts/serve-dist.sh start",
-    "manifest": "node scripts/gen-asset-manifest.mjs"
+    "manifest": "node scripts/gen-asset-manifest.mjs",
+    "build:static": "node scripts/build-static.mjs",
+    "package:artifact": "node scripts/package-artifact.mjs",
+    "e2e:static": "node tests/e2e/static-bundle.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",

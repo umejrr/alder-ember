@@ -44,6 +44,8 @@ const blank = (kind: Props['kind']): Values => ({
 
 const HEATING_LABEL: Record<string, string> = { electric: 'Electric', wood: 'Wood-burning', advice: 'I need advice' };
 
+const STATIC_DEMO = import.meta.env.PUBLIC_STATIC_DEMO === 'true';
+
 type Status =
   | { s: 'idle' }
   | { s: 'submitting' }
@@ -122,6 +124,13 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
       return;
     }
     setErrors({});
+    if (STATIC_DEMO) {
+      // Static preview hosting has no server. Validation above was real; nothing is sent and nothing is stored.
+      const c = check.value;
+      setStatus({ s: 'sent', mode: 'demo', snapshot: { model: c.model, heating: c.heating, projectType: c.projectType, people: c.people, changingArea: c.changingArea } });
+      requestAnimationFrame(() => doneRef.current?.focus());
+      return;
+    }
     setStatus({ s: 'submitting' });
     try {
       const res = await fetch('/api/enquiry', {

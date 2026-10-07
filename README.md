@@ -30,6 +30,7 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 | `npm run build:production` | Production-mode build (hides unapproved values and routes) |
 | `npm run check:production` | Builds in production mode and scans the output for leaked working values, drafts and unapproved routes |
 | `npm run e2e` / `npm run a11y` | Browser journey checks / axe accessibility scan (need a running build: `npm run build && npm run serve`) |
+| `npm run build:static` / `npm run e2e:static` | Static, sub-path-safe preview bundle / its browser test |
 | `npm run crawl` | Crawls a running build for broken links, anchors and assets |
 | `npm run contrast` | WCAG contrast check for every text and control pair in the tokens |
 | `npm run logo` | Regenerates the logo SVGs and PNG favicons into `public/brand/` |
@@ -43,6 +44,10 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 ## Deploying
 
 `npm run build` produces `dist/client` (static pages) and `dist/server` (the enquiry endpoint). Run it with `npm start` on any Node 22 host behind HTTPS; put `ENQUIRY_*` and `HUBSPOT_*` variables in the host's secret store, never in the repo. A static-only host can serve `dist/client` but cannot run `/api/enquiry`, so use the Node host (or swap in the matching Astro adapter) for the live form. Nothing has been deployed: production deployment needs the agreed environment and authorisation ([docs/launch-dependencies.md](docs/launch-dependencies.md)).
+
+## Hosted preview (static bundle)
+
+`npm run build:static` builds `dist-static/`: a fully static copy that works from any URL or sub-path (every link is relative, no server). The enquiry form there is a **client-side demo**: it validates for real, then says plainly that nothing was sent. `npm run package:artifact` prepares it for publishing as a hosted Artifact, and `npm run e2e:static` tests it from a nested sub-path, failing if any request escapes that path. The same bundle can go on any static host (for example GitHub Pages, Netlify or Vercel). A static host cannot run `/api/enquiry`, so live enquiries still need the Node build.
 
 ## Content modes
 

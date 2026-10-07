@@ -9,3 +9,8 @@ test-results
 screenshots
 *.log
 dist-prod
+dist-static
+dist-static-raw
+dist-artifact
+dist-artifact-pkg
+dist-artifact-test

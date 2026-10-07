@@ -10,6 +10,7 @@ Boundaries are small and explicit. Nothing here has been connected to a live sys
 | HubSpot Forms API | **Implemented, not verified against a real portal.** Awaiting configuration | `src/lib/enquiry/hubspot.ts` |
 | Sales alert and customer confirmation email | **Not configured.** Returns "not sent"; the UI never claims an email was sent | `src/lib/enquiry/notify.ts` |
 | Analytics and consent | **Boundary built, no provider chosen**, so nothing is sent and no banner is shown | `src/lib/analytics.ts`, `src/lib/consent.ts` |
+| Static preview form | **Client-side demo only.** Validates, then shows the demo confirmation; sends and stores nothing | `PUBLIC_STATIC_DEMO=true` (`npm run build:static`) |
 | Booking | **Not built.** No calendar or booking process exists; no slots are invented | n/a |
 | Accessory checkout | **Not built.** No approved catalogue, prices, stock process, payment provider or terms; no pretend cart | n/a |
 | Email marketing | **Not connected.** The opt-in is a separate, optional checkbox that travels as a property | `ae_marketing_opt_in` |

@@ -15,6 +15,7 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 | Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 23 routes at 1440 px and 375 px. The scan was proven able to fail by injecting an alt-less image, which it caught |
 | Browser journeys | `npm run e2e` | **11 of 11 steps pass** (below) |
 | Horizontal overflow | scripted sweep, 22 routes | **None** at 320, 375, 390, 768, 1024, 1440 and 1920 px |
+| Static bundle from a nested sub-path | `npm run build:static && npm run e2e:static` | **8 of 8 steps pass**, also when wrapped in a simulated host page skeleton: styles and fonts load, islands hydrate, static and React-created links navigate, every page loads, compare and gallery work, the demo form sends no request, the mobile menu works, and **no request escaped the sub-path** |
 | Logo SVG validity | `npm run logo` | All 25 files are well-formed XML (this caught a real bug: unescaped `&` made the logo unusable as an image file) |
 
 ### What the unit tests cover (behaviours where a failure would mislead a customer or lose an enquiry)
@@ -48,6 +49,10 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 ## Local indicators (not performance guarantees)
 
 Measured with an unthrottled local browser on a localhost server with **no real images**, so they say little about the live site. Uncompressed transfer: HTML about 52 KB per page, CSS about 31 KB, fonts about 153 KB (Newsreader and Manrope latin subsets), and about 234 KB of JavaScript on pages with React islands (model pages, compare). The home page ships about 1 KB until the model showcase scrolls into view. Layout shift in these runs was 0.000 to 0.046 (the highest was on mobile compare, from the two-model default applying after hydration). **No Lighthouse or field Core Web Vitals run has been done**: that needs real images on a real host.
+
+## Hosted preview
+
+The preview is published as a private Artifact. It could not be opened from this container (claude.ai needs a login), so the hosted page itself has **not** been seen rendering. What was verified instead is that the identical files work from a nested sub-path behind a host-style page wrapper (above). Not verified there: the host's content-security policy and sandbox behaviour with the island scripts, whether the host keeps query strings on in-page navigation (model choice also travels in session storage, so the main flows do not depend on them), and printing or embedding.
 
 ## Not verified, and why
 
