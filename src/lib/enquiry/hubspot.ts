@@ -15,6 +15,8 @@ export interface HubspotConfig {
   formGuid: string;
   /** map of our field -> HubSpot internal property name */
   fieldMap?: Record<string, string>;
+  /** override for a sandbox or test double; defaults to HubSpot's Forms API host */
+  apiBase?: string;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
 }
@@ -61,7 +63,7 @@ export function createHubspotClient(cfg: HubspotConfig) {
   const f = cfg.fetchImpl ?? fetch;
   return {
     async send(e: EnquiryInput, reference: string) {
-      const url = `https://api.hsforms.com/submissions/v3/integration/submit/${encodeURIComponent(cfg.portalId)}/${encodeURIComponent(cfg.formGuid)}`;
+      const url = `${cfg.apiBase ?? 'https://api.hsforms.com'}/submissions/v3/integration/submit/${encodeURIComponent(cfg.portalId)}/${encodeURIComponent(cfg.formGuid)}`;
       const body = {
         fields: toHubspotFields(e, reference, map),
         context: { pageUri: e.sourcePage ?? '', pageName: 'Alder & Ember enquiry' },

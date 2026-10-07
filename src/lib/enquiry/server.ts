@@ -19,7 +19,7 @@ export function getDeps(env: NodeJS.ProcessEnv = process.env): Deps {
   }
   const crm =
     env.HUBSPOT_PORTAL_ID && env.HUBSPOT_FORM_GUID
-      ? createHubspotClient({ portalId: env.HUBSPOT_PORTAL_ID, formGuid: env.HUBSPOT_FORM_GUID, fieldMap })
+      ? createHubspotClient({ portalId: env.HUBSPOT_PORTAL_ID, formGuid: env.HUBSPOT_FORM_GUID, fieldMap, apiBase: env.HUBSPOT_API_BASE || undefined })
       : null;
   cached = {
     mode,

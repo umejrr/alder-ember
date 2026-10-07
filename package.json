@@ -20,7 +20,8 @@
     "check:production": "node scripts/check-production.mjs",
     "e2e": "node tests/e2e/journey.mjs",
     "a11y": "node tests/e2e/a11y.mjs",
-    "serve": "scripts/serve-dist.sh start"
+    "serve": "scripts/serve-dist.sh start",
+    "manifest": "node scripts/gen-asset-manifest.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",

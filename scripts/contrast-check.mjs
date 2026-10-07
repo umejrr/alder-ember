@@ -5,7 +5,7 @@ const tokens = {
   timber: '#795B45', ember: '#A54F32', border: '#D8D2C8', forest: '#111C16',
   // derived tokens defined in src/styles/tokens.css
   forestSurface: '#17261E', onForest: '#F4F0E8', onForestMuted: '#C3C8BC',
-  emberOnForest: '#E8A07F', emberStrong: '#8F4128',
+  emberOnForest: '#E8A07F', emberStrong: '#8F4128', error: '#A3261A',
 };
 const lum = (hex) => {
   const c = hex.replace('#', '').match(/../g).map((h) => parseInt(h, 16) / 255)
@@ -32,6 +32,9 @@ const pairs = [
   ['onForest', 'forestSurface', 4.5, 'text on raised forest surface'],
   ['onForestMuted', 'forestSurface', 4.5, 'supporting text on raised forest surface'],
   ['emberOnForest', 'forest', 4.5, 'ember accent text on forest'],
+  ['error', 'canvas', 4.5, 'error text on canvas'],
+  ['error', 'surface', 4.5, 'error text on surface'],
+  ['muted', 'surface', 3.0, 'form control border on surface'],
   ['border', 'canvas', 1.0, 'decorative divider (non-text, informational only)'],
   ['timber', 'canvas', 3.0, 'focus ring / UI component boundary'],
   ['charcoal', 'canvas', 3.0, 'form control boundary'],

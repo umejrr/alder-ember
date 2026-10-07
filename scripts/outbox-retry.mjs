@@ -21,7 +21,7 @@ for (const name of (await readdir(dir).catch(() => [])).filter((n) => n.endsWith
   const src = { ...rec.enquiry, reference: rec.reference };
   const fields = Object.entries(fieldMap).filter(([k]) => src[k] !== undefined && src[k] !== '').map(([k, n]) => ({ name: n, value: String(src[k]) }));
   try {
-    const res = await fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${portal}/${guid}`, {
+    const res = await fetch(`${process.env.HUBSPOT_API_BASE || 'https://api.hsforms.com'}/submissions/v3/integration/submit/${portal}/${guid}`, {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ fields, context: { pageUri: src.sourcePage ?? '', pageName: 'Alder & Ember enquiry' } }),
     });
