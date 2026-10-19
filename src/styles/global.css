@@ -246,7 +246,8 @@ h4,
 }
 .grid-12 {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  /* one column until there is room for twelve: eleven gaps alone are wider than a phone when text is enlarged */
+  grid-template-columns: minmax(0, 1fr);
   column-gap: var(--col-gap);
   row-gap: var(--s-6);
 }
@@ -254,7 +255,8 @@ h4,
   grid-column: 1 / -1;
   min-width: 0;
 }
-@media (min-width: 960px) {
+@media (min-width: 60rem) {
+  .grid-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   /* span classes set the END line; start classes set the START line, so they compose */
   .grid-12 > .c-3 { grid-column: auto / span 3; }
   .grid-12 > .c-4 { grid-column: auto / span 4; }
@@ -623,7 +625,7 @@ fieldset > legend {
   font-weight: 600;
   font-variant-numeric: tabular-nums lining-nums;
 }
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .facts > div {
     grid-template-columns: 1fr;
     gap: 0.15rem;
@@ -771,7 +773,7 @@ table.data td {
 .two-col h3 {
   margin-bottom: var(--s-3);
 }
-@media (min-width: 760px) {
+@media (min-width: 47.5rem) {
   .two-col {
     grid-template-columns: 1fr 1fr;
   }
@@ -784,7 +786,7 @@ table.data td {
   padding: 0.55rem 0;
   border-bottom: var(--border);
 }
-@media (min-width: 640px) {
+@media (min-width: 40rem) {
   .plain-list--cols {
     grid-template-columns: 1fr 1fr;
     column-gap: var(--s-5);
@@ -801,7 +803,34 @@ table.data td {
 .closing__copy .lead { color: var(--c-on-forest-muted); }
 .closing__text .btn,
 .closing__copy .btn { justify-self: start; }
-@media (min-width: 960px) {
+@media (min-width: 60rem) {
   .closing__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: var(--s-8); }
   .closing__inner:not(:has(.closing__media)) { grid-template-columns: 1.25fr 1fr; align-items: end; }
+}
+
+/* Long words must wrap rather than push the page sideways when text is enlarged. `anywhere` (not `break-word`) also lowers
+   the minimum width a grid or flex item needs, so a long word cannot widen its column. lang is set, so hyphens work. */
+h1,
+h2,
+h3,
+h4,
+.display,
+.lead,
+.label,
+.serif,
+p,
+li,
+dt,
+dd,
+summary,
+.fyf__price-value,
+.price-block__value {
+  overflow-wrap: anywhere;
+}
+h1,
+h2,
+h3,
+h4,
+.display {
+  hyphens: auto;
 }

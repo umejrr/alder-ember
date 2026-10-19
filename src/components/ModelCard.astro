@@ -9,7 +9,7 @@ const { product } = Astro.props;
 ---
 <article class="model-card" id={product.slug} aria-labelledby={`mc-${product.id}`}>
   <a class="model-card__media" href={`/saunas/${product.slug}`} tabindex="-1" aria-hidden="true">
-    <Picture id={product.heroAsset} sizes="(min-width: 1100px) 30vw, 100vw" />
+    <Picture id={product.heroAsset} sizes="(min-width: 68.75rem) 30vw, 100vw" />
   </a>
   <div class="model-card__body">
     <header>

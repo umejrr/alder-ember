@@ -109,13 +109,17 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     justify-content: space-between;
     gap: var(--s-5);
   }
+  /* width, not height, is the constraint: the lockup keeps its proportions and can never be wider than half the bar,
+     whatever the text size (a rem height alone overflowed at 200% text) */
   .site-header__logo {
     display: block;
-    height: 1.6rem;
-    flex: none;
+    width: min(14.6rem, 56vw);
+    flex: 0 1 auto;
+    min-width: 110px; /* the smallest the lockup is specified to be used at */
     color: inherit;
   }
-  .site-header__logo .logo { height: 100%; }
+  .site-header__logo .logo { display: block; width: 100%; height: auto; }
+  .site-header__logo .logo svg { width: 100%; height: auto; }
   .site-nav {
     display: flex;
     align-items: center;
@@ -267,12 +271,20 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   html.menu-open .site-header { background: var(--c-forest) !important; color: var(--c-on-forest) !important; border-bottom-color: rgba(244,240,232,.14) !important; --logo-accent: var(--c-ember-on-forest) !important; }
   html.menu-open .site-header::before { display: none; }
 
-  @media (max-width: 980px) {
+  /* breakpoints are in rem so that a larger browser text size switches to the menu button earlier, instead of letting the
+     desktop navigation run out of room (980 px at the default size) */
+  @media (max-width: 61.25rem) {
     .site-nav { display: none; }
     .menu-toggle { display: inline-flex; }
-    .site-header__logo { height: 1.4rem; }
+    .site-header__logo { width: min(12.8rem, 56vw); }
   }
-  @media (min-width: 981px) {
+  @media (max-width: 22.5rem) {
+    .site-header__bar { gap: var(--s-3); }
+    .site-header__logo { width: min(11rem, 52vw); }
+    /* the word stays for assistive tech; on the narrowest bars (or large text) the icon alone is enough */
+    .menu-toggle__label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  }
+  @media (min-width: 61.3125rem) {
     .mobile-nav { display: none !important; }
   }
 </style>
@@ -351,7 +363,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       }
     }
   });
-  window.matchMedia('(min-width: 981px)').addEventListener('change', (m) => {
+  window.matchMedia('(min-width: 61.3125rem)').addEventListener('change', (m) => {
     if (m.matches && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
   });
 </script>

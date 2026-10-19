@@ -105,6 +105,7 @@
 .fyf__panel {
   grid-area: panel;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--s-5);
   align-content: start;
   min-width: 0;
@@ -195,7 +196,7 @@
   gap: var(--s-2) var(--s-5);
 }
 
-@media (min-width: 960px) {
+@media (min-width: 60rem) {
   .fyf {
     grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
     grid-template-areas: 'stage panel' 'tabs panel';

@@ -42,7 +42,7 @@ const ROWS: Row[] = [
   { key: 'fit', label: 'Suggested residential use', get: (m) => val(m.fit) },
 ];
 
-const NARROW = '(max-width: 640px)';
+const NARROW = '(max-width: 40rem)';
 
 export default function CompareTool({ models }: { models: ModelView[] }) {
   const ids = useMemo(() => models.map((m) => m.id), [models]);
@@ -127,38 +127,41 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
   return (
     <div className="cmp">
       <div className="cmp__bar">
-        {narrow ? (
-          <div className="cmp__pickers">
-            {([0, 1] as const).map((slot) => (
-              <div className="field" key={slot}>
-                <label htmlFor={`cmp-pick-${slot}`}>{slot === 0 ? 'Compare' : 'with'}</label>
-                <select id={`cmp-pick-${slot}`} className="select" value={selected[slot] ?? ids[slot]} onChange={(e) => pick(slot, e.target.value)}>
-                  {models.map((m) => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div role="group" aria-label="Choose models to compare" className="cmp__toggles">
-            {models.map((m) => (
-              <button
-                key={m.id}
-                type="button"
-                className="cmp__toggle"
-                aria-pressed={selected.includes(m.id)}
-                aria-describedby="cmp-hint"
-                onClick={() => toggle(m.id)}
-              >
-                {m.name}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* both control sets are always rendered and CSS shows one, so hydration never changes the layout */}
+        <div className="cmp__pickers">
+          {([0, 1] as const).map((slot) => (
+            <div className="field" key={slot}>
+              <label htmlFor={`cmp-pick-${slot}`}>{slot === 0 ? 'Compare' : 'with'}</label>
+              <select id={`cmp-pick-${slot}`} className="select" value={selected[slot] ?? ids[slot]} onChange={(e) => pick(slot, e.target.value)}>
+                {models.map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div>
+        <div role="group" aria-label="Choose models to compare" className="cmp__toggles">
+          {models.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              className="cmp__toggle"
+              aria-pressed={selected.includes(m.id)}
+              aria-describedby="cmp-hint"
+              onClick={() => toggle(m.id)}
+            >
+              {m.name}
+            </button>
+          ))}
+        </div>
         <div className="actions">
           <span className="cmp__hint" id="cmp-hint" role="status" aria-live="polite">
-            {note || (narrow ? 'Comparing two models at a time on a narrow screen.' : 'Compare two or three models.')}
+            {note || (
+              <>
+                <span className="cmp__hint-wide">Compare two or three models.</span>
+                <span className="cmp__hint-narrow">Comparing two models at a time on a narrow screen.</span>
+              </>
+            )}
           </span>
           <button type="button" className="text-link" onClick={reset} style={{ background: 'none', border: 0, borderBottom: '1px solid currentColor', cursor: 'pointer' }}>
             Reset

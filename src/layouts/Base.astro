@@ -25,8 +25,14 @@ interface Props {
   bodyClass?: string;
   /** approved social image (absolute path); defaults to the site-wide one when it has been approved */
   socialImage?: string | null;
+  /**
+   * Preload the two critical latin font files. Worth it where an image is the largest element (home, model pages):
+   * it removes the layout shift from the late font swap. On text-led pages it only adds bytes ahead of the text, so
+   * those pages leave it off.
+   */
+  preloadFonts?: boolean;
 }
-const { title, description, overHero = false, noindex = false, breadcrumbs, bodyClass = '', socialImage } = Astro.props;
+const { title, description, overHero = false, noindex = false, breadcrumbs, bodyClass = '', socialImage, preloadFonts = false } = Astro.props;
 const mode = currentMode();
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 const robots = isPreview() || noindex ? 'noindex, nofollow' : 'index, follow';
@@ -60,8 +66,8 @@ const crumbLd =
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#111c16" />
     {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="preload" href={newsreaderLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={manropeLatin} as="font" type="font/woff2" crossorigin />
+    {preloadFonts && <link rel="preload" href={newsreaderLatin} as="font" type="font/woff2" crossorigin />}
+    {preloadFonts && <link rel="preload" href={manropeLatin} as="font" type="font/woff2" crossorigin />}
     <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />

@@ -9,7 +9,7 @@ interface Props {
   initial?: string;
 }
 
-const SIZES = '(min-width: 960px) 66vw, 100vw';
+const SIZES = '(min-width: 60rem) 66vw, 100vw';
 const SCOPE = 'Delivery and installation are confirmed in your itemised quotation.';
 
 function Img({ m, active }: { m: ModelView; active: boolean }) {

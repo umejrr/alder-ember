@@ -2,6 +2,9 @@
 // 320 px (400% reflow) pass. Real rendering in Chromium; it does not replace testing on real iOS and Android devices.
 //   node tests/e2e/responsive.mjs [baseUrl]
 import { chromium } from 'playwright';
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const base = process.argv[2] || 'http://127.0.0.1:4321';
 const routes = ['/', '/saunas', '/saunas/rowan', '/saunas/alder', '/saunas/ember', '/compare', '/installation-delivery', '/installations', '/installations/preview-template',
@@ -42,15 +45,32 @@ for (const route of routes) {
     const page = await ctx.newPage();
     await page.goto(base + route, { waitUntil: 'networkidle' });
     await probe(page, `${route} @${w}`);
-    if (w === 390 || w === 1440) {
-      await page.addStyleTag({ content: 'html { font-size: 200% !important; }' }); // text enlarged to 200%
-      await page.waitForTimeout(150);
-      await probe(page, `${route} @${w} with text at 200%`);
-    }
     await ctx.close();
   }
 }
 await browser.close();
+
+// Text enlarged to 200% the way a visitor does it: the browser's own default font size is raised, so rem units and rem
+// breakpoints both follow it (injecting a root font-size from the page would not move media queries).
+const profile = mkdtempSync(join(tmpdir(), 'ae-textsize-'));
+mkdirSync(join(profile, 'Default'), { recursive: true });
+writeFileSync(join(profile, 'Default', 'Preferences'), JSON.stringify({ webkit: { webprefs: { default_font_size: 32, default_fixed_font_size: 26 } } }));
+const big = await chromium.launchPersistentContext(profile, { executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium', viewport: { width: 390, height: 900 } });
+const bigPage = big.pages()[0] ?? (await big.newPage());
+await bigPage.goto(base + '/', { waitUntil: 'networkidle' });
+const rootSize = await bigPage.evaluate(() => getComputedStyle(document.documentElement).fontSize);
+if (rootSize !== '32px') { console.log(`could not set the browser default font size (root is ${rootSize}); the 200% text pass was not run`); problems.push('200% text pass could not run'); }
+else {
+  // /brand is an internal specimen sheet that shows fixed-size mock-ups, so it is left out of the enlarged-text pass
+  for (const route of routes.filter((r) => r !== '/brand')) {
+    for (const w of [390, 768, 1440]) {
+      await bigPage.setViewportSize({ width: w, height: 900 });
+      await bigPage.goto(base + route, { waitUntil: 'networkidle' });
+      await probe(bigPage, `${route} @${w} with the browser text size at 200%`);
+    }
+  }
+}
+await big.close();
 console.log(`${checks} layout checks across ${routes.length} routes.`);
 if (problems.length) { console.log(problems.join('\n')); process.exit(1); }
 console.log('No horizontal overflow at any width, nor with text enlarged to 200%.');

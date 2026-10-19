@@ -20,7 +20,7 @@
 .gal__btn:hover { background: #fff; }
 .gal__zoom { position: absolute; right: 0.75rem; top: 0.75rem; }
 .gal__stage .pic__tag { z-index: 2; }
-.gal__thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); gap: var(--s-2); }
+.gal__thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr)); gap: var(--s-2); }
 .gal__thumb {
   position: relative; display: block; padding: 0; border: 1px solid var(--c-border);
   background: none; cursor: pointer; min-height: 44px; aspect-ratio: 4 / 3; overflow: hidden;
@@ -42,3 +42,12 @@
 .gal-dialog .gal__frame { aspect-ratio: 4 / 3; max-height: 74vh; width: 100%; }
 .gal-dialog .gal__btn { background: var(--c-canvas); }
 .gal-dialog__nav { display: flex; gap: var(--s-2); }
+
+/* on narrow screens the label would meet the "View larger" button, so it sits above the controls at the bottom-left */
+@media (max-width: 30rem) {
+  .gal__stage .pic__tag {
+    top: auto;
+    bottom: 62px;
+    max-width: calc(100% - 20px);
+  }
+}

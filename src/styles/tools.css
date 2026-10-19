@@ -11,7 +11,8 @@
 .cmp__toggle:hover { background: #fff; }
 .cmp__toggle[aria-pressed='true'] { background: var(--c-charcoal); color: var(--c-canvas); }
 .cmp__toggle[aria-pressed='true']::before { content: '✓'; content: '✓' / ''; font-size: 0.85em; }
-.cmp__pickers { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); width: 100%; }
+.cmp__pickers { display: none; grid-template-columns: 1fr 1fr; gap: var(--s-3); width: 100%; }
+.cmp__hint-narrow { display: none; }
 .cmp__hint { font-size: var(--fs-small); color: var(--c-muted); }
 .cmp-table { display: block; }
 .cmp-stack { display: none; }
@@ -27,15 +28,22 @@
 .cmp-stack .cmp-stack__name { display: block; font-family: var(--font-serif); font-size: 1.125rem; font-weight: 380; }
 .cmp-stack .cmp-stack__val { font-weight: 600; font-variant-numeric: tabular-nums lining-nums; overflow-wrap: anywhere; }
 .cmp-stack .cmp-stack__actions { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr)); gap: var(--s-3); padding-top: var(--s-4); }
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .cmp-table { display: none; }
   .cmp-stack { display: block; }
+  /* narrow screens compare two models: the controls, hint and columns are chosen here, before any script runs */
+  .cmp__pickers { display: grid; }
+  .cmp__toggles { display: none; }
+  .cmp__hint-wide { display: none; }
+  .cmp__hint-narrow { display: inline; }
+  .cmp-stack .cmp-stack__cells, .cmp-stack .cmp-stack__actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cmp-stack .cmp-stack__cells > :nth-child(n + 3), .cmp-stack .cmp-stack__actions > :nth-child(n + 3) { display: none; }
 }
 
 /* ---------- selector ---------- */
 .sel { display: grid; gap: var(--s-6); }
 .sel__grid { display: grid; gap: var(--s-6) var(--col-gap); }
-@media (min-width: 900px) { .sel__grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 56.25rem) { .sel__grid { grid-template-columns: 1fr 1fr; } }
 .sel fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--s-3); align-content: start; }
 .sel legend { padding: 0; margin-bottom: var(--s-2); font-weight: 700; }
 .sel .hint { font-size: var(--fs-small); color: var(--c-muted); }
@@ -78,7 +86,7 @@
 .enq fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--s-5); }
 .enq legend { padding: 0; font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; margin-bottom: var(--s-4); }
 .enq__row { display: grid; gap: var(--s-5) var(--col-gap); align-items: start; }
-@media (min-width: 720px) { .enq__row--2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 45rem) { .enq__row--2 { grid-template-columns: 1fr 1fr; } }
 .enq__prefill {
   display: grid; gap: var(--s-3); padding: 1rem 1.25rem; background: var(--c-surface);
   border: 1px solid var(--c-border); border-left: 4px solid var(--c-timber); border-radius: var(--radius);

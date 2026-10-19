@@ -67,7 +67,6 @@ await step('static links and React-created links both navigate within the bundle
   await page.getByRole('link', { name: 'Home', exact: true }).first().click().catch(() => {});
 });
 
-const here = (p) => new URL(base).pathname + p;
 const underPrefix = (href, from) => new URL(href, from).pathname.startsWith(new URL(base).pathname);
 
 await step('generated links are real hrefs under the project prefix, and open in a new tab (Ctrl-click)', async () => {

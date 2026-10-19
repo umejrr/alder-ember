@@ -77,7 +77,7 @@
   --t-reveal: 560ms;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   :root {
     --header-h: 64px;
   }

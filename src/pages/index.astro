@@ -29,6 +29,7 @@ const details = [
   title="Premium Outdoor Saunas | Alder & Ember"
   description="Premium outdoor saunas for UK gardens, planned around your space. Compare three models, see starting prices, and understand how site assessment and installation work."
   overHero
+  preloadFonts
 >
   <!-- Arrive: one large image, a short offer -->
   <section class="hero is-forest" data-hero aria-labelledby="hero-title">
@@ -103,7 +104,7 @@ const details = [
           <div class="materials__frames">
             {details.map((d) => (
               <div class="materials__frame" data-frame={d.id}>
-                <Picture id={d.asset} fill sizes="(min-width: 960px) 50vw, 100vw" />
+                <Picture id={d.asset} fill sizes="(min-width: 60rem) 50vw, 100vw" />
               </div>
             ))}
           </div>
@@ -111,7 +112,7 @@ const details = [
         <ol class="materials__list">
           {details.map((d, i) => (
             <li class="material" data-detail={d.id}>
-              <div class="material__pic"><Picture id={d.asset} sizes="(min-width: 640px) 70vw, 100vw" /></div>
+              <div class="material__pic"><Picture id={d.asset} sizes="(min-width: 40rem) 70vw, 100vw" /></div>
               <p class="material__n tnum" aria-hidden="true">{String(i + 1).padStart(2, '0')} · {d.label}</p>
               <h3 class="material__t">{d.title}</h3>
               <p class="material__b">{d.body}</p>
@@ -130,7 +131,7 @@ const details = [
         <p class="label muted">Installation</p>
         <h2 id="process-title">From your space to first use</h2>
         <p class="lead">We check the space and access before confirming your installation.</p>
-        <Picture id="site-access" class="process__pic" sizes="(min-width: 960px) 38vw, 100vw" />
+        <Picture id="site-access" class="process__pic" sizes="(min-width: 60rem) 38vw, 100vw" />
         <div class="process__split">
           <p><strong>We coordinate</strong> the assessment, specification, delivery and installation checks.</p>
           <p><strong>Ground preparation and electrical connection</strong> are assessed separately, and may need your own contractor.</p>
@@ -213,7 +214,7 @@ const details = [
         <p class="lead">Tell us where you’re based and what you have in mind. We’ll help you choose the next step.</p>
         <a class="btn" href="/plan-your-sauna">Plan your sauna</a>
       </div>
-      <div class="closing__media"><Picture id="closing-warmth" sizes="(min-width: 960px) 44vw, 100vw" /></div>
+      <div class="closing__media"><Picture id="closing-warmth" sizes="(min-width: 60rem) 44vw, 100vw" /></div>
     </div>
   </section>
 </Base>
@@ -339,7 +340,7 @@ const details = [
   .hero__copy > :nth-child(2) { animation-delay: 70ms; }
   .hero__copy > :nth-child(3) { animation-delay: 140ms; }
 
-  @media (max-width: 640px) {
+  @media (max-width: 40rem) {
     /* image first, then copy on a deep forest panel: legibility never depends on the photo */
     .hero {
       min-height: 0;
@@ -405,7 +406,7 @@ const details = [
   .materials__foot { margin-top: var(--s-8); max-width: 34rem; color: var(--c-on-forest-muted); font-size: var(--fs-small); border-top: 1px solid var(--rule); padding-top: var(--s-4); }
 
   /* wide screens, with scripting: one sticky stage that follows native scroll, plus equivalent buttons */
-  @media (min-width: 960px) {
+  @media (min-width: 60rem) {
     .materials.is-enhanced .materials__body {
       grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
       column-gap: clamp(3rem, 6vw, 7rem);
@@ -454,7 +455,7 @@ const details = [
     .materials.is-enhanced .material:not(.is-active) { opacity: 0.62; }
     .materials.is-enhanced .material:last-child { border-bottom: 1px solid var(--rule); }
   }
-  @media (min-width: 640px) and (max-width: 959px) {
+  @media (min-width: 40rem) and (max-width: 59.9375rem) {
     .material__pic { max-width: 36rem; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -515,13 +516,13 @@ const details = [
   }
   .commercial__copy { display: grid; gap: var(--s-4); }
   .commercial__copy .btn { justify-self: start; }
-  @media (min-width: 900px) {
+  @media (min-width: 56.25rem) {
     .commercial__inner { grid-template-columns: 1fr 1fr; align-items: start; gap: var(--s-8); }
   }
 
   /* closing section: shared styles live in global.css; only the media crop is specific to this page */
   .closing__media .pic { aspect-ratio: 4 / 3; }
-  @media (min-width: 960px) {
+  @media (min-width: 60rem) {
     .closing__media .pic { aspect-ratio: 5 / 4; }
   }
 </style>

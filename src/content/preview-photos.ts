@@ -27,7 +27,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [1280, 1920],
     avif: true,
     thumbWidth: 320,
-    credit: {"title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg", "author": "www.saunowisko.pl Lucjan Morawski", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg", "adapted": "Resized, cropped to 16:9, converted to avif and webp"},
+    credit: {"title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg", "author": "www.saunowisko.pl Lucjan Morawski", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg", "adapted": "Resized, cropped to 16:9, converted to AVIF and WebP"},
   },
   'hero-mobile': {
     file: '/images/preview/hero-mobile',
@@ -36,7 +36,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [480, 800],
     avif: true,
     thumbWidth: 320,
-    credit: {"title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg", "author": "www.saunowisko.pl Lucjan Morawski", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg", "adapted": "Resized, cropped to 4:5, converted to avif and webp"},
+    credit: {"title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg", "author": "www.saunowisko.pl Lucjan Morawski", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg", "adapted": "Resized, cropped to 4:5, converted to AVIF and WebP"},
   },
   'rowan-exterior': {
     file: '/images/preview/rowan-exterior',
@@ -45,7 +45,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [640, 1280],
     avif: true,
     thumbWidth: 320,
-    credit: {"title": "Heretty - sauna.jpg", "author": "Tiia Monto", "license": "CC BY-SA 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Heretty_-_sauna.jpg", "adapted": "Resized, cropped to 3:2, converted to avif and webp, colour saturation reduced"},
+    credit: {"title": "Heretty - sauna.jpg", "author": "Tiia Monto", "license": "CC BY-SA 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Heretty_-_sauna.jpg", "adapted": "Resized, cropped to 3:2, converted to AVIF and WebP, colour saturation reduced"},
   },
   'alder-exterior': {
     file: '/images/preview/alder-exterior',
@@ -54,7 +54,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [640, 1267],
     avif: true,
     thumbWidth: 320,
-    credit: {"title": "Cabin next to the Frøylandsvatnet, Sandnes, Norway julesvernex2.jpg", "author": "Jules Verne Times Two", "license": "CC BY-SA 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cabin_next_to_the_Fr%C3%B8ylandsvatnet,_Sandnes,_Norway_julesvernex2.jpg", "adapted": "Resized, cropped to 3:2, converted to avif and webp, colour saturation reduced"},
+    credit: {"title": "Cabin next to the Frøylandsvatnet, Sandnes, Norway julesvernex2.jpg", "author": "Jules Verne Times Two", "license": "CC BY-SA 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cabin_next_to_the_Fr%C3%B8ylandsvatnet,_Sandnes,_Norway_julesvernex2.jpg", "adapted": "Resized, cropped to 3:2, converted to AVIF and WebP, colour saturation reduced"},
   },
   'ember-exterior': {
     file: '/images/preview/ember-exterior',
@@ -63,7 +63,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [640, 1280],
     avif: true,
     thumbWidth: 320,
-    credit: {"title": "Saunowisko w Krągu 01.jpg", "author": "www.saunowisko.pl Lucjan Morawski", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_01.jpg", "adapted": "Resized, cropped, converted to avif and webp"},
+    credit: {"title": "Saunowisko w Krągu 01.jpg", "author": "www.saunowisko.pl Lucjan Morawski", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/", "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_01.jpg", "adapted": "Resized, converted to AVIF and WebP"},
   },
   'rowan-interior': {
     file: '/images/preview/rowan-interior',

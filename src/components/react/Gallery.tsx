@@ -9,11 +9,11 @@ function Frame({ img, eager = false }: { img: Img; eager?: boolean }) {
   return img.src ? (
     <>
       <picture>
-        {img.srcsetAvif && <source type="image/avif" srcSet={assetSrcset(img.srcsetAvif)} sizes="(min-width: 960px) 58vw, 100vw" />}
+        {img.srcsetAvif && <source type="image/avif" srcSet={assetSrcset(img.srcsetAvif)} sizes="(min-width: 60rem) 58vw, 100vw" />}
         <img
           src={assetUrl(img.src)}
           srcSet={assetSrcset(img.srcset)}
-          sizes="(min-width: 960px) 58vw, 100vw"
+          sizes="(min-width: 60rem) 58vw, 100vw"
           alt={img.alt}
           style={{ objectPosition: img.pos }}
           loading={eager ? 'eager' : 'lazy'}

@@ -39,7 +39,7 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'The saunas', href: '/sau
 const cap = resolve(product.capacity);
 const pendingText = 'Confirmed against the approved drawings during your site review';
 ---
-<Base title={product.seoTitle} description={product.seoDescription} breadcrumbs={crumbs} bodyClass="has-sticky-cta">
+<Base title={product.seoTitle} description={product.seoDescription} breadcrumbs={crumbs} bodyClass="has-sticky-cta" preloadFonts>
   <!-- Top: gallery + decision panel -->
   <section class="product-top container" data-product-top>
     <Breadcrumbs items={crumbs} />
@@ -85,7 +85,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   <section class="chapter is-forest is-forest-gradient" id="overview" aria-labelledby="why-title">
     <div class="container grid-12 chapter__grid">
       <div class="c-6 reveal">
-        <Picture id={`${product.id}-interior`} sizes="(min-width: 960px) 46vw, 100vw" />
+        <Picture id={`${product.id}-interior`} sizes="(min-width: 60rem) 46vw, 100vw" />
       </div>
       <div class="c-5 c-start-8 chapter__copy">
         <p class="label">Why the {product.shortName}</p>
@@ -303,7 +303,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   .product-top { padding-top: clamp(0.5rem, 1.5vw, 1.25rem); padding-bottom: var(--section-tight); }
   .product-top__grid { align-items: start; }
   .product-top__panel { min-width: 0; }
-  .product-top__sticky { display: grid; gap: var(--s-4); }
+  .product-top__sticky { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
   .ppanel__lead { font-size: var(--fs-small); }
   .ppanel__summary { display: grid; gap: 0.15rem; }
   .ppanel__summary-text { font-weight: 600; }
@@ -316,7 +316,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   .local-nav a:hover { color: var(--c-charcoal); }
   .local-nav a[aria-current='true'] { color: var(--c-charcoal); border-bottom-color: var(--c-ember); }
   section[id] { scroll-margin-top: calc(var(--header-h) + 3.5rem); }
-  @media (min-width: 960px) {
+  @media (min-width: 60rem) {
     .product-top__sticky { position: sticky; top: calc(var(--header-h) + 1.25rem); }
   }
   .ppanel { display: grid; gap: var(--s-4); padding-top: var(--s-4); border-top: var(--border); }
@@ -338,7 +338,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   .tick-list li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 0.75rem; height: 1px; background: var(--c-ember-on-forest); }
 
   .spec-groups { display: grid; gap: var(--s-7); }
-  @media (min-width: 1100px) { .spec-groups { grid-template-columns: 1fr 1fr; gap: var(--s-6); align-items: start; } }
+  @media (min-width: 68.75rem) { .spec-groups { grid-template-columns: 1fr 1fr; gap: var(--s-6); align-items: start; } }
   .spec-groups h3 { margin-bottom: var(--s-3); }
   .choices { display: grid; border-top: var(--border); }
   .choices li { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem var(--s-3); align-items: center; padding: 1rem 0; border-bottom: var(--border); }
@@ -361,7 +361,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   }
   .sticky-cta__name { font-size: 1.25rem; }
   .sticky-cta .btn { min-height: 44px; padding-block: 0.5rem; }
-  @media (max-width: 959px) {
+  @media (max-width: 59.9375rem) {
     .sticky-cta.is-on { display: flex; }
     body.has-sticky-cta .site-footer { padding-bottom: 6rem; }
   }

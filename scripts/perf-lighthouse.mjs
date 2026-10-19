@@ -10,8 +10,12 @@ import { join } from 'node:path';
 const base = (process.argv[2] || 'http://127.0.0.1:4321').replace(/\/$/, '');
 const runs = Number(process.argv[3] || 3);
 const out = process.argv[4];
-const pages = [['Home', '/'], ['Model (Alder)', '/saunas/alder'], ['Compare', '/compare'], ['Enquiry', '/plan-your-sauna']];
-const presets = [['mobile', []], ['desktop', ['--preset=desktop']]];
+// PERF_PAGES=Home,Enquiry and PERF_PRESETS=mobile narrow a run (for example when checking one change)
+const only = (name) => (process.env[name] ? process.env[name].split(',').map((x) => x.trim().toLowerCase()) : null);
+const pageFilter = only('PERF_PAGES');
+const presetFilter = only('PERF_PRESETS');
+const pages = [['Home', '/'], ['Model (Alder)', '/saunas/alder'], ['Compare', '/compare'], ['Enquiry', '/plan-your-sauna']].filter(([l]) => !pageFilter || pageFilter.some((f) => l.toLowerCase().startsWith(f)));
+const presets = [['mobile', []], ['desktop', ['--preset=desktop']]].filter(([l]) => !presetFilter || presetFilter.includes(l));
 const chrome = process.env.CHROME_PATH || '/opt/pw-browsers/chromium';
 const dir = mkdtempSync(join(tmpdir(), 'lh-'));
 const median = (a) => { const s = [...a].sort((x, y) => x - y); return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2; };
