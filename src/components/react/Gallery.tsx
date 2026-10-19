@@ -17,6 +17,7 @@ function Frame({ img, eager = false }: { img: Img; eager?: boolean }) {
           alt={img.alt}
           style={{ objectPosition: img.pos }}
           loading={eager ? 'eager' : 'lazy'}
+          fetchPriority={eager ? 'high' : undefined}
           decoding="async"
         />
       </picture>

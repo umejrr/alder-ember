@@ -22,7 +22,15 @@ Every fault was reproduced against the source first, then fixed, then covered by
 | A10 | Reveal depended on a script that could fail after hiding content | Content is visible by default. `<html>` only gets `reveal-armed` after setup completes, and elements already on screen are never hidden | Journey: a throwing `IntersectionObserver`, no JavaScript, and reduced motion all leave every reveal element visible |
 | A11 | Mobile compare was ambiguous | Two explicit selectors that swap on a clash and say so; desktop explains why a comparison keeps two models; the price qualification sits beside each price | Journey at 375 px |
 
-The static test also caught a real bug introduced along the way: React's server renderer writes `srcSet` in camelCase, which the build-time URL rewrite missed, so responsive images would have 404ed from a sub-path. It is fixed and the rewrite's self-check is now case-insensitive.
+## Found while verifying (not in the audit)
+
+New checks were added as the work went on, and each found something real that is now fixed:
+
+- **A sub-path bug.** React's server renderer writes `srcSet` in camelCase, which the build-time URL rewrite missed, so responsive images would have 404ed from a sub-path. The rewrite and its self-check are now case-insensitive.
+- **Layout at 320 px and at large text.** A new sweep (`npm run responsive`) found that the enlarged logo plus the menu button overflowed the header at 320 px; and, with the browser's own text size raised to 200%, the header, the 12-column grid (its eleven gaps alone were wider than a phone), long headings and several columns overflowed. Breakpoints are now in rem, the grid is one column until twelve fit, the lockup is width-constrained, and long words wrap. The sweep injects the browser's default font size, so rem breakpoints react as they would for a real visitor.
+- **A performance trade-off, measured rather than assumed.** Preloading the two fonts removed the home page's late-swap layout shift but made mobile Compare and Enquiry slower to show their first text (LCP up 1 to 2 s in Lighthouse's model), so the preload is now limited to the image-led pages. Compare's own hydration shift (CLS 0.072) was removed by rendering both control sets and letting CSS choose.
+- **Hero text over the photograph.** Axe cannot sample images, so a new check (`npm run hero`) hides the copy, captures what is behind it and measures contrast. On the first run the headline came out at 1.8:1 to 2.6:1 from 769 to 1440 px where it meets the lit wall of the cabin; the scrim was strengthened and the headline is now 3.7:1 or better at every desktop width, the lead paragraph 5.5:1 or better.
+- **The stock label met the gallery buttons at 320 px**, and the Rowan page now says in words when a heating preference was carried over from another model and changed.
 
 ## The creative direction
 

@@ -6,7 +6,7 @@ dist
 !.env.example
 data/outbox
 test-results
-screenshots
+/screenshots
 *.log
 dist-prod
 dist-static

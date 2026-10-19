@@ -27,7 +27,8 @@
     "e2e:static": "STATIC_BASE=/a/b/c/ OUT_DIR=dist-static-test node scripts/build-static.mjs && node tests/e2e/static-bundle.mjs",
     "images": "python3 scripts/images/build-preview-photos.py",
     "perf": "node scripts/perf-lighthouse.mjs",
-    "responsive": "node tests/e2e/responsive.mjs"
+    "responsive": "node tests/e2e/responsive.mjs",
+    "hero": "node tests/e2e/hero-legibility.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",

@@ -293,9 +293,9 @@ const details = [
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(60% 55% at 14% 78%, rgba(10, 16, 12, 0.62) 0%, rgba(10, 16, 12, 0) 72%),
+      radial-gradient(70% 62% at 24% 76%, rgba(10, 16, 12, 0.72) 0%, rgba(10, 16, 12, 0) 76%),
       linear-gradient(0deg, rgba(10, 16, 12, 0.78) 0%, rgba(10, 16, 12, 0.4) 30%, rgba(10, 16, 12, 0) 58%),
-      linear-gradient(90deg, rgba(10, 16, 12, 0.5) 0%, rgba(10, 16, 12, 0.22) 34%, rgba(10, 16, 12, 0) 56%);
+      linear-gradient(90deg, rgba(10, 16, 12, 0.6) 0%, rgba(10, 16, 12, 0.38) 36%, rgba(10, 16, 12, 0) 62%);
   }
   .hero__tag {
     position: absolute;
@@ -330,7 +330,7 @@ const details = [
     vertical-align: middle;
     background: var(--c-ember-on-forest);
   }
-  /* sized so the headline ends before the cabin's doorway in the photograph (never across the door) */
+  /* sized so the headline ends before the cabin's doorway; the scrim keeps it legible where it meets the wall (npm run hero measures this) */
   .hero__headline { max-width: 13ch; font-size: clamp(2.375rem, 1.1rem + 3.9vw, 4.25rem); }
   .hero__copy .lead { color: var(--c-on-forest); max-width: 28em; }
   .hero .btn--secondary { --btn-border: rgba(244, 240, 232, 0.7); }

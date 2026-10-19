@@ -1,22 +1,30 @@
 # Test report
 
-Everything below was actually run on 7 October 2026 against this repository, in Chromium only, in a cloud container. Where something could not be verified, that is stated at the end rather than implied.
+Everything below was actually run on 19 October 2026 against the review branch (`claude/audit-upgrade-review`), in Chromium only, in a cloud container. Where something could not be verified, that is stated at the end rather than implied. The audit this follows is answered item by item in [audit-response.md](audit-response.md).
 
 ## Automated checks (all passing)
 
 | Check | Command | Result |
 |---|---|---|
-| Unit tests | `npm test` | **49 passed** in 3 files |
-| Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 89 files (Astro, TypeScript, React) |
+| Unit tests | `npm test` | **69 passed** in 4 files |
+| Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 92 files (Astro, TypeScript, React) |
 | Contrast | `npm run contrast` | **20 pairs pass, 0 fail** (text pairs at 4.5:1, controls and focus at 3:1) |
 | Broken links, anchors, assets | `npm run crawl` on a preview build | **25 pages crawled, none broken** |
-| Same crawl on a production build | server on `dist-prod/`, then `npm run crawl` | **16 pages crawled, none broken** (guides and installations links correctly disappear) |
 | Production leak check | `npm run check:production` | **Pass.** 17 HTML files scanned: no working price, dimension, capacity or lead time, no preview notice, no draft or unapproved route, correct robots rules, sitemap contains only real pages. Reports 10 pages still showing labelled stock preview images as a **launch blocker** (expected) |
-| Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 24 routes at 1440 px and 375 px. The scan was proven able to fail by injecting an alt-less image, which it caught |
-| Browser journeys | `npm run e2e` | **11 of 11 steps pass** (below) |
-| Horizontal overflow | scripted sweep, 22 routes | **None** at 320, 375, 390, 768, 1024, 1440 and 1920 px |
-| Static bundle from a nested sub-path | `npm run build:static && npm run e2e:static` | **8 of 8 steps pass**, also when wrapped in a simulated host page skeleton: styles and fonts load, islands hydrate, static and React-created links navigate, every page loads, compare and gallery work, the demo form sends no request, the mobile menu works, and **no request escaped the sub-path**. With the stock photos in place this caught a real bug: React's server renderer writes `srcSet` in camelCase, which the build-time URL rewrite missed, so responsive images would have 404ed on a sub-path host. Fixed and covered |
-| Logo SVG validity | `npm run logo` | All 25 files are well-formed XML (this caught a real bug: unescaped `&` made the logo unusable as an image file) |
+| Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 24 routes at 1440 px and 375 px |
+| Browser journeys | `npm run e2e` | **20 of 20 steps pass** (below) |
+| Layout sweep | `npm run responsive` | **227 checks, no horizontal overflow**: 23 routes at 320, 375, 390, 768, 1024, 1440 and 1920 px, and 22 routes at 390, 768 and 1440 px with the browser's own default text size raised to 200% (the internal `/brand` specimen sheet is excluded from that pass) |
+| Hero text legibility | `npm run hero` | **Pass at 769, 1024, 1280, 1440, 1920 and 2560 px.** The copy is hidden, what sits behind it is captured, and contrast is taken against the brightest 1% of those pixels: headline 3.7:1 or better (large text needs 3:1), lead paragraph 5.5:1 or better (needs 4.5:1). Axe cannot sample photographs, so this is the only check of text over the hero image |
+| Static bundle from a nested sub-path | `npm run e2e:static` | **10 of 10 steps pass**: styles, fonts and islands load from `/a/b/c/`; static and React-created links navigate; every generated link is a real `href` under the prefix and a Ctrl-click opens a new tab inside it; five nested missing URLs return 404 with the branded, styled page and working recovery links; every page loads; compare and the gallery work; the demo form sends no request; the mobile menu works; and **no request escaped the prefix** |
+| Logo SVG validity | `npm run logo` | All 25 files are well-formed XML |
+
+**Negative controls.** The nested-404 step was run against a bundle built without the base anchor and **failed**, as it should. The hero check was run against the previous scrim and **failed** at 769, 1024, 1280 and 1440 px (headline 1.8:1 to 2.6:1 where it crosses the cabin wall); that is what it caught and the scrim now fixes. The responsive sweep failed before the fixes below: its first run found the 320 px header overflow, the 200% text overflows in the header, the 12-column grid and long headings, and the gallery label collision.
+
+### What the audit follow-up added
+
+- **Unit tests (20 new):** the base-aware link helper (relative and absolute root markers, query strings and fragments, assets, external links); the model-id allowlist (six inherited names, unknown, empty, real); the one heating rule (Rowan and wood-burning becomes advice with a reason, valid pairs untouched, incoming URLs and saved state reconciled); server validation rejecting the contradictory pair while keeping people and changing area in the payload.
+- **Journey steps (9 new):** one arrow key press moves exactly one gallery image (dialog and inline, with wrap); changing the model reconciles the heating preference and says so; an incoming contradictory URL is reconciled; carried people and changing area are visible, editable, and the confirmation uses the edited values; Clear removes the preference parameters from the address bar and leaves `utm_source` and the fragment; the product page explains a heating preference carried from another model; a selector result never outlives its answers; reveal content stays visible when the script throws, with no JavaScript, and with reduced motion; a desktop comparison keeps two models and says why; mobile compare uses two explicit selectors with price context beside each price. The explorer step also checks that only the visible model's image is in the page up front and that the stage keeps a 3:2 ratio.
+- **Static-bundle steps (2 new):** native-link behaviour and nested 404s, as above.
 
 ### What the unit tests cover (behaviours where a failure would mislead a customer or lose an enquiry)
 
@@ -43,27 +51,25 @@ Everything below was actually run on 7 October 2026 against this repository, in 
 ## Manual verification
 
 - **Live enquiry path against a local mock of HubSpot** (the real server, `ENQUIRY_MODE=live`): delivered when the CRM is up; the same idempotency key returned the same response with no second record; with the CRM failing the enquiry was accepted but reported **queued** (and recorded as failed, attempts 1) rather than delivered; `npm run outbox:retry` then delivered it (attempts 2); cross-origin and honeypot requests were rejected (403 and 400); invalid bodies returned field errors; outbox files were created with mode 600. The mock received the mapped fields.
-- **Visual review** of the home page, collection, a model page, compare, enquiry, installation & delivery and the brand sheet at 1440 px and 390 px, in full-page screenshots (see `docs/screenshots/`). This found and fixed: collapsing grid columns, double gutters on mobile, an overlapping zoom button, the product enquiry action sitting too far down on mobile, misaligned form fields, and a mobile menu that covered its own Close button when the preview bar was above the header.
+- **Visual review** of the home page, collection, a model page, compare, enquiry, installation & delivery and the brand sheet at 1440 px (desktop) and 390 px (mobile), in screenshots regenerated from the final build (`docs/screenshots/`, captured with `npm run shots` at 1440 × 900 and 390 × 844, full-page captures up to 9254 px tall). This found and fixed: collapsing grid columns, double gutters on mobile, an overlapping zoom button, the product enquiry action sitting too far down on mobile, misaligned form fields, and a mobile menu that covered its own Close button when the preview bar was above the header. In this round, looking at the hero found the headline sitting over the lit wall of the cabin at some widths; the contrast figure above is what that review turned into.
 - **Logo** inspected at 16, 24, 32 and 48 px, as a favicon, in the header, on forest, on a photographic gradient and as an avatar. Three directions were drawn and compared; one was rejected.
 
-## Local indicators (not performance guarantees)
+## Performance (lab only)
 
-Measured with an unthrottled local browser on a localhost server with **no real images**, so they say little about the live site. Uncompressed transfer: HTML about 52 KB per page, CSS about 31 KB, fonts about 153 KB (Newsreader and Manrope latin subsets), and about 234 KB of JavaScript on pages with React islands (model pages, compare). The home page ships about 1 KB until the model showcase scrolls into view. Layout shift in these runs was 0.000 to 0.046 (the highest was on mobile compare, from the two-model default applying after hydration). **No Lighthouse or field Core Web Vitals run has been done**: that needs real images on a real host.
+Lighthouse 12, median of three runs per page and device, before and after, with the same script and settings: see [performance.md](performance.md). They are lab numbers from one machine, taken just before the final CSS-only change to the hero scrim (a background gradient, so no network or layout effect was expected, but the benchmark was not repeated after it). **No field Core Web Vitals and no Lighthouse run against the live host have been collected.**
 
 ## Hosted preview
 
-**GitHub Pages (public):** https://umejrr.github.io/alder-ember/ . The browser checks above were run against the live address (`LIVE_URL=https://umejrr.github.io/alder-ember/ npm run e2e:static`) on 7 October 2026: **8 of 8 steps passed**, including every page loading, hydration, navigation, the demo form and the mobile menu, with no console or network errors.
-
-The preview is published as a private Artifact. It could not be opened from this container (claude.ai needs a login), so the hosted page itself has **not** been seen rendering. What was verified instead is that the identical files work from a nested sub-path behind a host-style page wrapper (above). Not verified there: the host's content-security policy and sandbox behaviour with the island scripts, whether the host keeps query strings on in-page navigation (model choice also travels in session storage, so the main flows do not depend on them), and printing or embedding.
+The **live GitHub Pages site (https://umejrr.github.io/alder-ember/) is still the audited build**: this work is on the review branch, which the Pages workflow does not watch, so nothing was published. The earlier live checks (7 October, and 19 October for reachability) therefore say nothing about this branch. The identical static bundle was tested from a nested sub-path with a host-style 404 fallback (above); publishing it is a separate, explicit step.
 
 ## Not verified, and why
 
 - **A real HubSpot portal.** None was supplied; the adapter follows the documented endpoint and has only been tested against a mock. Property names are placeholders.
 - **Screen readers and keyboard use on real devices.** Only automated axe checks and scripted keyboard journeys have been run, in Chromium. NVDA, JAWS, VoiceOver and TalkBack have not been used. WCAG 2.2 AA is a target, not a claim.
-- **Other browsers.** Firefox and Safari have not been tested (the `:has()` selected-state styling, `<dialog>` and native `<details>` are all widely supported but unchecked here).
-- **Alder & Ember photography.** The site uses 16 openly licensed stock photographs as clearly labelled previews (see [image-credits.md](image-credits.md)). Crop, focal points, heading-over-image contrast and responsive WebP delivery were checked against these, but not against the real product, installation or site photography, which does not exist yet. Stock photos are atmosphere only: none shows the Rowan, Alder or Ember, and every one is tagged on the page. AVIF delivery and image performance budgets are untested.
+- **Other browsers and real devices.** Firefox, Safari (WebKit), and iOS and Android devices have not been tested: only Chromium is installed here, and the instructions for this environment say not to install others. The `:has()` selected-state styling, `<dialog>`, native `<details>`, `overflow-wrap: anywhere`, AVIF and `<picture>` are all widely supported but unchecked outside Chromium.
+- **Alder & Ember photography.** The site uses 17 openly licensed stock photographs as clearly labelled previews (see [image-credits.md](image-credits.md)). Crop, focal points, heading-over-image contrast and AVIF/WebP delivery were checked against these, but not against the real product, installation or site photography, which does not exist yet. Stock photos are atmosphere only: none shows the Rowan, Alder or Ember, and every one is tagged on the page.
 - **A deployed environment.** No HTTPS host, CDN, caching, shared rate-limit store or multi-instance behaviour.
 - **Email.** No confirmation or alert emails exist.
 - **Print** reproduction of the logo, and **trademark clearance** of the identity.
-- **Zoom and text-scaling at 200 to 400 percent** were exercised only through the narrow-width sweep (320 px), not with real browser zoom.
+- **Zoom and text-scaling.** 400% reflow is approximated by the 320 px width, and 200% text by raising Chromium's default font size (a faithful emulation of the setting, run in `npm run responsive`). Real browser zoom, and text-only zoom in Safari or Firefox, were not run. Overflow was checked; clipped or overlapping content at large text was only reviewed on a few pages by eye.
 - **Reference sites**: only the homepages' opening views (and Heritage's full page) were inspected; see [references.md](references.md).

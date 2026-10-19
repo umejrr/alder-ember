@@ -29,7 +29,7 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 | `npm run check` | Type-check Astro, TypeScript and React (`astro check`) |
 | `npm run build:production` | Production-mode build (hides unapproved values and routes) |
 | `npm run check:production` | Builds in production mode and scans the output for leaked working values, drafts and unapproved routes |
-| `npm run e2e` / `npm run a11y` / `npm run responsive` | Browser journey checks / axe accessibility scan / layout sweep at seven widths and 200% text (need a running build: `npm run build && npm run serve`; the enquiry API rate-limits, so restart the server between `e2e` runs) |
+| `npm run e2e` / `npm run a11y` / `npm run responsive` / `npm run hero` | Browser journey checks / axe accessibility scan / layout sweep at seven widths and 200% text / contrast of the hero copy over the photograph (need a running build: `npm run build && npm run serve`; the enquiry API rate-limits, so restart the server between `e2e` runs) |
 | `npm run build:static` | Static, sub-path-safe preview bundle (`STATIC_BASE=/repo-name/` anchors `404.html` for a project-page host) |
 | `npm run e2e:static` | Builds a bundle anchored to `/a/b/c/` and tests it from there: styles, islands, native (Ctrl-click) links, nested 404s, the demo form, and that no request escapes the prefix |
 | `npm run images` | Rebuilds the stock preview photographs (AVIF, WebP, crops, credits) from `scripts/images/preview-photos.manifest.json` |
