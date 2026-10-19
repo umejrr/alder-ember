@@ -8,6 +8,7 @@ import ConsentBanner from '@/components/ConsentBanner.astro';
 import { currentMode, isPreview } from '@/lib/mode';
 import { previewNotice, site } from '@/content/site';
 import { absoluteUrl } from '@/lib/site-url';
+import { resolve } from '@/lib/mode';
 
 export interface Crumb { label: string; href?: string }
 interface Props {
@@ -19,12 +20,17 @@ interface Props {
   noindex?: boolean;
   breadcrumbs?: Crumb[];
   bodyClass?: string;
+  /** approved social image (absolute path); defaults to the site-wide one when it has been approved */
+  socialImage?: string | null;
 }
-const { title, description, overHero = false, noindex = false, breadcrumbs, bodyClass = '' } = Astro.props;
+const { title, description, overHero = false, noindex = false, breadcrumbs, bodyClass = '', socialImage } = Astro.props;
 const mode = currentMode();
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 const robots = isPreview() || noindex ? 'noindex, nofollow' : 'index, follow';
 const canonical = absoluteUrl(path);
+// a social image only ever comes from approved content, and only as an absolute URL: never a stock preview
+const socialPath = socialImage === undefined ? resolve(site.socialImage) : socialImage;
+const socialUrl = socialPath ? absoluteUrl(socialPath) : null;
 
 // BreadcrumbList only when the real domain is known and the trail mirrors visible navigation.
 const crumbLd =
@@ -59,6 +65,12 @@ const crumbLd =
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_GB" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {socialUrl && <meta property="og:image" content={socialUrl} />}
+    <meta name="twitter:card" content={socialUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {socialUrl && <meta name="twitter:image" content={socialUrl} />}
     {crumbLd && <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />}
     <script is:inline>
       document.documentElement.classList.add('js');

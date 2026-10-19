@@ -45,9 +45,15 @@ const topics = [
         <h2 id="guidance-title">Looking after your sauna</h2>
         <p class="muted" style="margin-top: var(--s-4)">Guidance is specific to your model and equipment, and comes from approved instructions rather than general advice.</p>
       </div>
-      <dl class="c-8 facts care-list">
-        {topics.map(([t, d]) => <div><dt>{t}</dt><dd><span class="sub" style="color: inherit; font-weight: 500">{d}</span><span class="pending">Published here once approved.</span></dd></div>)}
-      </dl>
+      <ul class="c-8 care-grid">
+        {topics.map(([t, d]) => (
+          <li>
+            <h3 class="care-grid__t">{t}</h3>
+            <p class="muted">{d}</p>
+            <p class="pending">Published here once approved.</p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -78,6 +84,8 @@ const topics = [
 </Base>
 
 <style is:global>
-  .care-list dt { font-weight: 700; color: var(--fg); font-size: var(--fs-body); }
-  .care-list > div { grid-template-columns: minmax(10rem, 15rem) 1fr; }
+  .care-grid { display: grid; border-top: var(--border); }
+  .care-grid li { display: grid; gap: var(--s-1); padding: var(--s-4) 0; border-bottom: var(--border); align-content: start; }
+  .care-grid__t { font-size: var(--fs-h3); }
+  @media (min-width: 760px) { .care-grid { grid-template-columns: 1fr 1fr; column-gap: var(--s-7); } }
 </style>

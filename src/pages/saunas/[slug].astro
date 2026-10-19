@@ -53,28 +53,36 @@ const pendingText = 'Confirmed against the approved drawings during your site re
           <h1>{product.name}</h1>
           <p class="lead">{product.position}</p>
           <ModelFacts product={product} rows={['capacity', 'exterior']} />
-          <PriceBlock product={product} />
-          {
-            leadTime && (
-              <p class="product-top__lead">
-                <span class="label muted">Estimated lead time{isWorking(product.leadTime) ? ' (working figure)' : ''}</span><br />
-                {leadTime}
-              </p>
-            )
-          }
+          <PriceBlock product={product} compact />
           <ProductPanel
             client:load
             model={view}
             heating={heating}
             compareIds={productList.map((p) => p.id)}
+            leadTime={leadTime}
+            leadWorking={isWorking(product.leadTime)}
           />
         </div>
       </aside>
     </div>
   </section>
 
+  <!-- Local navigation: sticks under the site header, marks the section in view -->
+  <nav class="local-nav" aria-label={`${product.name} sections`} data-local-nav>
+    <div class="container">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#specifications">Dimensions</a></li>
+        <li><a href="#included">What’s included</a></li>
+        <li><a href="#heating">Heating</a></li>
+        <li><a href="#planning">Installation</a></li>
+        <li><a href="#faqs">Questions</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <!-- 1. Why this model: atmosphere chapter -->
-  <section class="chapter is-forest is-forest-gradient" aria-labelledby="why-title">
+  <section class="chapter is-forest is-forest-gradient" id="overview" aria-labelledby="why-title">
     <div class="container grid-12 chapter__grid">
       <div class="c-6 reveal">
         <Picture id={`${product.id}-interior`} sizes="(min-width: 960px) 46vw, 100vw" />
@@ -92,10 +100,10 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   <section class="section" id="specifications" aria-labelledby="spec-title">
     <div class="container grid-12">
       <div class="c-4">
-        <p class="label muted">Dimensions &amp; specifications</p>
-        <h2 id="spec-title">The numbers, kept separate</h2>
+        <p class="label muted">The {product.shortName}</p>
+        <h2 id="spec-title">Dimensions &amp; site planning</h2>
         <p class="muted" style="margin-top: var(--s-4)">
-          Cabin size, room size and installation requirements are different things. We do not calculate the footprint you need from the cabin size.
+          The cabin and the space it needs are different things. We confirm the base, clearances and access for your site, rather than working them out from the cabin size.
         </p>
       </div>
       <div class="c-8 spec-groups">
@@ -128,8 +136,8 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   <section class="section is-surface" id="included" aria-labelledby="included-title">
     <div class="container grid-12">
       <div class="c-4">
-        <p class="label muted">What’s included</p>
-        <h2 id="included-title">The package, and the installation scope</h2>
+        <p class="label muted">The package</p>
+        <h2 id="included-title">What’s included</h2>
       </div>
       <div class="c-8 two-col">
         <div>
@@ -168,7 +176,7 @@ const pendingText = 'Confirmed against the approved drawings during your site re
     <div class="container grid-12">
       <div class="c-4">
         <p class="label muted">Heating &amp; options</p>
-        <h2 id="heating-title">Choices to talk through</h2>
+        <h2 id="heating-title">Heating options</h2>
         <p class="muted" style="margin-top: var(--s-4)">
           What you choose here is a preference. We confirm the configuration, and what is possible on your site, in your quotation.
         </p>
@@ -206,8 +214,8 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   <section class="section is-surface" id="planning" aria-labelledby="planning-title">
     <div class="container grid-12">
       <div class="c-5">
-        <p class="label muted">Planning, delivery &amp; installation</p>
-        <h2 id="planning-title">Checked before your order is confirmed</h2>
+        <p class="label muted">Planning</p>
+        <h2 id="planning-title">Delivery &amp; installation</h2>
         <p class="lead">We check the space and access before confirming your installation.</p>
         <p style="margin-top: var(--s-5)"><a class="text-link" href="/installation-delivery">View installation guidance <span class="arrow" aria-hidden="true">→</span></a></p>
       </div>
@@ -237,8 +245,8 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   <section class="section" id="faqs" aria-labelledby="faq-title">
     <div class="container grid-12">
       <div class="c-4">
-        <p class="label muted">Questions about the {product.shortName}</p>
-        <h2 id="faq-title">Good to know</h2>
+        <p class="label muted">Good to know</p>
+        <h2 id="faq-title">Questions about the {product.shortName}</h2>
         <p class="muted" style="margin-top: var(--s-4)">
           After handover you have an accessible first point of contact for care questions. See <a href="/care-support">care &amp; support</a> and the <a href="/warranty">warranty</a> page.
         </p>
@@ -292,11 +300,22 @@ const pendingText = 'Confirmed against the approved drawings during your site re
 </Base>
 
 <style is:global>
-  .product-top { padding-top: calc(var(--header-h) + clamp(1rem, 2vw, 2rem)); padding-bottom: var(--section-tight); }
+  .product-top { padding-top: clamp(0.5rem, 1.5vw, 1.25rem); padding-bottom: var(--section-tight); }
   .product-top__grid { align-items: start; }
   .product-top__panel { min-width: 0; }
-  .product-top__sticky { display: grid; gap: var(--s-5); }
-  .product-top__lead { font-size: var(--fs-small); }
+  .product-top__sticky { display: grid; gap: var(--s-4); }
+  .ppanel__lead { font-size: var(--fs-small); }
+  .ppanel__summary { display: grid; gap: 0.15rem; }
+  .ppanel__summary-text { font-weight: 600; }
+
+  /* local navigation */
+  .local-nav { position: sticky; top: var(--header-h); z-index: 80; background: var(--c-canvas); border-block: var(--border); }
+  .local-nav ul { display: flex; gap: var(--s-5); overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .local-nav ul::-webkit-scrollbar { display: none; }
+  .local-nav a { display: inline-flex; align-items: center; min-height: 48px; white-space: nowrap; text-decoration: none; font-size: var(--fs-small); font-weight: 600; color: var(--c-muted); border-bottom: 2px solid transparent; }
+  .local-nav a:hover { color: var(--c-charcoal); }
+  .local-nav a[aria-current='true'] { color: var(--c-charcoal); border-bottom-color: var(--c-ember); }
+  section[id] { scroll-margin-top: calc(var(--header-h) + 3.5rem); }
   @media (min-width: 960px) {
     .product-top__sticky { position: sticky; top: calc(var(--header-h) + 1.25rem); }
   }
@@ -305,9 +324,14 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   .ppanel__fieldset legend { padding: 0; margin-bottom: var(--s-2); }
   .ppanel__summary p { font-weight: 600; }
   .ppanel__note { font-size: var(--fs-small); color: var(--fg-muted); }
-  .ppanel .choice-group { gap: var(--s-2); }
-  .ppanel .choice { padding: 0.7rem 0.8rem; }
-  .ppanel .choice-note { font-size: 0.8125rem; }
+  .ppanel__heat { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .ppanel__heat-opt { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0.4rem 0.95rem; border: 1px solid var(--c-muted); border-radius: var(--radius); background: var(--c-surface); cursor: pointer; font-size: 0.9375rem; font-weight: 600; }
+  .ppanel__heat-opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .ppanel__heat-opt:has(input:checked) { background: var(--c-charcoal); color: var(--c-canvas); border-color: var(--c-charcoal); }
+  .ppanel__heat-opt:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .ppanel__heat-opt.is-off { color: var(--c-muted); border-style: dashed; cursor: not-allowed; background: transparent; }
+  .ppanel__heat-opt.is-off input { cursor: not-allowed; }
+  .ppanel__heat-note { font-size: var(--fs-small); color: var(--c-muted); min-height: 1.4em; }
 
   .tick-list { display: grid; gap: var(--s-3); margin-block: var(--s-2); }
   .tick-list li { position: relative; padding-left: 1.5rem; color: var(--c-on-forest-muted); }
@@ -345,6 +369,21 @@ const pendingText = 'Confirmed against the approved drawings during your site re
 
 <script>
   import { track } from '@/lib/analytics';
+  // mark the section in view in the local navigation (links still work with no script)
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-local-nav] a')];
+  const targets = links.map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!)).filter(Boolean) as HTMLElement[];
+  if (links.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          links.forEach((a) => a.setAttribute('aria-current', String(a.getAttribute('href') === `#${(e.target as HTMLElement).id}`)));
+        });
+      },
+      { rootMargin: '-30% 0px -60% 0px' },
+    );
+    targets.forEach((t) => io.observe(t));
+  }
   const bar = document.querySelector<HTMLElement>('[data-sticky-cta]');
   const top = document.querySelector<HTMLElement>('[data-product-top]');
   const close = document.querySelector<HTMLElement>('[data-product-close]');

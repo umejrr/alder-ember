@@ -75,31 +75,36 @@ const svgWrap = (vb, inner, title, extra = '') =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" role="img" aria-label="${xml(title)}"${extra}>\n<title>${xml(title)}</title>\n${inner}\n</svg>\n`;
 
 // ---- Final lockups (direction C) ------------------------------------------------------
+// The mark is optically aligned to the lettering: its top meets the ascender line and its foot sits on
+// the baseline, so it carries the same height as the words beside it instead of floating inside the box.
+// (The glyph occupies y 6..58 and x 7..60 of the 64-unit symbol box.)
+const GLYPH = { x0: 7, x1: 60, y0: 6, y1: 58 };
+const alignMark = (top, bottom) => {
+  const k = (bottom - top) / (GLYPH.y1 - GLYPH.y0);
+  return { k, ox: -GLYPH.x0 * k, oy: top - GLYPH.y0 * k, w: (GLYPH.x1 - GLYPH.x0) * k };
+};
+
 function horizontal(f) {
-  const symH = 118;
-  const k = symH / 64;
-  const wm = wordmarkC({ x: symH + 38, y: 100 });
-  // vertically centre the symbol on the cap-height band (y 0..100)
-  const symY = 50 - symH / 2;
-  const inner =
-    parts(symbolC, k, 0, symY, f.base, f.accent) + `<g fill="${f.text}">${wm.inner}</g>`;
-  const top = Math.min(symY, -12);
-  const h = Math.max(symY + symH, 100 + 28) - top;
-  return svgWrap(`0 ${r(top)} ${r(symH + 38 + wm.w)} ${r(h)}`, inner, 'Alder & Ember');
+  const ASC = -8; // Newsreader's ascenders and apex overshoot reach about 8 units above the cap line
+  const m = alignMark(ASC, 100);
+  const gap = 40;
+  const wm = wordmarkC({ x: m.w + gap, y: 100 });
+  const inner = parts(symbolC, m.k, m.ox, m.oy, f.base, f.accent) + `<g fill="${f.text}">${wm.inner}</g>`;
+  return svgWrap(`0 -12 ${r(m.w + gap + wm.w)} 124`, inner, 'Alder & Ember');
 }
 
 function compact(f) {
-  const symH = 112;
-  const k = symH / 64;
-  const x0 = symH + 26;
+  const m = alignMark(0, 112);
+  const gap = 28;
+  const x0 = m.w + gap;
   const size = 44;
   const l1 = wordmarkLine('Alder', '&', x0, 48, size);
   const l2 = typeset(roman, 'Ember', { x: x0, y: 112, tracking: 0.012, size });
   const inner =
-    parts(symbolC, k, 0, 0, f.base, f.accent) +
+    parts(symbolC, m.k, m.ox, m.oy, f.base, f.accent) +
     `<g fill="${f.text}">${l1.inner}<path d="${l2.d}"/></g>`;
   const w = x0 + Math.max(l1.w, l2.w);
-  return svgWrap(`0 -4 ${r(w)} ${symH + 8}`, inner, 'Alder & Ember');
+  return svgWrap(`0 -4 ${r(w)} 120`, inner, 'Alder & Ember');
 }
 
 /** "Alder &" on one line (used by the compact lockup). */
@@ -143,8 +148,8 @@ write('favicon.svg', favicon);
 
 // Editable source with LIVE text (requires Newsreader installed to preview as intended).
 const sourceInner =
-  parts(symbolC, 118 / 64, 0, -9, 'currentColor', 'var(--logo-accent, currentColor)') +
-  `<text x="${118 + 38}" y="100" font-family="Newsreader, serif" font-size="${r(100 / (roman.capHeight / roman.unitsPerEm))}" letter-spacing="1.2" fill="currentColor">Alder <tspan font-style="italic">&amp;</tspan> Ember</text>`;
+  parts(symbolC, alignMark(-8, 100).k, alignMark(-8, 100).ox, alignMark(-8, 100).oy, 'currentColor', 'var(--logo-accent, currentColor)') +
+  `<text x="${r(alignMark(-8, 100).w + 40)}" y="100" font-family="Newsreader, serif" font-size="${r(100 / (roman.capHeight / roman.unitsPerEm))}" letter-spacing="1.2" fill="currentColor">Alder <tspan font-style="italic">&amp;</tspan> Ember</text>`;
 write(
   'logo-horizontal.source.svg',
   svgWrap('0 -12 760 140', sourceInner, 'Alder & Ember (editable source: live text, ampersand shown as italic placeholder; final uses the custom outlined ampersand)'),

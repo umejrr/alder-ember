@@ -8,13 +8,16 @@ interface Props {
   model: ModelView;
   heating: HeatingChoice[];
   compareIds: string[];
+  /** estimated lead time, shown after the call to action */
+  leadTime?: string | null;
+  leadWorking?: boolean;
 }
 
 /**
  * Enquiry panel on a model page. A heating choice here is a PREFERENCE carried into the
  * enquiry, not a confirmed configuration, and the panel says so.
  */
-export default function ProductPanel({ model, heating, compareIds }: Props) {
+export default function ProductPanel({ model, heating, compareIds, leadTime = null, leadWorking = false }: Props) {
   const [pref, setPref] = useState<HeatingPreference | null>(null);
 
   useEffect(() => {
@@ -34,14 +37,7 @@ export default function ProductPanel({ model, heating, compareIds }: Props) {
 
   return (
     <div className="ppanel">
-      <div className="ppanel__summary" aria-live="polite">
-        <span className="label muted">Your enquiry</span>
-        <p>
-          {model.name}
-          {label ? ` · ${label} (a preference)` : ''}
-        </p>
-      </div>
-
+      {/* the action sits straight after the price; everything optional follows it */}
       <div className="actions">
         <a className="btn btn--block" href={href} data-enquiry-cta>
           Plan your {model.shortName}
@@ -50,12 +46,27 @@ export default function ProductPanel({ model, heating, compareIds }: Props) {
           Compare models
         </a>
       </div>
+      <p className="ppanel__summary" aria-live="polite">
+        <span className="label muted">Your enquiry</span>
+        <span className="ppanel__summary-text">
+          {model.name}
+          {label ? ` · ${label} (a preference)` : ''}
+        </span>
+      </p>
+
+      {leadTime && (
+        <p className="ppanel__lead">
+          <span className="label muted">Estimated lead time{leadWorking ? ' (working figure)' : ''}</span>
+          <br />
+          {leadTime}
+        </p>
+      )}
 
       <fieldset className="ppanel__fieldset">
         <legend className="label muted">Heating preference (optional)</legend>
-        <div className="choice-group">
+        <div className="ppanel__heat" role="radiogroup">
           {heating.map((h) => (
-            <label className="choice" key={h.value}>
+            <label className={`ppanel__heat-opt${h.disabled ? ' is-off' : ''}`} key={h.value}>
               <input
                 type="radio"
                 name={`heating-${model.id}`}
@@ -65,12 +76,16 @@ export default function ProductPanel({ model, heating, compareIds }: Props) {
                 onChange={() => choose(h.value)}
               />
               <span>
-                <span className="choice-title">{h.label}</span>
-                <span className="choice-note">{h.note}</span>
+                {h.label}
+                {h.disabled ? <span className="sr-only"> (not offered on this model)</span> : null}
               </span>
             </label>
           ))}
         </div>
+        <p className="ppanel__heat-note" aria-live="polite">
+          {heating.find((h) => h.value === pref)?.note ??
+            (heating.some((h) => h.disabled) ? 'Wood-burning is not offered on this model in the supplied range.' : 'Choose a preference, or leave it blank.')}
+        </p>
       </fieldset>
 
       <p className="ppanel__note">

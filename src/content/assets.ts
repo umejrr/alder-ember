@@ -30,6 +30,7 @@ export type AssetRole =
   | 'detail-glazing-heater'
   | 'site-access'
   | 'installation-process'
+  | 'closing'
   | 'project';
 
 export type Ratio = '16:9' | '3:2' | '4:3' | '4:5' | '1:1' | '21:9';
@@ -53,6 +54,8 @@ export interface Asset {
   src?: string;
   /** responsive candidates, e.g. "/images/x-640.webp 640w, /images/x-1280.webp 1280w" */
   srcset?: string;
+  /** AVIF candidates for the same widths; the browser prefers these when it can decode them */
+  srcsetAvif?: string;
   /** smallest variant, for thumbnails */
   thumb?: string;
   width?: number;
@@ -206,6 +209,16 @@ const baseAssets: Asset[] = [
     tone: 'forest',
     evidence: 'project-evidence',
   }),
+  ph({
+    id: 'closing-warmth',
+    role: 'closing',
+    label: 'Closing: a warm interior or an evening garden',
+    ratio: '4:3',
+    alt: 'A warmly lit sauna interior, the benches and timber glowing in low light.',
+    intendedCrop: 'A warm interior or evening garden composition. Approved photography only; never a staged installation claim.',
+    intendedUse: 'Homepage closing',
+    tone: 'dusk',
+  }),
 ];
 
 interface Stock {
@@ -233,6 +246,7 @@ const STOCK: Record<string, Stock> = {
   'detail-construction': { photo: 'detail-construction', focal: { x: 50, y: 50 }, alt: 'Two walls of horizontal timber cladding meeting at an outside corner.' },
   'detail-glazing-heater': { photo: 'detail-glazing-heater', focal: { x: 50, y: 50 }, alt: 'Inside a barrel sauna: benches, a heater and an arched window looking out to trees.' },
   'site-access': { photo: 'site-access', focal: { x: 50, y: 64 }, alt: 'A weathered timber gate at the top of stone garden steps between old walls.' },
+  'closing-warmth': { photo: 'ember-interior', focal: { x: 50, y: 58 }, alt: 'A large sauna with wide stepped benches along timber walls, two small windows and a stone-clad heater.' },
   'installation-process': { photo: 'installation-process', focal: { x: 50, y: 55 }, alt: 'A small red timber cabin on a twin-axle trailer, parked on a lawn.' },
 };
 
@@ -248,7 +262,8 @@ function withStock(a: Asset): Asset {
     evidence: 'atmosphere',
     src: `${ph.file}-${widths[widths.length - 1]}.webp`,
     srcset: widths.map((w) => `${ph.file}-${w}.webp ${w}w`).join(', '),
-    thumb: `${ph.file}-${widths[0]}.webp`,
+    ...(ph.avif ? { srcsetAvif: widths.map((w) => `${ph.file}-${w}.avif ${w}w`).join(', ') } : {}),
+    thumb: `${ph.file}-${ph.thumbWidth ?? widths[0]}.webp`,
     width: ph.width,
     height: ph.height,
     credit: ph.credit,

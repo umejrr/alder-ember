@@ -10,6 +10,7 @@ Nothing below is blocked by code: each is information, a decision, or an account
 | 4 | Product photography and rights | Alder & Ember | Replacing every placeholder and stock preview photo ([asset-manifest.md](asset-manifest.md), [image-credits.md](image-credits.md)); the stock photos carry CC BY / CC BY-SA attribution duties and are not licensed as Alder & Ember imagery; the production check reports this as a launch blocker |
 | 5 | Genuine installation stories and approved customer reviews, with permissions | Alder & Ember | The installations route, navigation item and home-page proof section |
 | 6 | Approved identity, contact details and domain | Daniel | Contact channels, `PUBLIC_SITE_URL`, canonical URLs, sitemap, Organisation details |
+| 6b | An approved 1200 × 630 social sharing image of Alder & Ember's own product or work (`site.socialImage`) | Alder & Ember | `og:image` and `twitter:image`. Until it exists none is emitted: a stock photograph must not stand in for an installation in a link preview |
 | 7 | Approved privacy, cookies, terms and warranty text | Daniel / adviser | Policy pages (indexable once approved), warranty content and the care page |
 | 8 | Webflow workspace and build decision, CMS access | Project team | Whether this is rebuilt in Webflow ([cms-mapping.md](cms-mapping.md)) or deployed as code |
 | 9 | HubSpot configuration, field names, routing and a test destination | Sales / project team | Live enquiries ([integrations.md](integrations.md)) |

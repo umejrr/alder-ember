@@ -1,7 +1,7 @@
 import type { Availability, Product } from '@/content/types';
 import { getAsset, previewTag } from '@/content/assets';
 import { publicProduct } from './format';
-import { resolve } from './mode';
+import { isWorking, resolve } from './mode';
 import type { ModelView } from '@/components/react/ModelView';
 
 const AVAIL: Record<Availability, string> = {
@@ -20,6 +20,7 @@ export function assetView(id: string): ModelView['asset'] {
     alt: a.alt,
     src: a.kind !== 'placeholder' && a.src ? a.src : null,
     srcset: a.kind !== 'placeholder' ? (a.srcset ?? null) : null,
+    srcsetAvif: a.kind !== 'placeholder' ? (a.srcsetAvif ?? null) : null,
     thumb: a.kind !== 'placeholder' ? (a.thumb ?? a.src ?? null) : null,
     tag: previewTag(a),
     ratio: a.ratio.replace(':', ' / '),
@@ -50,6 +51,7 @@ export function toModelView(p: Product, assetId: string = p.heroAsset): ModelVie
     price: pub.price,
     vat: pub.vat,
     priceScope: pub.priceScope,
+    priceWorking: Boolean(pub.price) && isWorking(p.priceFromMinor),
     leadTime: pub.leadTime,
     changingArea: pub.changingArea,
     electric: electric ? AVAIL[electric] : null,
@@ -62,6 +64,7 @@ export function toModelView(p: Product, assetId: string = p.heroAsset): ModelVie
       alt: a.alt,
       src: a.kind !== 'placeholder' && a.src ? a.src : null,
       srcset: a.kind !== 'placeholder' ? (a.srcset ?? null) : null,
+      srcsetAvif: a.kind !== 'placeholder' ? (a.srcsetAvif ?? null) : null,
       thumb: a.kind !== 'placeholder' ? (a.thumb ?? a.src ?? null) : null,
       tag: previewTag(a),
       ratio: a.ratio.replace(':', ' / '),

@@ -1,20 +1,32 @@
+/*
+  Model explorer. The stage has a fixed aspect ratio, so the photograph is never stretched by the height of the
+  text beside it. On narrow screens the model rail comes first (so the choice is always at hand), then the stage,
+  then the facts. On wide screens the rail sits under the stage and the panel takes the right-hand third.
+*/
 .fyf {
   display: grid;
-  background: var(--c-surface);
-  border: 1px solid var(--c-charcoal);
+  gap: var(--s-4);
   color: var(--c-charcoal);
+  grid-template-areas: 'tabs' 'stage' 'panel';
+}
+.fyf__tabs {
+  grid-area: tabs;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--c-border);
 }
 .fyf__stage {
+  grid-area: stage;
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   background: var(--c-border);
 }
 .fyf__img {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 450ms var(--ease);
+  transition: opacity 380ms var(--ease);
 }
 .fyf__img.is-active {
   opacity: 1;
@@ -28,39 +40,47 @@
   width: 100%;
   height: 100%;
 }
-.fyf__rail {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-width: 0;
+/* a thin progress line while the next image is fetched; the current image stays in place */
+.fyf__loading {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--c-ember);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
 }
-.fyf__tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--c-charcoal);
+.fyf__stage[data-busy] .fyf__loading {
+  opacity: 1;
+  animation: fyf-load 1400ms var(--ease) infinite;
 }
+@keyframes fyf-load {
+  0% { transform: scaleX(0); }
+  70% { transform: scaleX(0.85); }
+  100% { transform: scaleX(0.95); }
+}
+
 .fyf__tab {
   position: relative;
   display: grid;
   gap: 0.15rem;
   align-content: center;
   min-height: 4.25rem;
-  padding: 0.75rem 0.75rem;
+  padding: 0.7rem 0.5rem 0.8rem;
   background: transparent;
   border: 0;
-  border-right: 1px solid var(--c-border);
   text-align: left;
   cursor: pointer;
-  color: inherit;
-  transition: background-color var(--t-fast) var(--ease);
-}
-.fyf__tab:last-child {
-  border-right: 0;
+  color: var(--c-muted);
+  transition: color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
 .fyf__tab:hover {
-  background: #fff;
+  color: var(--c-charcoal);
 }
 .fyf__tab[aria-selected='true'] {
-  background: #fff;
+  color: var(--c-charcoal);
   box-shadow: inset 0 -3px 0 var(--c-ember);
 }
 .fyf__tab:focus-visible {
@@ -72,25 +92,53 @@
   line-height: 1.15;
   font-weight: 380;
 }
+.fyf__tab[aria-selected='true'] .fyf__tab-name {
+  font-weight: 460;
+}
 .fyf__tab-meta {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--c-muted);
   font-variant-numeric: tabular-nums;
 }
+
 .fyf__panel {
+  grid-area: panel;
   display: grid;
   gap: var(--s-5);
   align-content: start;
-  padding: clamp(1.25rem, 2.4vw, 2rem);
+  min-width: 0;
 }
 .fyf__title {
   font-size: var(--fs-h2);
+  line-height: 1.05;
 }
 .fyf__position {
+  margin-top: var(--s-2);
   color: var(--c-muted);
-  max-width: 32em;
+  max-width: 30em;
+}
+.fyf__facts {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--c-border);
+}
+.fyf__facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.fyf__facts dt {
+  font-size: var(--fs-small);
+  color: var(--c-muted);
+}
+.fyf__facts dd {
+  font-weight: 600;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-align: right;
 }
 .fyf__price {
   display: grid;
@@ -98,62 +146,79 @@
 }
 .fyf__price-value {
   font-family: var(--font-serif);
-  font-size: var(--fs-h3);
-  font-weight: 340;
+  font-size: var(--fs-h2);
+  line-height: 1.1;
+  font-weight: 320;
+  letter-spacing: -0.01em;
   font-variant-numeric: lining-nums tabular-nums;
 }
 .fyf__price-value small {
   font-family: var(--font-sans);
   font-size: var(--fs-small);
   font-weight: 500;
+  letter-spacing: 0;
   color: var(--c-muted);
-  margin-left: 0.4rem;
+  margin-left: 0.5rem;
 }
 .fyf__scope {
   font-size: var(--fs-small);
   color: var(--c-muted);
-  max-width: 34em;
+  max-width: 32em;
+}
+.fyf__more {
+  font-size: var(--fs-small);
+  color: var(--c-muted);
+}
+.fyf__more > summary {
+  cursor: pointer;
+  width: fit-content;
+  min-height: 24px;
+  color: var(--c-charcoal);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.fyf__more > p {
+  margin-top: 0.4rem;
+  max-width: 32em;
 }
 .fyf__actions {
   display: grid;
-  gap: var(--s-3);
+  gap: var(--s-4);
+  justify-items: start;
 }
-.fyf__actions-row {
+.fyf__actions .btn {
+  min-width: min(100%, 14rem);
+}
+.fyf__links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s-3);
-}
-.fyf__actions-row .btn {
-  flex: 1 1 11rem;
+  gap: var(--s-2) var(--s-5);
 }
 
 @media (min-width: 960px) {
   .fyf {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  }
-  .fyf__stage {
-    aspect-ratio: auto;
-    min-height: clamp(30rem, 44vw, 40rem);
-  }
-  .fyf__rail {
-    border-left: 1px solid var(--c-charcoal);
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    grid-template-areas: 'stage panel' 'tabs panel';
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    row-gap: var(--s-3);
+    align-items: start;
   }
   .fyf__tabs {
-    grid-template-columns: 1fr;
-    border-top: 0;
+    border-top: 1px solid var(--c-charcoal);
+    border-bottom: 0;
   }
   .fyf__tab {
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
-    min-height: 4.5rem;
-    padding: 1rem clamp(1.25rem, 2.4vw, 2rem);
-    border-right: 0;
-    border-bottom: 1px solid var(--c-border);
+    padding: 1rem 0.25rem 0.9rem;
+    box-shadow: none;
   }
   .fyf__tab[aria-selected='true'] {
-    box-shadow: inset 4px 0 0 var(--c-ember);
+    box-shadow: inset 0 3px 0 var(--c-ember);
+    padding-left: 0.25rem;
   }
   .fyf__tab-name {
     font-size: 1.5rem;
+  }
+  .fyf__panel {
+    padding-top: var(--s-2);
   }
 }

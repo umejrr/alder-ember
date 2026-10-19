@@ -724,7 +724,7 @@ table.data td {
 
 /* ---------- page header (non-home pages) ---------- */
 .page-head {
-  padding-top: calc(var(--header-h) + clamp(2rem, 4vw, 4rem));
+  padding-top: clamp(1.5rem, 3vw, 3rem);
   padding-bottom: clamp(2rem, 4vw, 4rem);
 }
 .page-head .h1 {
@@ -789,4 +789,19 @@ table.data td {
     grid-template-columns: 1fr 1fr;
     column-gap: var(--s-5);
   }
+}
+
+/* ---------- closing call to action (shared by every page that ends on one) ---------- */
+.closing { padding-block: clamp(4rem, 2rem + 8vw, 9rem); border-bottom: 1px solid var(--rule); }
+.closing__inner { display: grid; gap: var(--s-7); }
+.closing__text,
+.closing__copy { display: grid; gap: var(--s-5); align-content: center; max-width: 30rem; }
+.closing .display { max-width: 12ch; }
+.closing__text .lead,
+.closing__copy .lead { color: var(--c-on-forest-muted); }
+.closing__text .btn,
+.closing__copy .btn { justify-self: start; }
+@media (min-width: 960px) {
+  .closing__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: var(--s-8); }
+  .closing__inner:not(:has(.closing__media)) { grid-template-columns: 1.25fr 1fr; align-items: end; }
 }

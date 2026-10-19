@@ -11,6 +11,10 @@ export interface PreviewPhoto {
   height: number;
   /** widths actually emitted */
   widths: number[];
+  /** true when an AVIF twin exists for every width (`${file}-${w}.avif`), served ahead of the WebP */
+  avif?: boolean;
+  /** width of the small variant used for gallery thumbnails (WebP only) */
+  thumbWidth?: number;
   credit: { title: string; author: string; license: string; licenseUrl: string | null; sourceUrl: string; adapted: string };
 }
 

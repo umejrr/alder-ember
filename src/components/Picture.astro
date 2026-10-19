@@ -28,17 +28,20 @@ const isImage = asset.kind !== 'placeholder' && Boolean(asset.src);
 {
   isImage ? (
     <div class:list={['pic', fill && 'pic--fill', className]} style={`--ratio:${ratio};--pos:${pos};--pos-m:${mobilePos}`}>
-      <img
-        src={asset.src}
-        srcset={asset.srcset}
-        alt={asset.alt}
-        width={asset.width}
-        height={asset.height}
-        sizes={sizes}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding={priority ? 'sync' : 'async'}
-        fetchpriority={priority ? 'high' : 'auto'}
-      />
+      <picture>
+        {asset.srcsetAvif && <source type="image/avif" srcset={asset.srcsetAvif} sizes={sizes} />}
+        <img
+          src={asset.src}
+          srcset={asset.srcset}
+          alt={asset.alt}
+          width={asset.width}
+          height={asset.height}
+          sizes={sizes}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding={priority ? 'sync' : 'async'}
+          fetchpriority={priority ? 'high' : 'auto'}
+        />
+      </picture>
       {tag && !quiet && <span class="pic__tag">{tag}</span>}
     </div>
   ) : (
@@ -71,6 +74,7 @@ const isImage = asset.kind !== 'placeholder' && Boolean(asset.src);
     width: 100%;
     height: 100%;
   }
+  .pic picture { display: contents; }
   .pic img {
     width: 100%;
     height: 100%;

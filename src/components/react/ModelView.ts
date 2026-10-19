@@ -16,6 +16,8 @@ export interface ModelView {
   price: string | null;
   vat: string | null;
   priceScope: string | null;
+  /** true while the starting price is a working figure awaiting approval (preview builds only) */
+  priceWorking: boolean;
   leadTime: string | null;
   changingArea: string | null;
   electric: string | null;
@@ -28,6 +30,7 @@ export interface ModelView {
     alt: string;
     src: string | null;
     srcset: string | null;
+    srcsetAvif: string | null;
     thumb: string | null;
     /** visible label for stock previews, e.g. "Stock preview · not the Alder" */
     tag: string | null;

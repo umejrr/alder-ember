@@ -29,6 +29,11 @@ export const site = {
     'Initial coverage; confirm with Operations before it is shown as a promise',
   ),
   social: [] as { label: string; href: string }[],
+  /**
+   * Social sharing image (1200 x 630). Must be approved photography of Alder & Ember's own product or work.
+   * Never a stock preview: a stock house must not stand in for a photographed installation in a link preview.
+   */
+  socialImage: missing<string>('APPROVED_SOCIAL_IMAGE_REQUIRED (absolute path of an approved 1200x630 image)'),
 };
 
 export interface NavItem {

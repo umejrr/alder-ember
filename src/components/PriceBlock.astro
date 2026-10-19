@@ -5,8 +5,11 @@ import { isWorking } from '@/lib/mode';
 
 interface Props {
   product: Product;
+  /** short qualification beside the amount, with the full scope one click away */
+  compact?: boolean;
 }
-const { product } = Astro.props;
+const { product, compact = false } = Astro.props;
+const SHORT = 'Delivery and installation are confirmed in your itemised quotation.';
 const pub = publicProduct(product);
 const working = isWorking(product.priceFromMinor);
 ---
@@ -25,8 +28,16 @@ const working = isWorking(product.priceFromMinor);
     }
   </p>
   <p class="price-block__scope">
-    {pub.priceScope ?? 'Delivery and installation scope are confirmed in your itemised quotation.'}
+    {compact ? SHORT : (pub.priceScope ?? SHORT)}
   </p>
+  {
+    compact && pub.priceScope && (
+      <details class="price-block__more">
+        <summary>What the price covers</summary>
+        <p>{pub.priceScope}</p>
+      </details>
+    )
+  }
 </div>
 
 <style is:global>
@@ -47,4 +58,7 @@ const working = isWorking(product.priceFromMinor);
     margin-left: 0.5rem;
   }
   .price-block__scope { font-size: var(--fs-small); color: var(--fg-muted); max-width: 36em; }
+  .price-block__more { font-size: var(--fs-small); color: var(--fg-muted); }
+  .price-block__more > summary { cursor: pointer; width: fit-content; min-height: 24px; color: var(--fg); text-decoration: underline; text-underline-offset: 0.2em; }
+  .price-block__more > p { margin-top: 0.4rem; max-width: 36em; }
 </style>

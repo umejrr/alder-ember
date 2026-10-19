@@ -8,7 +8,7 @@ const controls = [
   ['The range', 'We decide which models, finishes and options we offer, and describe them honestly.'],
   ['Consultation', 'We help you choose a model and talk through heating and your space.'],
   ['Site assessment', 'We check your space and access before an order is confirmed.'],
-  ['Installation coordination', 'We coordinate delivery and installation, and set out who does what.'],
+  ['Installation', 'We coordinate delivery and installation, and set out who does what.'],
   ['Quality checks', 'We check the installation before handover.'],
   ['Aftercare', 'You have an accessible first point of contact after handover.'],
 ];
@@ -18,24 +18,26 @@ const controls = [
   description="Alder & Ember is a UK supplier and installer of premium outdoor saunas. Our core range is built by a specialist European manufacturing partner to agreed specifications."
   breadcrumbs={crumbs}
 >
-  <header class="page-head container">
+  <header class="page-head container about-head">
     <Breadcrumbs items={crumbs} />
     <h1>About Alder &amp; Ember</h1>
-    <p class="lead">{site.shortDescription} We are a small UK team that supplies and installs outdoor saunas.</p>
+    <p class="lead about-head__lead">
+      We supply and install premium outdoor saunas for UK gardens. We help you choose, check your site, and look after the installation from first conversation to handover.
+    </p>
   </header>
 
   <section class="section section--flush-top" aria-labelledby="how-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-5">
         <p class="label muted">How it works</p>
-        <h2 id="how-title">Who builds what</h2>
+        <h2 id="how-title">Built by specialists, looked after by us.</h2>
       </div>
-      <div class="c-7 c-start-6 prose">
+      <div class="c-6 c-start-7 prose">
         <p>
-          We work with a specialist European manufacturing partner, who builds our core range to agreed specifications. We do not build the saunas ourselves, and we do not present the manufacturer’s workshop as ours.
+          Our core range is built to agreed specifications by a specialist European manufacturing partner.
         </p>
         <p>
-          What we do is look after everything around the sauna: the range and its approved finishes and options, helping you choose, checking your site, coordinating installation, checking quality, and being there afterwards.
+          Alder &amp; Ember looks after everything around the sauna: the range and its approved finishes and options, helping you choose, checking your site, coordinating installation, quality checks and aftercare.
         </p>
         <p>
           Bespoke changes need the manufacturer’s confirmation before we can quote or accept an order.
@@ -45,37 +47,44 @@ const controls = [
   </section>
 
   <section class="section is-surface" aria-labelledby="control-title">
-    <div class="container grid-12">
-      <div class="c-4">
+    <div class="container">
+      <div class="section-head">
         <p class="label muted">What we look after</p>
         <h2 id="control-title">Where we take responsibility</h2>
       </div>
-      <dl class="c-8 facts control-list">
-        {controls.map(([t, d]) => <div><dt>{t}</dt><dd><span class="sub" style="color: inherit; font-weight: 500">{d}</span></dd></div>)}
-      </dl>
+      <ol class="about-grid">
+        {controls.map(([t, d], i) => (
+          <li>
+            <span class="about-grid__n tnum" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="about-grid__t">{t}</h3>
+            <p class="muted">{d}</p>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
   <section class="section" aria-labelledby="quality-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-5">
         <p class="label muted">Quality</p>
-        <h2 id="quality-title">What we mean by quality</h2>
+        <h2 id="quality-title">Quality, in specifics</h2>
       </div>
-      <div class="c-7 c-start-6 prose">
-        <p>We try to explain quality through specifics. The core range uses thermally modified exterior timber, smooth sauna-grade interior timber and insulated cabin construction, with carefully finished benches and fittings. Glazing and heaters are selected for the specific configuration.</p>
-        <p>We would rather tell you what needs checking than promise that everything will fit. That is why we assess the site before confirming an order.</p>
+      <div class="c-6 c-start-7 prose">
+        <p>The core range uses thermally modified exterior timber, smooth sauna-grade interior timber and insulated cabin construction, with carefully finished benches and fittings. Glazing and heaters are selected for the specific configuration.</p>
+        <p>We would rather tell you what needs checking than promise that everything will fit, which is why we assess the site before confirming an order.</p>
+        <p><a class="text-link" href="/#find-your-fit">See the three models <span class="arrow" aria-hidden="true">→</span></a></p>
       </div>
     </div>
   </section>
 
   <section class="section is-surface" aria-labelledby="team-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-5">
         <p class="label muted">The team</p>
         <h2 id="team-title">A small team, with clear roles</h2>
       </div>
-      <div class="c-7 c-start-6 prose">
+      <div class="c-6 c-start-7 prose">
         <p>We are seven people. Sales looks after your questions and enquiry. Operations confirms specifications, fulfilment and installation details. Marketing looks after what you read and see here, and the founder is responsible for the direction of the business.</p>
         <p class="muted">Profiles and photographs of the team will be added when they have been approved.</p>
       </div>
@@ -84,8 +93,8 @@ const controls = [
 
   <section class="closing is-forest is-forest-gradient" aria-labelledby="close-title">
     <div class="container closing__inner">
-      <h2 class="display" id="close-title">Let’s plan a sauna that suits your space.</h2>
-      <div class="closing__copy">
+      <div class="closing__text">
+        <h2 class="display" id="close-title">Let’s plan your sauna.</h2>
         <p class="lead">Tell us where you’re based and what you have in mind. We’ll help you choose the next step.</p>
         <a class="btn" href="/plan-your-sauna">Plan your sauna</a>
       </div>
@@ -94,6 +103,15 @@ const controls = [
 </Base>
 
 <style is:global>
-  .control-list dt { font-weight: 700; color: var(--fg); font-size: var(--fs-body); }
-  .control-list > div { grid-template-columns: minmax(10rem, 15rem) 1fr; }
+  .about-head__lead { max-width: 34em; }
+  .about-grid { display: grid; gap: 0; border-top: var(--border); margin-top: var(--s-6); }
+  .about-grid li { display: grid; gap: var(--s-2); padding: var(--s-5) 0; border-bottom: var(--border); align-content: start; }
+  .about-grid__n { font-size: var(--fs-small); font-weight: 700; letter-spacing: 0.06em; color: var(--c-timber); }
+  .about-grid__t { font-size: var(--fs-h3); }
+  @media (min-width: 760px) {
+    .about-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-7); }
+  }
+  @media (min-width: 1100px) {
+    .about-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
 </style>

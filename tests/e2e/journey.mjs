@@ -22,12 +22,22 @@ await step('Find your fit: tabs change the model, data and links together', asyn
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   await page.locator('#find-your-fit').scrollIntoViewIfNeeded();
   const tab = (n) => page.getByRole('tab', { name: new RegExp(n) });
+  await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+  // only the visible model's image is in the page until a visitor shows interest in another
+  assert.equal(await page.locator('.fyf__img').count(), 1, 'the other models must not be loaded up front');
+  // the stage keeps a fixed aspect ratio, whatever the height of the text beside it
+  const stage = await page.locator('.fyf__stage').boundingBox();
+  assert.ok(Math.abs(stage.width / stage.height - 1.5) < 0.02, `stage ratio is ${stage.width / stage.height}`);
   await tab('Ember').click();
   const panel = page.getByRole('tabpanel');
   await panel.getByText('From £18,950').waitFor();
   assert.equal(await panel.getByRole('link', { name: /Explore the Ember/ }).getAttribute('href'), '/saunas/ember');
   assert.match(await panel.getByRole('link', { name: /Plan your Ember/ }).getAttribute('href'), /plan-your-sauna\?model=ember/);
   assert.equal(new URL(page.url()).pathname, '/', 'tabs must not navigate');
+  // image, facts and links agree: the active image is the Ember's, and the panel names the Ember
+  await page.waitForFunction(() => document.querySelector('.fyf__img.is-active img')?.getAttribute('alt')?.length > 0);
+  assert.equal(await page.locator('.fyf').getAttribute('data-model'), 'ember');
+  assert.match(await page.locator('.fyf__img.is-active .pic__tag').innerText(), /not the ember/i);
   await tab('Ember').focus();
   await page.keyboard.press('ArrowLeft');
   assert.equal(await tab('Alder').getAttribute('aria-selected'), 'true');
