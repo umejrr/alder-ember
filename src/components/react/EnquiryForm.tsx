@@ -10,8 +10,10 @@ import {
   type EnquiryInput,
   type FieldErrors,
 } from '@/lib/enquiry/schema';
-import { parsePreferences } from '@/lib/selector';
-import { readPrefs, writePrefs } from '@/lib/prefs-client';
+import { parsePreferences, reconcilePreferences } from '@/lib/selector';
+import { clearPrefs as clearStoredPrefs, clearUrlPreferences, readPrefs } from '@/lib/prefs-client';
+import { reconcileHeating, woodBurningMayBeDiscussed } from '@/content/options';
+import { pageHref } from '@/lib/base-url';
 import { track } from '@/lib/analytics';
 import type { ModelView } from './ModelView';
 
@@ -42,7 +44,8 @@ const blank = (kind: Props['kind']): Values => ({
   openingTarget: '', contractors: '', marketingOptIn: false,
 });
 
-const HEATING_LABEL: Record<string, string> = { electric: 'Electric', wood: 'Wood-burning', advice: 'I need advice' };
+const PEOPLE_OPTIONS = [...[1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ v: String(n), label: `${n}` })), { v: '9', label: 'More than 8' }];
+const MODEL_IDS = new Set(['rowan', 'alder', 'ember']);
 
 const STATIC_DEMO = import.meta.env.PUBLIC_STATIC_DEMO === 'true';
 
@@ -57,6 +60,8 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>({ s: 'idle' });
   const [prefilled, setPrefilled] = useState(false);
+  // why a heating preference was changed for the visitor (read out politely, never silent)
+  const [heatingNote, setHeatingNote] = useState<string | null>(null);
   const startedAt = useRef<number>(0);
   const key = useRef<string>('');
   const tracked = useRef(false);
@@ -65,12 +70,15 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
   const errorRef = useRef<HTMLDivElement>(null);
 
   // Prefill from the URL and this visit's non-personal preferences. Visible and editable, never hidden.
+  // The URL wins over saved choices, and the pair is reconciled so a model never carries a preference it does not offer.
   useEffect(() => {
     startedAt.current = Date.now();
     key.current = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `k${Date.now()}${Math.random().toString(36).slice(2)}`;
-    const fromUrl = parsePreferences(new URLSearchParams(window.location.search));
+    // raw first, so a contradictory link ("?model=rowan&heating=wood") can be explained rather than silently altered
+    const fromUrl = parsePreferences(new URLSearchParams(window.location.search), { reconcile: false });
     const saved = readPrefs();
-    const p = { ...saved, ...fromUrl };
+    const merged = { ...saved, ...fromUrl };
+    const p = reconcilePreferences(merged);
     const next: Partial<Values> = {};
     if (p.model) next.model = p.model;
     if (p.heating) next.heating = p.heating;
@@ -81,6 +89,8 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
       setV((cur) => ({ ...cur, ...next }));
       setPrefilled(true);
     }
+    const note = reconcileHeating(merged.model, merged.heating);
+    if (note.adjusted) setHeatingNote(note.reason);
   }, [kind]);
 
   const set = <K extends keyof Values>(k: K, val: Values[K]) => {
@@ -92,10 +102,29 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
     if (errors[k as keyof FieldErrors]) setErrors((e) => ({ ...e, [k]: undefined }));
   };
 
-  const clearPrefs = () => {
+  /** Changing the model re-checks the heating preference, so the summary and payload never contradict each other. */
+  const changeModel = (model: string) => {
+    const r = reconcileHeating(model, v.heating);
+    setV((cur) => ({ ...cur, model, heating: r.heating }));
+    setHeatingNote(r.adjusted ? r.reason : null);
+    if (errors.model || errors.heating) setErrors((e) => ({ ...e, model: undefined, heating: undefined }));
+    if (!tracked.current) {
+      tracked.current = true;
+      track('start_enquiry', { model_id: model || 'none', source_page: window.location.pathname });
+    }
+  };
+
+  const changeHeating = (heating: string) => {
+    setHeatingNote(null);
+    set('heating', heating);
+  };
+
+  /** Clears every carried preference from the form, this visit's saved choices and the address bar. */
+  const clearCarried = () => {
     setV((cur) => ({ ...cur, model: '', heating: '', people: '', changingArea: '' }));
-    writePrefs({});
-    try { sessionStorage.removeItem('ae-prefs-v1'); } catch { /* ignore */ }
+    clearStoredPrefs();
+    clearUrlPreferences();
+    setHeatingNote(null);
     setPrefilled(false);
   };
 
@@ -193,7 +222,7 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
           <h3>What happens next</h3>
           <p>{responseTime ?? 'The team reviews your project and replies as soon as they can.'}</p>
           <p>We will ask about your space and access, and help you confirm the model and the site requirements. Photographs and approximate measurements are a good start, and you can send those when we reply.</p>
-          <p><a className="text-link" href="/installation-delivery">View installation guidance <span className="arrow" aria-hidden="true">→</span></a></p>
+          <p><a className="text-link" href={pageHref('/installation-delivery')}>View installation guidance <span className="arrow" aria-hidden="true">→</span></a></p>
         </div>
       </div>
     );
@@ -210,7 +239,9 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
   const Err = ({ k }: { k: keyof FieldErrors }) => (err(k) ? <p className="field-error" id={`${id(k)}-err`}>{err(k)}</p> : null);
   const commercial = kind === 'commercial' || v.projectType === 'commercial';
   const busy = status.s === 'submitting';
-  const modelName = models.find((m) => m.id === v.model)?.name;
+  const knownModel = MODEL_IDS.has(v.model) ? (v.model as 'rowan' | 'alder' | 'ember') : null;
+  const woodOk = knownModel ? woodBurningMayBeDiscussed(knownModel) : true;
+  const woodLabel = `Wood-burning${woodOk ? '' : ` (not offered on ${models.find((m) => m.id === v.model)?.name ?? 'this model'})`}`;
 
   return (
     <form className="enq" onSubmit={submit} noValidate aria-describedby="enq-next">
@@ -241,23 +272,147 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
         </div>
       )}
 
-      {prefilled && (
-        <div className="enq__prefill" role="group" aria-label="Preferences carried from your browsing">
-          <span className="label muted">From your browsing</span>
-          <p>
-            {[modelName ?? (v.model === 'not-sure' ? 'Model: not sure' : null), v.heating ? `${HEATING_LABEL[v.heating]} (a preference)` : null, v.people ? `${v.people === '9' ? 'More than 8' : v.people} people` : null]
-              .filter(Boolean)
-              .join(' · ')}
-            . You can change any of this below.
-          </p>
-          <button type="button" className="text-link" onClick={clearPrefs} style={{ background: 'none', border: 0, borderBottom: '1px solid currentColor', justifySelf: 'start', cursor: 'pointer' }}>
-            Clear these preferences
-          </button>
+      <fieldset className="enq__section">
+        <legend>Your project</legend>
+
+        {kind === 'residential' && (
+          <div className={`field${err('projectType') ? ' has-error' : ''}`}>
+            <span className="field-label" id="enq-pt-label" style={{ fontWeight: 600, fontSize: 'var(--fs-small)' }}>This is for</span>
+            <div className="choice-group choice-group--row" role="radiogroup" aria-labelledby="enq-pt-label">
+              {(['residential', 'commercial'] as const).map((t) => (
+                <label className="choice" key={t}>
+                  <input type="radio" name="projectType" value={t} checked={v.projectType === t} onChange={() => set('projectType', t)} />
+                  <span className="choice-title">{t === 'residential' ? 'A home' : 'A business'}</span>
+                </label>
+              ))}
+            </div>
+            <Err k="projectType" />
+            {v.projectType === 'commercial' && (
+              <p className="hint">
+                Business projects are assessed separately. You can carry on here, or use <a href={pageHref('/commercial#enquire')}>the commercial form</a>, which asks about use, operation and timing.
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* editable project summary: every preference that travels with the enquiry is here, changeable and removable */}
+        <div className="enq__project" role="group" aria-labelledby="enq-project-title">
+          <div className="enq__project-head">
+            <h3 id="enq-project-title" className="enq__project-title">
+              {prefilled ? 'Your project so far' : 'Shape your enquiry'}
+            </h3>
+            {prefilled && (
+              <button type="button" className="enq__clear" onClick={clearCarried}>
+                Clear these preferences
+              </button>
+            )}
+          </div>
+          {prefilled && <p className="hint">Carried from your browsing. Change or remove anything below, and your confirmation will use what you leave here.</p>}
+
+          <div className="enq__row enq__row--2">
+            <div className={`field${err('model') ? ' has-error' : ''}`}>
+              <label htmlFor={id('model')}>Model of interest</label>
+              <select className="select" required value={v.model} onChange={(e) => changeModel(e.target.value)} {...fieldProps('model')}>
+                <option value="" disabled>Choose one…</option>
+                {models.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}{m.capacity ? `, ${m.capacity}` : ''}
+                  </option>
+                ))}
+                <option value="not-sure">Not sure</option>
+              </select>
+              <Err k="model" />
+            </div>
+            <div className="field">
+              <label htmlFor={id('people')}>Usual number of people</label>
+              <select className="select" value={v.people} onChange={(e) => set('people', e.target.value)} {...fieldProps('people', 'enq-people-hint')}>
+                <option value="">Not sure</option>
+                {PEOPLE_OPTIONS.map((p) => <option key={p.v} value={p.v}>{p.label}</option>)}
+              </select>
+              <span className="hint" id="enq-people-hint">Adults sitting at once.</span>
+            </div>
+          </div>
+
+          <div className="enq__row enq__row--2">
+            <div className={`field${err('heating') ? ' has-error' : ''}`}>
+              <label htmlFor={id('heating')}>Heating preference</label>
+              <select className="select" value={v.heating} onChange={(e) => changeHeating(e.target.value)} {...fieldProps('heating', 'enq-heat-hint')}>
+                <option value="">No preference yet</option>
+                <option value="electric">Electric</option>
+                <option value="wood" disabled={!woodOk}>{woodLabel}</option>
+                <option value="advice">I need advice</option>
+              </select>
+              <span className="hint" id="enq-heat-hint">A preference, not a confirmed configuration.</span>
+              <Err k="heating" />
+            </div>
+            <div className="field">
+              <label htmlFor={id('changingArea')}>A changing area</label>
+              <select className="select" value={v.changingArea} onChange={(e) => set('changingArea', e.target.value)} {...fieldProps('changingArea', 'enq-changing-hint')}>
+                <option value="">No preference yet</option>
+                <option value="yes">I would like one</option>
+                <option value="no">No</option>
+                <option value="not-important">Not important</option>
+              </select>
+              <span className="hint" id="enq-changing-hint">Only the Ember is described with one, and how it is specified is still being confirmed.</span>
+            </div>
+          </div>
+
+          <p className="enq__note" role="status" aria-live="polite">{heatingNote}</p>
         </div>
+
+        <div className={`field${err('description') ? ' has-error' : ''}`}>
+          <label htmlFor={id('description')}>{commercial ? 'Tell us about the venue and the project' : 'Tell us about your space'}</label>
+          <textarea
+            className="textarea"
+            required
+            value={v.description}
+            onChange={(e) => set('description', e.target.value)}
+            {...fieldProps('description', 'enq-desc-hint')}
+          />
+          <span className="hint" id="enq-desc-hint">
+            {commercial ? 'What it is for, and anything we should know about the site.' : 'Where in the garden, what the ground is like, and how you would get it in. A few lines is plenty.'}
+          </span>
+          <Err k="description" />
+        </div>
+
+        <div className={`field${err('dimensions') ? ' has-error' : ''}`}>
+          <label htmlFor={id('dimensions')}>Approximate space available (optional)</label>
+          <input className="input" type="text" value={v.dimensions} placeholder="e.g. 4 m × 3 m" onChange={(e) => set('dimensions', e.target.value)} {...fieldProps('dimensions', 'enq-dim-hint')} />
+          <span className="hint" id="enq-dim-hint">Please include units (metres). A starting point only: we check base, clearances and access with you.</span>
+          <Err k="dimensions" />
+        </div>
+      </fieldset>
+
+      {commercial && (
+        <fieldset className="enq__section">
+          <legend>About the venue (all optional)</legend>
+          <div className="enq__row enq__row--2">
+            <div className="field"><label htmlFor={id('organisation')}>Organisation</label><input className="input" type="text" autoComplete="organization" value={v.organisation} onChange={(e) => set('organisation', e.target.value)} {...fieldProps('organisation')} /><Err k="organisation" /></div>
+            <div className={`field${err('website') ? ' has-error' : ''}`}><label htmlFor={id('website')}>Website</label><input className="input" type="text" inputMode="url" autoComplete="url" value={v.website} onChange={(e) => set('website', e.target.value)} {...fieldProps('website')} /><Err k="website" /></div>
+          </div>
+          <div className="enq__row enq__row--2">
+            <div className="field"><label htmlFor={id('venueType')}>Type of venue</label><input className="input" type="text" value={v.venueType} placeholder="e.g. holiday cabins, small hotel, wellness studio" onChange={(e) => set('venueType', e.target.value)} {...fieldProps('venueType')} /><Err k="venueType" /></div>
+            <div className="field">
+              <label htmlFor={id('venueStatus')}>New or existing venue</label>
+              <select className="select" value={v.venueStatus} onChange={(e) => set('venueStatus', e.target.value)} {...fieldProps('venueStatus')}>
+                <option value="">Choose one…</option><option value="new">A new venue</option><option value="existing">An existing venue</option><option value="not-sure">Not sure</option>
+              </select>
+            </div>
+          </div>
+          <div className="enq__row enq__row--2">
+            <div className="field"><label htmlFor={id('usualUsers')}>Usual users</label><input className="input" type="text" value={v.usualUsers} placeholder="e.g. couples, groups of up to six" onChange={(e) => set('usualUsers', e.target.value)} {...fieldProps('usualUsers')} /><Err k="usualUsers" /></div>
+            <div className="field"><label htmlFor={id('usageFrequency')}>Expected frequency of use</label><input className="input" type="text" value={v.usageFrequency} placeholder="e.g. daily in season" onChange={(e) => set('usageFrequency', e.target.value)} {...fieldProps('usageFrequency')} /><Err k="usageFrequency" /></div>
+          </div>
+          <div className="enq__row enq__row--2">
+            <div className="field"><label htmlFor={id('openingTarget')}>Opening target</label><input className="input" type="text" value={v.openingTarget} onChange={(e) => set('openingTarget', e.target.value)} {...fieldProps('openingTarget')} /><Err k="openingTarget" /></div>
+            <div className="field"><label htmlFor={id('contractors')}>Contractors already involved</label><input className="input" type="text" value={v.contractors} onChange={(e) => set('contractors', e.target.value)} {...fieldProps('contractors')} /><Err k="contractors" /></div>
+          </div>
+          <p className="hint">Please do not include health information about guests.</p>
+        </fieldset>
       )}
 
-      <fieldset>
-        <legend>About you</legend>
+      <fieldset className="enq__section">
+        <legend>Your details</legend>
         <div className="enq__row enq__row--2">
           <div className={`field${err('name') ? ' has-error' : ''}`}>
             <label htmlFor={id('name')}>Name</label>
@@ -285,88 +440,8 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend>Your project</legend>
-        {kind === 'residential' && (
-          <div className={`field${err('projectType') ? ' has-error' : ''}`}>
-            <span className="field-label" id="enq-pt-label" style={{ fontWeight: 600, fontSize: 'var(--fs-small)' }}>This is for</span>
-            <div className="choice-group choice-group--row" role="radiogroup" aria-labelledby="enq-pt-label">
-              {(['residential', 'commercial'] as const).map((t) => (
-                <label className="choice" key={t}>
-                  <input type="radio" name="projectType" value={t} checked={v.projectType === t} onChange={() => set('projectType', t)} />
-                  <span className="choice-title">{t === 'residential' ? 'A home' : 'A business'}</span>
-                </label>
-              ))}
-            </div>
-            <Err k="projectType" />
-            {v.projectType === 'commercial' && (
-              <p className="hint">
-                Business projects are assessed separately. You can carry on here, or use <a href="/commercial#enquire">the commercial form</a>, which asks about use, operation and timing.
-              </p>
-            )}
-          </div>
-        )}
-
-        <div className={`field${err('model') ? ' has-error' : ''}`}>
-          <label htmlFor={id('model')}>Model of interest</label>
-          <select className="select" required value={v.model} onChange={(e) => set('model', e.target.value)} {...fieldProps('model')}>
-            <option value="" disabled>Choose one…</option>
-            {models.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name}{m.capacity ? `, ${m.capacity}` : ''}
-              </option>
-            ))}
-            <option value="not-sure">Not sure</option>
-          </select>
-          <Err k="model" />
-        </div>
-
-        <div className={`field${err('description') ? ' has-error' : ''}`}>
-          <label htmlFor={id('description')}>{commercial ? 'Tell us about the venue and the project' : 'Tell us about your space'}</label>
-          <textarea
-            className="textarea"
-            required
-            value={v.description}
-            onChange={(e) => set('description', e.target.value)}
-            {...fieldProps('description', 'enq-desc-hint')}
-          />
-          <span className="hint" id="enq-desc-hint">
-            {commercial ? 'What it is for, and anything we should know about the site.' : 'Where in the garden, what the ground is like, and how you would get it in. A few lines is plenty.'}
-          </span>
-          <Err k="description" />
-        </div>
-      </fieldset>
-
-      {commercial && (
-        <fieldset>
-          <legend>About the venue (all optional)</legend>
-          <div className="enq__row enq__row--2">
-            <div className="field"><label htmlFor={id('organisation')}>Organisation</label><input className="input" type="text" autoComplete="organization" value={v.organisation} onChange={(e) => set('organisation', e.target.value)} {...fieldProps('organisation')} /><Err k="organisation" /></div>
-            <div className={`field${err('website') ? ' has-error' : ''}`}><label htmlFor={id('website')}>Website</label><input className="input" type="text" inputMode="url" autoComplete="url" value={v.website} onChange={(e) => set('website', e.target.value)} {...fieldProps('website')} /><Err k="website" /></div>
-          </div>
-          <div className="enq__row enq__row--2">
-            <div className="field"><label htmlFor={id('venueType')}>Type of venue</label><input className="input" type="text" value={v.venueType} placeholder="e.g. holiday cabins, small hotel, wellness studio" onChange={(e) => set('venueType', e.target.value)} {...fieldProps('venueType')} /><Err k="venueType" /></div>
-            <div className="field">
-              <label htmlFor={id('venueStatus')}>New or existing venue</label>
-              <select className="select" value={v.venueStatus} onChange={(e) => set('venueStatus', e.target.value)} {...fieldProps('venueStatus')}>
-                <option value="">Choose one…</option><option value="new">A new venue</option><option value="existing">An existing venue</option><option value="not-sure">Not sure</option>
-              </select>
-            </div>
-          </div>
-          <div className="enq__row enq__row--2">
-            <div className="field"><label htmlFor={id('usualUsers')}>Usual users</label><input className="input" type="text" value={v.usualUsers} placeholder="e.g. couples, groups of up to six" onChange={(e) => set('usualUsers', e.target.value)} {...fieldProps('usualUsers')} /><Err k="usualUsers" /></div>
-            <div className="field"><label htmlFor={id('usageFrequency')}>Expected frequency of use</label><input className="input" type="text" value={v.usageFrequency} placeholder="e.g. daily in season" onChange={(e) => set('usageFrequency', e.target.value)} {...fieldProps('usageFrequency')} /><Err k="usageFrequency" /></div>
-          </div>
-          <div className="enq__row enq__row--2">
-            <div className="field"><label htmlFor={id('openingTarget')}>Opening target</label><input className="input" type="text" value={v.openingTarget} onChange={(e) => set('openingTarget', e.target.value)} {...fieldProps('openingTarget')} /><Err k="openingTarget" /></div>
-            <div className="field"><label htmlFor={id('contractors')}>Contractors already involved</label><input className="input" type="text" value={v.contractors} onChange={(e) => set('contractors', e.target.value)} {...fieldProps('contractors')} /><Err k="contractors" /></div>
-          </div>
-          <p className="hint">Please do not include health information about guests.</p>
-        </fieldset>
-      )}
-
-      <fieldset>
-        <legend>A little more, if you can (optional)</legend>
+      <details className="enq__more" open={Boolean(v.budget || v.timing || errors.budget || errors.timing)}>
+        <summary>A little more, if you can (optional)</summary>
         <div className="enq__row enq__row--2">
           <div className="field">
             <label htmlFor={id('budget')}>Budget range</label>
@@ -383,37 +458,16 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
             </select>
           </div>
         </div>
-        <div className="enq__row enq__row--2">
-          <div className={`field${err('dimensions') ? ' has-error' : ''}`}>
-            <label htmlFor={id('dimensions')}>Approximate space available</label>
-            <input className="input" type="text" value={v.dimensions} placeholder="e.g. 4 m × 3 m" onChange={(e) => set('dimensions', e.target.value)} {...fieldProps('dimensions', 'enq-dim-hint')} />
-            <span className="hint" id="enq-dim-hint">Please include units (metres). This is a starting point; we check base, clearances and access with you.</span>
-            <Err k="dimensions" />
-          </div>
-          <div className="field">
-            <label htmlFor={id('heating')}>Heating preference</label>
-            <select className="select" value={v.heating} onChange={(e) => set('heating', e.target.value)} {...fieldProps('heating', 'enq-heat-hint')}>
-              <option value="">No preference yet</option>
-              <option value="electric">Electric</option>
-              <option value="wood" disabled={v.model === 'rowan'}>Wood-burning{v.model === 'rowan' ? ' (not offered on the Rowan)' : ''}</option>
-              <option value="advice">I need advice</option>
-            </select>
-            <span className="hint" id="enq-heat-hint">A preference, not a confirmed configuration.</span>
-          </div>
-        </div>
         <p className="hint">You can send photographs of the space when we reply. There is no upload here.</p>
-      </fieldset>
+      </details>
 
-      <fieldset>
-        <legend>Staying in touch</legend>
-        <label className="choice">
-          <input type="checkbox" checked={v.marketingOptIn} onChange={(e) => set('marketingOptIn', e.target.checked)} />
-          <span>
-            <span className="choice-title">Send me occasional news from Alder & Ember (optional)</span>
-            <span className="choice-note">Separate from your enquiry. Your enquiry is sent either way, and we will only email you news if you tick this.</span>
-          </span>
-        </label>
-      </fieldset>
+      <label className="choice enq__optin">
+        <input type="checkbox" checked={v.marketingOptIn} onChange={(e) => set('marketingOptIn', e.target.checked)} />
+        <span>
+          <span className="choice-title">Send me occasional news from Alder & Ember (optional)</span>
+          <span className="choice-note">Separate from your enquiry, which is sent either way. We only email news if you tick this.</span>
+        </span>
+      </label>
 
       {/* honeypot: hidden from people and assistive tech */}
       <div className="enq__hp" aria-hidden="true">
@@ -426,7 +480,7 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
           {busy ? (<><span className="enq__spinner" aria-hidden="true" /> Sending…</>) : kind === 'commercial' ? 'Send commercial enquiry' : 'Send your enquiry'}
         </button>
         <p id="enq-next" className="muted" style={{ fontSize: 'var(--fs-small)' }}>
-          {responseTime ?? 'The team reviews your project and replies as soon as they can.'} Site assessment and your quotation confirm the final specification. See our <a href="/privacy">privacy</a> page for how your details are used.
+          {responseTime ?? 'The team reviews your project and replies as soon as they can.'} Site assessment and your quotation confirm the final specification. See our <a href={pageHref('/privacy')}>privacy</a> page for how your details are used.
         </p>
       </div>
     </form>

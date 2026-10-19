@@ -8,7 +8,7 @@
 import type { ProductId } from '@/content/types';
 import { products, productList } from '@/content/products';
 import type { HeatingPreference } from '@/content/options';
-import { woodBurningMayBeDiscussed } from '@/content/options';
+import { reconcileHeating, woodBurningMayBeDiscussed } from '@/content/options';
 
 export type UseType = 'residential' | 'commercial';
 export type ModelInterest = ProductId | 'not-sure';
@@ -21,8 +21,6 @@ export interface SelectorInput {
   model: ModelInterest;
   heating: HeatingPreference;
   changingArea: ChangingAreaPref;
-  /** free text, optional; never used to decide */
-  space?: string;
 }
 
 export type SelectorResult =
@@ -45,7 +43,7 @@ export function modelForPeople(people: number): ProductId | null {
 }
 
 const SPACE_CAVEAT =
-  'Your approximate space is a starting point only. A model also needs a base, clearances around it and a route in for delivery, which we check with you.';
+  'A model also needs a base, clearances around it and a route in for delivery, which we check with you once you share your space.';
 
 export function runSelector(input: SelectorInput): SelectorResult {
   if (input.use === 'commercial') {
@@ -140,7 +138,7 @@ export function runSelector(input: SelectorInput): SelectorResult {
     caveats.push('You would like advice on heating. We will talk through electric and, where offered, wood-burning.');
   }
 
-  if (input.space && input.space.trim()) caveats.push(SPACE_CAVEAT);
+  caveats.push(SPACE_CAVEAT);
   caveats.push('This is a shortlist, not an approval of your site or a confirmed installed price.');
 
   return { kind: 'recommend', model: chosen, reasons, caveats };
@@ -158,16 +156,20 @@ export interface PreferenceState {
   changingArea?: ChangingAreaPref;
 }
 
+const MODEL_IDS: readonly string[] = productList.map((p) => p.id);
 const HEATING_VALUES: HeatingPreference[] = ['electric', 'wood', 'advice'];
 const USE_VALUES: UseType[] = ['residential', 'commercial'];
 const CHANGING_VALUES: ChangingAreaPref[] = ['yes', 'no', 'not-important'];
 
 /** Parse and validate preference params; unknown/invalid values are dropped. */
-export function parsePreferences(params: URLSearchParams | Record<string, string | undefined>): PreferenceState {
+export function parsePreferences(
+  params: URLSearchParams | Record<string, string | undefined>,
+  { reconcile = true }: { reconcile?: boolean } = {},
+): PreferenceState {
   const get = (k: string) => (params instanceof URLSearchParams ? params.get(k) : params[k]) ?? undefined;
   const out: PreferenceState = {};
   const model = get('model');
-  if (model === 'not-sure' || (model && model in products)) out.model = model as PreferenceState['model'];
+  if (model === 'not-sure' || (model && MODEL_IDS.includes(model))) out.model = model as PreferenceState['model'];
   const use = get('use');
   if (use && (USE_VALUES as string[]).includes(use)) out.use = use as UseType;
   const people = Number(get('people'));
@@ -176,8 +178,18 @@ export function parsePreferences(params: URLSearchParams | Record<string, string
   if (heating && (HEATING_VALUES as string[]).includes(heating)) out.heating = heating as HeatingPreference;
   const ca = get('changing');
   if (ca && (CHANGING_VALUES as string[]).includes(ca)) out.changingArea = ca as ChangingAreaPref;
-  return out;
+  return reconcile ? reconcilePreferences(out) : out;
 }
+
+/** Drops a heating preference the chosen model does not offer, so carried state is never contradictory. */
+export function reconcilePreferences(p: PreferenceState): PreferenceState {
+  const r = reconcileHeating(p.model, p.heating);
+  if (!r.adjusted) return p;
+  return { ...p, heating: r.heating as HeatingPreference };
+}
+
+/** Query parameters that carry preferences. Anything else on the URL is left alone. */
+export const PREFERENCE_PARAMS = ['model', 'use', 'people', 'heating', 'changing'] as const;
 
 export function preferencesToQuery(p: PreferenceState): string {
   const q = new URLSearchParams();

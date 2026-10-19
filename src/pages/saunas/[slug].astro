@@ -348,7 +348,8 @@ const pendingText = 'Confirmed against the approved drawings during your site re
   const bar = document.querySelector<HTMLElement>('[data-sticky-cta]');
   const top = document.querySelector<HTMLElement>('[data-product-top]');
   const close = document.querySelector<HTMLElement>('[data-product-close]');
-  const modelId = new URL(location.href).pathname.split('/').pop() ?? '';
+  // the last path segment, ignoring a trailing slash or index.html (static bundles are served as files)
+  const modelId = new URL(location.href).pathname.split('/').filter((x) => x && x !== 'index.html').pop() ?? '';
   track('view_product', { model_id: modelId });
 
   if (bar && top && 'IntersectionObserver' in window) {

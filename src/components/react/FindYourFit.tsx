@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import '../../styles/find-your-fit.css';
 import type { ModelView } from './ModelView';
 import { enquiryHref, readPrefs, writePrefs } from '@/lib/prefs-client';
-import { assetSrcset, assetUrl } from '@/lib/asset-url';
+import { assetSrcset, assetUrl, pageHref } from '@/lib/base-url';
 
 interface Props {
   models: ModelView[];
@@ -174,10 +174,10 @@ export default function FindYourFit({ models, initial = 'alder' }: Props) {
 
           <div className="fyf__actions">
             <div className="fyf__actions-row">
-              <a className="btn" href={`/saunas/${m.id}`}>
+              <a className="btn" href={pageHref(`/saunas/${m.id}`)}>
                 Explore the {m.shortName}
               </a>
-              <a className="btn btn--secondary" href={`/compare?m=${models.map((x) => x.id).join(',')}`}>
+              <a className="btn btn--secondary" href={pageHref(`/compare?m=${models.map((x) => x.id).join(',')}`)}>
                 Compare models
               </a>
             </div>

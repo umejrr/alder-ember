@@ -177,3 +177,28 @@ describe('analytics never carries personal data', () => {
     expect(sanitize('compare_models', { model_ids: ['rowan', 'alder'] })).toEqual({ model_ids: 'rowan,alder' });
   });
 });
+
+describe('model and heating preference must agree (audit A04)', () => {
+  it('rejects wood-burning on the Rowan instead of accepting a contradiction', () => {
+    const r = validateEnquiry({ ...good, model: 'rowan', heating: 'wood' });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.heating).toMatch(/not offered on The Rowan/);
+  });
+
+  it('accepts the same preference on a model that offers it, and the Rowan with electric or advice', () => {
+    expect(validateEnquiry({ ...good, model: 'ember', heating: 'wood' }).ok).toBe(true);
+    expect(validateEnquiry({ ...good, model: 'rowan', heating: 'electric' }).ok).toBe(true);
+    expect(validateEnquiry({ ...good, model: 'rowan', heating: 'advice' }).ok).toBe(true);
+    expect(validateEnquiry({ ...good, model: 'not-sure', heating: 'wood' }).ok).toBe(true);
+  });
+
+  it('keeps people and changing area in the validated payload and the summary', () => {
+    const r = validateEnquiry({ ...good, model: 'ember', people: 6, changingArea: 'yes' });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.value).toMatchObject({ people: 6, changingArea: 'yes' });
+      expect(contextSummary(r.value).join(' ')).toMatch(/6/);
+      expect(contextSummary(r.value).join(' ')).toMatch(/changing area/i);
+    }
+  });
+});

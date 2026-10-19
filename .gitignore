@@ -11,6 +11,7 @@ screenshots
 dist-prod
 dist-static
 dist-static-raw
+dist-static-test
 dist-artifact
 dist-artifact-pkg
 dist-artifact-test

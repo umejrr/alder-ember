@@ -3,7 +3,14 @@
  * survive navigation into the enquiry form and back. Never stores name, email, phone,
  * postcode, free text or photos.
  */
-import { parsePreferences, preferencesToQuery, type PreferenceState } from './selector';
+import {
+  PREFERENCE_PARAMS,
+  parsePreferences,
+  preferencesToQuery,
+  reconcilePreferences,
+  type PreferenceState,
+} from './selector';
+import { pageHref } from './base-url';
 
 const KEY = 'ae-prefs-v1';
 
@@ -18,7 +25,8 @@ export function readPrefs(): PreferenceState {
 }
 
 export function writePrefs(update: PreferenceState): PreferenceState {
-  const merged = { ...readPrefs(), ...update };
+  // reconcile after merging, so a model change can never leave an unavailable heating preference behind
+  const merged = reconcilePreferences({ ...readPrefs(), ...update });
   try {
     sessionStorage.setItem(KEY, preferencesToQuery(merged).replace(/^\?/, ''));
   } catch {
@@ -35,4 +43,24 @@ export function clearPrefs() {
   }
 }
 
-export const enquiryHref = (p: PreferenceState) => `/plan-your-sauna${preferencesToQuery(p)}`;
+/**
+ * Removes the preference parameters from the address bar, leaving any other parameters and the
+ * fragment untouched. "Clear" must clear the URL too, otherwise a reload brings the choice back.
+ */
+export function clearUrlPreferences() {
+  try {
+    const url = new URL(window.location.href);
+    let changed = false;
+    for (const k of PREFERENCE_PARAMS) {
+      if (url.searchParams.has(k)) {
+        url.searchParams.delete(k);
+        changed = true;
+      }
+    }
+    if (changed) window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+  } catch {
+    /* sandboxed frames may refuse; session and form state are already cleared */
+  }
+}
+
+export const enquiryHref = (p: PreferenceState) => pageHref(`/plan-your-sauna${preferencesToQuery(p)}`);

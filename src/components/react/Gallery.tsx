@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '../../styles/gallery.css';
 import type { ModelView } from './ModelView';
-import { assetSrcset, assetUrl } from '@/lib/asset-url';
+import { assetSrcset, assetUrl } from '@/lib/base-url';
 
 type Img = ModelView['asset'];
 
@@ -54,6 +54,8 @@ export default function Gallery({ images, name }: { images: Img[]; name: string 
     return () => d.removeEventListener('close', onClose);
   }, []);
 
+  // One owner for arrow keys: the wrapper. The dialog sits inside it, so its key events bubble here
+  // exactly once. Handling them on the dialog as well advanced two images per press.
   const onKey = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowRight') {
       e.preventDefault();
@@ -111,7 +113,7 @@ export default function Gallery({ images, name }: { images: Img[]; name: string 
         </div>
       )}
 
-      <dialog ref={dialogRef} className="gal-dialog" aria-label={`${name}: enlarged image`} onKeyDown={onKey}>
+      <dialog ref={dialogRef} className="gal-dialog" aria-label={`${name}: enlarged image`}>
         <div className="gal-dialog__inner">
           <div className="gal-dialog__bar">
             <span className="gal__count">

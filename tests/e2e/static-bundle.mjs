@@ -1,14 +1,16 @@
 // Verifies the static bundle works from a nested sub-path with NO request escaping that prefix.
-//   node scripts/build-static.mjs && node tests/e2e/static-bundle.mjs
+//   npm run e2e:static        (builds a bundle anchored to /a/b/c/, then runs this file)
+//   LIVE_URL=https://owner.github.io/repo/ node tests/e2e/static-bundle.mjs   (same checks against a real deployment)
+// Like GitHub Pages, the local server answers any missing path with 404.html and a 404 status.
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 
-const ROOT = process.env.BUNDLE_DIR ? new URL(process.env.BUNDLE_DIR.replace(/\/?$/, '/'), 'file://' + process.cwd() + '/').pathname : new URL('../../dist-static/', import.meta.url).pathname;
+const ROOT = process.env.BUNDLE_DIR ? new URL(process.env.BUNDLE_DIR.replace(/\/?$/, '/'), 'file://' + process.cwd() + '/').pathname : new URL('../../dist-static-test/', import.meta.url).pathname;
 const PREFIX = '/a/b/c/';
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain' };
 const escaped = [];
 const server = http.createServer(async (req, res) => {
   const u = new URL(req.url, 'http://x');
@@ -17,7 +19,11 @@ const server = http.createServer(async (req, res) => {
   let p = normalize(join(ROOT, decodeURIComponent(u.pathname.slice(PREFIX.length))));
   if (!p.startsWith(ROOT)) { res.statusCode = 403; return res.end(); }
   try { if ((await stat(p)).isDirectory()) p = join(p, 'index.html'); const b = await readFile(p); res.setHeader('content-type', MIME[extname(p)] || 'application/octet-stream'); res.end(b); }
-  catch { res.statusCode = 404; res.end('not found'); }
+  catch {
+    res.statusCode = 404;
+    if (extname(u.pathname)) return res.end('not found'); // a missing file (asset), not a missing page
+    try { res.setHeader('content-type', 'text/html'); res.end(await readFile(join(ROOT, '404.html'))); } catch { res.end('not found'); }
+  }
 });
 // LIVE_URL=https://owner.github.io/repo/ runs the same checks against a real deployment instead of the local server
 const LIVE = process.env.LIVE_URL ? process.env.LIVE_URL.replace(/\/?$/, '/') : null;
@@ -51,12 +57,70 @@ await step('the model showcase hydrates and works (island scripts load from rela
 });
 
 await step('static links and React-created links both navigate within the bundle', async () => {
-  await page.getByRole('link', { name: /Explore the Ember/ }).click(); // created by React: handled by the shim
+  await page.getByRole('link', { name: /Explore the Ember/ }).click(); // created by React: a real href, no click interception
   await page.waitForURL(/saunas\/ember\/index\.html/);
   assert.match(await page.locator('h1').innerText(), /The Ember/);
   await page.locator('.site-nav').getByRole('link', { name: 'Installation & delivery' }).click(); // static, rewritten at build time
   await page.waitForURL(/installation-delivery\/index\.html/);
   await page.getByRole('link', { name: 'Home', exact: true }).first().click().catch(() => {});
+});
+
+const here = (p) => new URL(base).pathname + p;
+const underPrefix = (href, from) => new URL(href, from).pathname.startsWith(new URL(base).pathname);
+
+await step('generated links are real hrefs under the project prefix, and open in a new tab (Ctrl-click)', async () => {
+  // home model explorer: links change with the selected model
+  await page.goto(base + 'index.html', { waitUntil: 'networkidle' });
+  await page.locator('#find-your-fit').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+  await page.getByRole('tab', { name: /Ember/ }).click();
+  const panel = page.getByRole('tabpanel');
+  for (const [name, expect_] of [[/Explore the Ember/, /saunas\/ember\/index\.html$/], [/Plan your Ember/, /plan-your-sauna\/index\.html\?model=ember$/], [/Compare models/, /compare\/index\.html\?m=/]]) {
+    const href = await panel.getByRole('link', { name }).first().getAttribute('href');
+    assert.match(href, expect_, `explorer link ${name}`);
+    assert.ok(underPrefix(href, page.url()), `explorer link escapes the prefix: ${href}`);
+  }
+  // selector result link (created after interaction), opened with a native modified click
+  await page.goto(base + 'compare/index.html#selector', { waitUntil: 'networkidle' });
+  await page.locator('#selector').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+  await page.selectOption('#sel-people', '2');
+  await page.locator('.sel').getByLabel('I would like one').check();
+  await page.getByRole('button', { name: 'Show a starting point' }).click();
+  const link = page.locator('.sel__result').getByRole('link', { name: 'Compare these models' });
+  await link.waitFor();
+  const href = await link.getAttribute('href');
+  assert.ok(underPrefix(href, page.url()) && /compare\/index\.html\?m=/.test(href), `selector link: ${href}`);
+  const [popup] = await Promise.all([ctx.waitForEvent('page'), link.click({ modifiers: ['Control'] })]);
+  await popup.waitForLoadState('domcontentloaded');
+  assert.ok(new URL(popup.url()).pathname.startsWith(new URL(base).pathname), `new tab left the prefix: ${popup.url()}`);
+  assert.match(await popup.locator('h1').innerText(), /Compare/);
+  await popup.close();
+  // the model page panel and compare table links
+  await page.goto(base + 'saunas/alder/index.html', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+  for (const a of await page.locator('a[data-enquiry-cta], .ppanel a').all()) assert.ok(underPrefix(await a.getAttribute('href'), page.url()), 'product panel link escapes the prefix');
+  await page.goto(base + 'compare/index.html', { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'The Alder', exact: true }).waitFor(); // the comparison island has hydrated
+  for (const a of await page.locator('.cmp-table a').all()) assert.ok(underPrefix(await a.getAttribute('href'), page.url()), 'compare table link escapes the prefix');
+});
+
+await step('missing pages at any depth return 404 with the branded, styled page and working recovery links', async () => {
+  const np = await ctx.newPage(); // its own page: the 404 responses are expected here, not errors
+  for (const path of ['qa-missing-page', 'qa-missing-page/', 'qa-missing-page/deep/', 'a/b/c/d/e/missing/', 'saunas/not-a-model']) {
+    const res = await np.goto(base + path, { waitUntil: 'networkidle' });
+    assert.equal(res.status(), 404, `${path} should be a 404`);
+    assert.match(await np.locator('h1').innerText(), /can.t find that page/i, path);
+    const font = await np.evaluate(() => getComputedStyle(document.querySelector('h1')).fontFamily);
+    assert.match(font, /Newsreader/, `${path}: the stylesheet did not load (font ${font})`);
+    const logo = await np.locator('.site-header img, .site-header svg, header img, header svg').first().boundingBox();
+    assert.ok(logo && logo.width < 400, `${path}: logo is unstyled (${logo && logo.width}px wide)`);
+    for (const a of await np.locator('main a[href]').all()) assert.ok(underPrefix(await a.getAttribute('href'), np.url()), `${path}: recovery link escapes the prefix`);
+    await np.getByRole('link', { name: 'Explore the saunas' }).click();
+    await np.waitForURL(/saunas\/index\.html$/);
+    assert.match(await np.locator('h1').first().innerText(), /./);
+  }
+  await np.close();
 });
 
 await step('every page in the bundle loads without errors', async () => {

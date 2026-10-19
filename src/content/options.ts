@@ -119,6 +119,38 @@ export function woodBurningMayBeDiscussed(productId: ProductId, mode?: ContentMo
   return f.value === 'selected-configurations' || f.value === 'available';
 }
 
+const isProductId = (v: unknown): v is ProductId =>
+  typeof v === 'string' && Object.prototype.hasOwnProperty.call(products, v);
+
+export interface ReconciledHeating {
+  heating: HeatingPreference | '';
+  /** true when the incoming preference was not offered on the model and was changed */
+  adjusted: boolean;
+  /** plain-language explanation to show the visitor when `adjusted` */
+  reason: string | null;
+}
+
+/**
+ * The one rule linking a model to a heating preference. A preference the chosen model does not
+ * offer is never kept: it becomes "I need advice", with a reason the visitor can read.
+ * Used by the enquiry form, saved/URL preferences and server validation.
+ */
+export function reconcileHeating(
+  model: string | null | undefined,
+  heating: string | null | undefined,
+  mode?: ContentMode,
+): ReconciledHeating {
+  const h = heating === 'electric' || heating === 'wood' || heating === 'advice' ? heating : '';
+  if (h === 'wood' && isProductId(model) && !woodBurningMayBeDiscussed(model, mode)) {
+    return {
+      heating: 'advice',
+      adjusted: true,
+      reason: `Wood-burning is not offered on ${products[model].name} in the supplied range, so we have changed your heating preference to “I need advice”.`,
+    };
+  }
+  return { heating: h, adjusted: false, reason: null };
+}
+
 export function modelHasProduct(p: Product | undefined): p is Product {
   return Boolean(p);
 }

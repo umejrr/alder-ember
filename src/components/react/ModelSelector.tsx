@@ -12,6 +12,7 @@ import {
 } from '@/lib/selector';
 import type { HeatingPreference } from '@/content/options';
 import { enquiryHref, writePrefs } from '@/lib/prefs-client';
+import { pageHref } from '@/lib/base-url';
 import { track } from '@/lib/analytics';
 
 const PEOPLE = [
@@ -28,10 +29,10 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
   const [use, setUse] = useState<UseType>('residential');
   const [people, setPeople] = useState('');
   const [model, setModel] = useState<ModelInterest>('not-sure');
-  const [space, setSpace] = useState('');
   const [heating, setHeating] = useState<HeatingPreference>('advice');
   const [changing, setChanging] = useState<ChangingAreaPref>('not-important');
-  const [result, setResult] = useState<SelectorResult | null>(null);
+  // the answers a result was produced from. Result, explanation and links all read this one snapshot.
+  const [committed, setCommitted] = useState<{ input: SelectorInput; result: SelectorResult } | null>(null);
   const started = useRef(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -47,15 +48,14 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
     model,
     heating,
     changingArea: changing,
-    space,
   });
 
   const submit = (e: { preventDefault(): void }) => {
     e.preventDefault();
     const i = input();
     const r = runSelector(i);
-    setResult(r);
-    // non-personal answers only (never the free-text space)
+    setCommitted({ input: i, result: r });
+    // non-personal answers only
     writePrefs({
       use: i.use,
       heating: i.heating,
@@ -72,7 +72,10 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
   };
 
   const name = (id: string) => models.find((m) => m.id === id)?.name ?? id;
-  const i = input();
+  const now = input();
+  const result = committed?.result ?? null;
+  const i = committed?.input ?? now; // links and wording come from the committed answers, never the live form
+  const stale = committed !== null && JSON.stringify(committed.input) !== JSON.stringify(now);
 
   return (
     <div className="sel">
@@ -114,23 +117,6 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
             </div>
           </fieldset>
 
-          <div className="field">
-            <label htmlFor="sel-space">Approximate available space (optional)</label>
-            <input
-              id="sel-space"
-              className="input"
-              type="text"
-              value={space}
-              onChange={(e) => setSpace(e.target.value)}
-              placeholder="e.g. 4 m × 3 m"
-              autoComplete="off"
-              aria-describedby="sel-space-hint"
-            />
-            <span className="hint" id="sel-space-hint">
-              A starting point only. The cabin also needs a base, clearances and a route in, which we check with you.
-            </span>
-          </div>
-
           <fieldset>
             <legend>Heating preference</legend>
             <div className="choice-group choice-group--row">
@@ -171,7 +157,15 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
 
       <div ref={resultRef} tabIndex={-1} aria-live="polite" className="sel__live">
         {result && (
-          <div className="sel__result">
+          <div className={`sel__result${stale ? ' is-stale' : ''}`}>
+            {stale && (
+              <p className="sel__stale" role="status">
+                Your answers have changed since this starting point.{' '}
+                <button type="button" className="text-link" onClick={submit} style={{ background: 'none', border: 0, borderBottom: '1px solid currentColor', cursor: 'pointer' }}>
+                  Update the starting point
+                </button>
+              </p>
+            )}
             {result.kind === 'recommend' && (
               <>
                 <span className="label muted">A starting point</span>
@@ -179,11 +173,11 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
                 <ul>{result.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
                 <ul>{result.caveats.map((r) => <li key={r} className="muted">{r}</li>)}</ul>
                 <p className="sel__closing">{CLOSING_SENTENCE}</p>
-                <div className="actions">
+                <div className="actions" hidden={stale}>
                   <a className="btn" href={enquiryHref({ model: result.model, use: i.use, heating: i.heating, changingArea: i.changingArea, ...(i.people ? { people: i.people } : {}) })}>
                     Plan your {name(result.model).replace('The ', '')}
                   </a>
-                  <a className="btn btn--secondary" href={`/saunas/${result.model}`}>See {name(result.model)}</a>
+                  <a className="btn btn--secondary" href={pageHref(`/saunas/${result.model}`)}>See {name(result.model)}</a>
                 </div>
               </>
             )}
@@ -193,9 +187,9 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
                 <h3>We would like to help you choose</h3>
                 <ul>{result.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
                 <p className="sel__closing">{CLOSING_SENTENCE}</p>
-                <div className="actions">
-                  <a className="btn" href={`/compare?m=${[...new Set(result.compare)].join(',')}`}>Compare these models</a>
-                  <a className="btn btn--secondary" href={enquiryHref({ use: i.use, heating: i.heating, ...(i.people ? { people: i.people } : {}) })}>Plan your sauna</a>
+                <div className="actions" hidden={stale}>
+                  <a className="btn" href={pageHref(`/compare?m=${[...new Set(result.compare)].join(',')}`)}>Compare these models</a>
+                  <a className="btn btn--secondary" href={enquiryHref({ use: i.use, heating: i.heating, changingArea: i.changingArea, ...(i.people ? { people: i.people } : {}) })}>Plan your sauna</a>
                 </div>
               </>
             )}
@@ -205,8 +199,8 @@ export default function ModelSelector({ models }: { models: ModelView[] }) {
                 <h3>A separate assessment</h3>
                 <ul>{result.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
                 <p className="sel__closing">{CLOSING_SENTENCE}</p>
-                <div className="actions">
-                  <a className="btn" href="/commercial">Discuss a commercial project</a>
+                <div className="actions" hidden={stale}>
+                  <a className="btn" href={pageHref('/commercial')}>Discuss a commercial project</a>
                 </div>
               </>
             )}

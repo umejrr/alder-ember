@@ -82,28 +82,36 @@ const crumbLd =
     <ConsentBanner />
 
     <script>
-      // Scroll reveal: subtle, and content is never hidden without JS or when motion is reduced.
+      // Scroll reveal. Content is visible by default: the page is only marked .reveal-armed (which is what
+      // allows .reveal elements to start hidden) once everything below is set up, and elements already on
+      // screen are never hidden. If this module fails or is blocked, nothing is ever hidden.
       const items = document.querySelectorAll<HTMLElement>('.reveal');
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!items.length) {
-        /* nothing to do */
-      } else if (reduce || !('IntersectionObserver' in window)) {
-        items.forEach((el) => el.classList.add('is-in'));
-      } else {
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add('is-in');
-                io.unobserve(e.target);
-              }
-            });
-          },
-          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
-        );
-        items.forEach((el) => io.observe(el));
-        // safety net: never leave anything hidden
-        window.setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
+      if (items.length && !reduce && 'IntersectionObserver' in window) {
+        try {
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((e) => {
+                if (e.isIntersecting) {
+                  e.target.classList.add('is-in');
+                  io.unobserve(e.target);
+                }
+              });
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+          );
+          const vh = window.innerHeight;
+          items.forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.top < vh && r.bottom > 0) el.classList.add('is-in');
+            else io.observe(el);
+          });
+          // safety net: never leave anything hidden
+          window.setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
+          document.documentElement.classList.add('reveal-armed');
+        } catch {
+          /* leave everything visible */
+        }
       }
     </script>
   </body>

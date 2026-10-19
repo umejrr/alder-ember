@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ModelView } from './ModelView';
 import { enquiryHref, readPrefs, writePrefs } from '@/lib/prefs-client';
 import type { HeatingChoice, HeatingPreference } from '@/content/options';
+import { pageHref } from '@/lib/base-url';
 
 interface Props {
   model: ModelView;
@@ -45,7 +46,7 @@ export default function ProductPanel({ model, heating, compareIds }: Props) {
         <a className="btn btn--block" href={href} data-enquiry-cta>
           Plan your {model.shortName}
         </a>
-        <a className="btn btn--secondary btn--block" href={`/compare?m=${compareIds.join(',')}`}>
+        <a className="btn btn--secondary btn--block" href={pageHref(`/compare?m=${compareIds.join(',')}`)}>
           Compare models
         </a>
       </div>

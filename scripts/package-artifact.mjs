@@ -29,14 +29,14 @@ for (const css of walk(join(PKG, ASSETS)).filter((f) => f.endsWith('.css'))) {
 const html = readFileSync(join(PKG, 'index.html'), 'utf8');
 const head = html.match(/<head>([\s\S]*?)<\/head>/)[1];
 const body = html.match(/<body[^>]*>([\s\S]*)<\/body>/)[1];
-const shim = head.match(/<meta name="ae-root"[^>]*><script>[\s\S]*?<\/script>/)[0];
+const rootMeta = head.match(/<meta name="ae-root"[^>]*>/)[0];
 const cssLinks = [...head.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map((m) => m[1]);
 const inlineCss = cssLinks.map((href) => {
   const path = join(PKG, href);
   // the CSS now lives in the page at the artifact root, so its relative font URLs need the assets/ prefix
   return readFileSync(path, 'utf8').replace(/url\(\.\//g, `url(${ASSETS}/`);
 }).join('\n');
-const fragment = `<title>Alder &amp; Ember</title>\n${shim}\n<script>document.documentElement.classList.add('js');</script>\n<style>\n${inlineCss}\n</style>\n${body}\n`;
+const fragment = `<title>Alder &amp; Ember</title>\n${rootMeta}\n<script>document.documentElement.classList.add('js');</script>\n<style>\n${inlineCss}\n</style>\n${body}\n`;
 // the primary page is published from this file; remove the full document from the files list
 writeFileSync(join(PKG, '_primary.html'), fragment);
 rmSync(join(PKG, 'index.html'));

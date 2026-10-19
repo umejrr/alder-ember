@@ -695,15 +695,16 @@ table.data td {
   text-transform: uppercase;
 }
 
-/* ---------- reveal (content is visible without JS or when motion is reduced) ---------- */
-.js .reveal {
+/* ---------- reveal ----------
+   Content is visible by default. Nothing is hidden until the reveal script has run to completion and
+   marked <html> with .reveal-armed, so a blocked or failed module, no JavaScript, or reduced motion
+   all leave every heading, instruction and action on screen. */
+.reveal-armed .reveal:not(.is-in) {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity var(--t-reveal) var(--ease), transform var(--t-reveal) var(--ease);
 }
-.js .reveal.is-in {
-  opacity: 1;
-  transform: none;
+.reveal-armed .reveal.is-in {
+  transition: opacity var(--t-reveal) var(--ease), transform var(--t-reveal) var(--ease);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -715,7 +716,7 @@ table.data td {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .js .reveal {
+  .reveal-armed .reveal:not(.is-in) {
     opacity: 1;
     transform: none;
   }

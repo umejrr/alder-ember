@@ -40,6 +40,9 @@ jobs:
 
       - name: Build the static bundle (relative links, demo-only form)
         run: npm run build:static
+        env:
+          # anchors 404.html (served at any depth) to the project path; every other page stays relative
+          STATIC_BASE: /${{ github.event.repository.name }}/
 
       - name: Publish dist-static to the gh-pages branch
         run: |

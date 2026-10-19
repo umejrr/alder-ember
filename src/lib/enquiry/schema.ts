@@ -2,6 +2,8 @@
  * Enquiry schema + validation. The SAME function runs in the browser (for usability)
  * and on the server (for trust). Never relax the server run.
  */
+import { reconcileHeating } from '@/content/options';
+
 export const PROJECT_TYPES = ['residential', 'commercial'] as const;
 export const MODEL_CHOICES = ['rowan', 'alder', 'ember', 'not-sure'] as const;
 export const HEATING = ['electric', 'wood', 'advice'] as const;
@@ -112,6 +114,10 @@ export function validateEnquiry(raw: unknown): ValidationResult {
 
   const website = str(r.website, LIMITS.short);
   if (website && !/^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(website)) errors.website = 'Enter a website address like example.co.uk.';
+
+  // a heating preference the chosen model does not offer is never accepted as an ordinary choice
+  const heatingCheck = reconcileHeating(model, oneOf(HEATING, r.heating));
+  if (heatingCheck.adjusted) errors.heating = heatingCheck.reason!.replace(', so we have changed your heating preference to “I need advice”.', '. Choose electric or “I need advice”.');
 
   const dimensions = str(r.dimensions, 120);
   if (dimensions.length > 120) errors.dimensions = 'Keep this to 120 characters.';

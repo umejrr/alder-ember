@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  modelForPeople, runSelector, parsePreferences, preferencesToQuery, type SelectorInput,
+  modelForPeople, runSelector, parsePreferences, preferencesToQuery, reconcilePreferences, PREFERENCE_PARAMS, type SelectorInput,
 } from '@/lib/selector';
+import { reconcileHeating } from '@/content/options';
 
 const base: SelectorInput = { use: 'residential', people: null, model: 'not-sure', heating: 'advice', changingArea: 'not-important' };
 const run = (o: Partial<SelectorInput>) => runSelector({ ...base, ...o });
@@ -65,8 +66,8 @@ describe('selector refuses to over-promise', () => {
     if (r.kind === 'recommend') expect(r.caveats.join(' ')).toMatch(/still|confirm/i);
   });
 
-  it('never says a model "fits" and always caveats approximate space', () => {
-    const r = run({ people: 2, space: '3m x 3m' });
+  it('never says a model "fits" and always caveats base, clearances and access', () => {
+    const r = run({ people: 2 });
     expect(r.kind).toBe('recommend');
     if (r.kind === 'recommend') {
       const text = [...r.reasons, ...r.caveats].join(' ').toLowerCase();
@@ -88,5 +89,55 @@ describe('preference state is non-personal and safe to share', () => {
     const p = parsePreferences(new URLSearchParams('model=nope&use=x&people=999&heating=steam&email=a@b.c&name=Sam&postcode=SW1A1AA'));
     expect(p).toEqual({});
     expect(preferencesToQuery({ model: 'rowan' })).not.toMatch(/email|name|postcode/);
+  });
+});
+
+describe('model parsing uses an allowlist, not inherited object keys (audit A07)', () => {
+  it.each(['constructor', '__proto__', 'toString', 'hasOwnProperty', 'valueOf', 'isPrototypeOf'])('drops model=%s', (key) => {
+    expect(parsePreferences(new URLSearchParams({ model: key }))).toEqual({});
+    expect(parsePreferences({ model: key })).toEqual({});
+  });
+
+  it('drops unknown and empty ids but keeps real models and not-sure', () => {
+    expect(parsePreferences(new URLSearchParams({ model: 'maple' }))).toEqual({});
+    expect(parsePreferences(new URLSearchParams({ model: '' }))).toEqual({});
+    for (const m of ['rowan', 'alder', 'ember', 'not-sure']) expect(parsePreferences(new URLSearchParams({ model: m })).model).toBe(m);
+  });
+
+  it('lists exactly the parameters that carry preferences', () => {
+    expect([...PREFERENCE_PARAMS].sort()).toEqual(['changing', 'heating', 'model', 'people', 'use']);
+  });
+});
+
+describe('a model never carries a heating preference it does not offer (audit A04)', () => {
+  it('turns wood-burning on the Rowan into a request for advice, with a reason', () => {
+    const r = reconcileHeating('rowan', 'wood');
+    expect(r).toMatchObject({ heating: 'advice', adjusted: true });
+    expect(r.reason).toMatch(/not offered on The Rowan/);
+  });
+
+  it('leaves valid combinations alone, including switching back to a model that offers wood', () => {
+    expect(reconcileHeating('ember', 'wood')).toMatchObject({ heating: 'wood', adjusted: false, reason: null });
+    expect(reconcileHeating('alder', 'wood').adjusted).toBe(false);
+    expect(reconcileHeating('rowan', 'electric').adjusted).toBe(false);
+    expect(reconcileHeating('rowan', 'advice').adjusted).toBe(false);
+    expect(reconcileHeating('not-sure', 'wood').adjusted).toBe(false);
+    expect(reconcileHeating(undefined, 'wood').adjusted).toBe(false);
+    expect(reconcileHeating('rowan', 'steam')).toMatchObject({ heating: '', adjusted: false });
+  });
+
+  it('reconciles an incoming URL and saved state', () => {
+    expect(parsePreferences(new URLSearchParams('model=rowan&heating=wood')).heating).toBe('advice');
+    expect(reconcilePreferences({ model: 'rowan', heating: 'wood', people: 2 })).toEqual({ model: 'rowan', heating: 'advice', people: 2 });
+    expect(reconcilePreferences({ model: 'ember', heating: 'wood' })).toEqual({ model: 'ember', heating: 'wood' });
+    // saved from another product, then the visitor lands on the Rowan page
+    expect(reconcilePreferences({ ...{ model: 'ember' as const, heating: 'wood' as const }, model: 'rowan' }).heating).toBe('advice');
+  });
+});
+
+describe('the selector no longer takes free text', () => {
+  it('ignores any extra space field', () => {
+    const r = runSelector({ ...base, people: 2, ...( { space: 'about 4m' } as object) });
+    expect(r.kind).toBe('recommend');
   });
 });

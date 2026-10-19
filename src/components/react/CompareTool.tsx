@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../../styles/tools.css';
 import type { ModelView } from './ModelView';
 import { track } from '@/lib/analytics';
-import { writePrefs } from '@/lib/prefs-client';
+import { enquiryHref, writePrefs } from '@/lib/prefs-client';
+import { pageHref } from '@/lib/base-url';
 
 const TBC = 'To be confirmed';
 
@@ -48,6 +49,8 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
   const [selected, setSelected] = useState<string[]>(ids);
   const [narrow, setNarrow] = useState(false);
   const interacted = useRef(false);
+  // short, polite explanation when a choice cannot be applied or something was replaced
+  const [note, setNote] = useState('');
   const max = narrow ? 2 : 3;
 
   const sync = useCallback((next: string[]) => {
@@ -78,21 +81,39 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
     return () => mq.removeEventListener('change', onChange);
   }, [ids]);
 
+  const commit = (next: string[]) => {
+    setSelected(next);
+    sync(next);
+    track('compare_models', { model_ids: next });
+  };
+
   const toggle = (id: string) => {
     interacted.current = true;
-    setSelected((cur) => {
-      let next: string[];
-      if (cur.includes(id)) {
-        if (cur.length <= 2) return cur; // a comparison needs at least two
-        next = cur.filter((x) => x !== id);
-      } else {
-        next = ids.filter((x) => x === id || cur.includes(x));
-        if (next.length > max) next = next.filter((x) => x !== cur[0]); // narrow: drop the oldest
+    setNote('');
+    if (selected.includes(id)) {
+      if (selected.length <= 2) {
+        setNote('A comparison needs at least two models. Select another model to swap one out.');
+        return;
       }
-      sync(next);
-      track('compare_models', { model_ids: next });
-      return next;
-    });
+      commit(selected.filter((x) => x !== id));
+    } else {
+      commit(ids.filter((x) => x === id || selected.includes(x)));
+    }
+  };
+
+  /** Narrow screens compare exactly two, chosen explicitly. Picking the other slot's model swaps them. */
+  const pick = (slot: 0 | 1, id: string) => {
+    interacted.current = true;
+    const a = selected[0] ?? ids[0];
+    const b = selected[1] ?? ids[1];
+    let next: string[] = slot === 0 ? [id, b] : [a, id];
+    if (next[0] === next[1]) {
+      next = slot === 0 ? [id, a] : [b, id];
+      setNote(`${models.find((m) => m.id === id)?.name} is now in this slot, and the other model moved across.`);
+    } else {
+      setNote('');
+    }
+    commit(next);
   };
 
   const reset = () => {
@@ -106,22 +127,38 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
   return (
     <div className="cmp">
       <div className="cmp__bar">
-        <div role="group" aria-label="Choose models to compare" className="cmp__toggles">
-          {models.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              className="cmp__toggle"
-              aria-pressed={selected.includes(m.id)}
-              onClick={() => toggle(m.id)}
-            >
-              {m.name}
-            </button>
-          ))}
-        </div>
+        {narrow ? (
+          <div className="cmp__pickers">
+            {([0, 1] as const).map((slot) => (
+              <div className="field" key={slot}>
+                <label htmlFor={`cmp-pick-${slot}`}>{slot === 0 ? 'Compare' : 'with'}</label>
+                <select id={`cmp-pick-${slot}`} className="select" value={selected[slot] ?? ids[slot]} onChange={(e) => pick(slot, e.target.value)}>
+                  {models.map((m) => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div role="group" aria-label="Choose models to compare" className="cmp__toggles">
+            {models.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                className="cmp__toggle"
+                aria-pressed={selected.includes(m.id)}
+                aria-describedby="cmp-hint"
+                onClick={() => toggle(m.id)}
+              >
+                {m.name}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="actions">
-          <span className="cmp__hint" id="cmp-hint">
-            {narrow ? 'Comparing two at a time on a narrow screen.' : 'Compare two or three models.'}
+          <span className="cmp__hint" id="cmp-hint" role="status" aria-live="polite">
+            {note || (narrow ? 'Comparing two models at a time on a narrow screen.' : 'Compare two or three models.')}
           </span>
           <button type="button" className="text-link" onClick={reset} style={{ background: 'none', border: 0, borderBottom: '1px solid currentColor', cursor: 'pointer' }}>
             Reset
@@ -142,7 +179,7 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
               <td />
               {shown.map((m) => (
                 <th key={m.id} scope="col">
-                  <a href={`/saunas/${m.id}`}>{m.name}</a>
+                  <a href={pageHref(`/saunas/${m.id}`)}>{m.name}</a>
                 </th>
               ))}
             </tr>
@@ -168,7 +205,7 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
               <th scope="row">Next step</th>
               {shown.map((m) => (
                 <td key={m.id}>
-                  <a className="btn" href={`/plan-your-sauna?model=${m.id}`} onClick={() => writePrefs({ model: m.id as never })}>
+                  <a className="btn" href={enquiryHref({ model: m.id })} onClick={() => writePrefs({ model: m.id as never })}>
                     Plan your {m.shortName}
                   </a>
                 </td>
@@ -190,7 +227,7 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
                   <div key={m.id}>
                     <span className="cmp-stack__name">{m.shortName}</span>
                     <span className={`cmp-stack__val${v.pending ? ' is-pending' : ''}`}>{v.text}</span>
-                    {v.sub && r.key !== 'price' && <span className="cmp__sub" style={{ fontSize: '0.8125rem', color: 'var(--c-muted)', display: 'block' }}>{v.sub}</span>}
+                    {v.sub && <span className="cmp__sub" style={{ fontSize: '0.8125rem', color: 'var(--c-muted)', display: 'block' }}>{v.sub}</span>}
                   </div>
                 );
               })}
@@ -199,7 +236,7 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
         ))}
         <div className="cmp-stack__actions">
           {shown.map((m) => (
-            <a key={m.id} className="btn" href={`/plan-your-sauna?model=${m.id}`}>
+            <a key={m.id} className="btn" href={enquiryHref({ model: m.id })}>
               Plan your {m.shortName}
             </a>
           ))}
