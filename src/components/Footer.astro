@@ -1,13 +1,11 @@
 ---
 import Logo from './Logo.astro';
 import { footerNav, legalNav, site } from '@/content/site';
-import { resolve } from '@/lib/mode';
 import { guidesRouteEnabled } from '@/lib/visibility';
 import { assets } from '@/content/assets';
 
 const usesStock = assets.some((a) => a.kind === 'stock-preview');
 
-const response = resolve(site.responseTime);
 const links = footerNav.map((col) => ({
   ...col,
   links: col.links.filter((l) => l.gate !== 'guides' || guidesRouteEnabled()),
@@ -18,8 +16,7 @@ const links = footerNav.map((col) => ({
     <div class="site-footer__top grid-12">
       <div class="c-4 site-footer__about">
         <p class="serif site-footer__lead">Premium outdoor saunas, planned around your space and installed with care.</p>
-        <p class="muted">{site.description}</p>
-        {response && <p class="muted">{response}</p>}
+        <p class="muted">A UK supplier and installer. Our core range is built to agreed specifications by a specialist European manufacturing partner.</p>
         <a class="btn" href="/plan-your-sauna">Plan your sauna</a>
       </div>
       <div class="c-8 site-footer__cols">

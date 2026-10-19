@@ -42,7 +42,9 @@ const step = async (name, fn) => { try { await fn(); passed++; console.log('PASS
 
 await step('home loads with styles and fonts from the sub-path', async () => {
   await page.goto(base + 'index.html', { waitUntil: 'networkidle' });
-  assert.match(await page.locator('h1').first().innerText(), /Premium outdoor saunas/);
+  const h1 = await page.locator('h1').first().innerText(); // the kicker is set in capitals by CSS
+  assert.match(h1, /premium outdoor saunas/i);
+  assert.match(h1, /A quieter moment, just outside/);
   const font = await page.evaluate(() => getComputedStyle(document.querySelector('h1')).fontFamily);
   assert.match(font, /Newsreader/);
   await page.evaluate(() => document.fonts.ready);

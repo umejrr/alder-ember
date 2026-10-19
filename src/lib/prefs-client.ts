@@ -14,10 +14,11 @@ import { pageHref } from './base-url';
 
 const KEY = 'ae-prefs-v1';
 
-export function readPrefs(): PreferenceState {
+/** `reconcile: false` returns what was stored, so a caller can explain a change it is about to make. */
+export function readPrefs({ reconcile = true }: { reconcile?: boolean } = {}): PreferenceState {
   try {
     const raw = sessionStorage.getItem(KEY);
-    if (raw) return parsePreferences(new URLSearchParams(raw));
+    if (raw) return parsePreferences(new URLSearchParams(raw), { reconcile });
   } catch {
     /* storage unavailable */
   }

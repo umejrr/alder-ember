@@ -85,8 +85,13 @@ def grade(im: Image.Image, g: dict) -> Image.Image:
     return im
 
 
-def adapted_text(g: dict, aspect: str) -> str:
-    bits = ["Resized", "cropped" + ("" if aspect == "auto" else " to " + aspect), "converted to AVIF and WebP"]
+def adapted_text(g: dict, aspect: str, zoom: float = 1.0) -> str:
+    bits = ["Resized"]
+    if aspect != "auto":
+        bits.append(f"cropped to {aspect}")
+    elif zoom != 1.0:
+        bits.append("cropped")
+    bits.append("converted to AVIF and WebP")
     if g.get("mirror"):
         bits.append("mirrored")
     if g.get("saturation", 1.0) != 1.0:
@@ -157,7 +162,7 @@ def main():
             "file": f"/images/preview/{key}", "width": w_, "height": h_, "widths": emitted,
             "credit": {
                 "title": p["title"], "author": p["author"], "license": p["license"], "licenseUrl": p["licenseUrl"],
-                "sourceUrl": p["page"], "adapted": p.get("adapted") or adapted_text(g, aspect).capitalize(),
+                "sourceUrl": p["page"], "adapted": p.get("adapted") or adapted_text(g, aspect, p.get("zoom", 1.0)),
             },
         }
     write_ts(entries)

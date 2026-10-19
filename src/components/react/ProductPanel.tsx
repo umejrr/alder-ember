@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ModelView } from './ModelView';
 import { enquiryHref, readPrefs, writePrefs } from '@/lib/prefs-client';
-import type { HeatingChoice, HeatingPreference } from '@/content/options';
+import { reconcileHeating, type HeatingChoice, type HeatingPreference } from '@/content/options';
 import { pageHref } from '@/lib/base-url';
 
 interface Props {
@@ -19,8 +19,13 @@ interface Props {
  */
 export default function ProductPanel({ model, heating, compareIds, leadTime = null, leadWorking = false }: Props) {
   const [pref, setPref] = useState<HeatingPreference | null>(null);
+  // said aloud when a heating preference carried from another model is not offered on this one
+  const [changed, setChanged] = useState<string | null>(null);
 
   useEffect(() => {
+    const before = readPrefs({ reconcile: false });
+    const r = reconcileHeating(model.id, before.heating);
+    setChanged(r.adjusted ? r.reason : null);
     writePrefs({ model: model.id });
     const saved = readPrefs().heating;
     const choice = heating.find((h) => h.value === saved && !h.disabled);
@@ -28,6 +33,7 @@ export default function ProductPanel({ model, heating, compareIds, leadTime = nu
   }, [model.id, heating]);
 
   const choose = (v: HeatingPreference) => {
+    setChanged(null);
     setPref(v);
     writePrefs({ heating: v });
   };
@@ -83,7 +89,8 @@ export default function ProductPanel({ model, heating, compareIds, leadTime = nu
           ))}
         </div>
         <p className="ppanel__heat-note" aria-live="polite">
-          {heating.find((h) => h.value === pref)?.note ??
+          {changed ??
+            heating.find((h) => h.value === pref)?.note ??
             (heating.some((h) => h.disabled) ? 'Wood-burning is not offered on this model in the supplied range.' : 'Choose a preference, or leave it blank.')}
         </p>
       </fieldset>

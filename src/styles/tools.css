@@ -68,7 +68,7 @@
 .enq__project-title { font-family: var(--font-sans); font-size: 1rem; font-weight: 700; letter-spacing: 0; }
 .enq__clear { background: none; border: 0; border-bottom: 1px solid currentColor; padding: 0; cursor: pointer; font: inherit; font-size: var(--fs-small); color: var(--c-charcoal); }
 .enq__note { font-size: var(--fs-small); color: var(--c-charcoal); }
-.enq__note:empty { display: none; }
+.enq__note:empty { height: 0; margin: 0; overflow: hidden; } /* stays in the accessibility tree so a later message is announced */
 .enq__more { border-top: var(--border); border-bottom: var(--border); padding: 1rem 0; }
 .enq__more > summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
 .enq__more[open] > summary { margin-bottom: var(--s-4); }

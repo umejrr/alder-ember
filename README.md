@@ -8,7 +8,7 @@ Website and brand system for **Alder & Ember**, a UK supplier and installer of p
 
 - **Original identity:** logo system (editable SVG), palette, type and tokens. See `/brand` in a preview build and [docs/design-system.md](docs/design-system.md).
 - **The full launch sitemap:** home, collection, three model pages from one product source, compare, installation & delivery, installations (preview template only), commercial, about, care & support, guides, campaigns, plan your sauna, policies, 404.
-- **Signature component, "Find your fit":** a photographic three-model showcase on the home page, driven by the same product records as every other page.
+- **Signature component, the model explorer:** a stable-ratio stage, a rail of all three models and a concise panel on the home page, driven by the same product records as every other page. Around it, a materials chapter and a planning sequence that follow native scroll and have equivalent controls.
 - **Compare and a shortlist selector:** shareable compare URLs, a labelled narrow-screen layout, and a selector that never claims a model "fits" or approves a site.
 - **Enquiry journey:** residential and commercial forms, shared client/server validation, honest demo vs live submission, a durable outbox and a HubSpot adapter.
 - **Content integrity built in:** every fact carries an approval status. Preview shows working values; production omits anything unresolved.
@@ -29,8 +29,11 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 | `npm run check` | Type-check Astro, TypeScript and React (`astro check`) |
 | `npm run build:production` | Production-mode build (hides unapproved values and routes) |
 | `npm run check:production` | Builds in production mode and scans the output for leaked working values, drafts and unapproved routes |
-| `npm run e2e` / `npm run a11y` | Browser journey checks / axe accessibility scan (need a running build: `npm run build && npm run serve`) |
-| `npm run build:static` / `npm run e2e:static` | Static, sub-path-safe preview bundle / its browser test |
+| `npm run e2e` / `npm run a11y` / `npm run responsive` | Browser journey checks / axe accessibility scan / layout sweep at seven widths and 200% text (need a running build: `npm run build && npm run serve`; the enquiry API rate-limits, so restart the server between `e2e` runs) |
+| `npm run build:static` | Static, sub-path-safe preview bundle (`STATIC_BASE=/repo-name/` anchors `404.html` for a project-page host) |
+| `npm run e2e:static` | Builds a bundle anchored to `/a/b/c/` and tests it from there: styles, islands, native (Ctrl-click) links, nested 404s, the demo form, and that no request escapes the prefix |
+| `npm run images` | Rebuilds the stock preview photographs (AVIF, WebP, crops, credits) from `scripts/images/preview-photos.manifest.json` |
+| `npm run perf` | Median-of-three Lighthouse runs per page, mobile and desktop, against a running build |
 | `npm run crawl` | Crawls a running build for broken links, anchors and assets |
 | `npm run contrast` | WCAG contrast check for every text and control pair in the tokens |
 | `npm run logo` | Regenerates the logo SVGs and PNG favicons into `public/brand/` |
@@ -66,6 +69,8 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 | [docs/integrations.md](docs/integrations.md) | HubSpot, booking, accessories, email, analytics and consent: what is implemented, demo, or awaiting configuration |
 | [docs/launch-dependencies.md](docs/launch-dependencies.md) | What must be supplied or decided before launch, with owners |
 | [docs/asset-manifest.md](docs/asset-manifest.md) | Image roles, status and the outstanding photography brief |
+| [docs/audit-response.md](docs/audit-response.md) | How each finding in the 19 October live audit was addressed, with the evidence, and what remains open |
+| [docs/performance.md](docs/performance.md) | Image and script budgets, and lab measurements before and after |
 | [docs/test-report.md](docs/test-report.md) | The checks actually run, with outcomes and what could not be verified |
 | [docs/screenshots/](docs/screenshots) | Representative desktop and mobile screenshots |
 

@@ -196,6 +196,18 @@ await step('Clear these preferences also clears the URL, and unrelated parameter
   assert.equal(await page.locator('#enq-people').inputValue(), '');
 });
 
+await step('Product page: a heating preference carried from another model is changed in the open (audit A04)', async () => {
+  await page.goto(base + '/saunas/ember', { waitUntil: 'networkidle' });
+  await page.evaluate(() => sessionStorage.setItem('ae-prefs-v1', 'model=ember&heating=wood'));
+  await page.goto(base + '/saunas/rowan', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
+  const note = page.locator('.ppanel__heat-note');
+  await note.getByText(/not offered on The Rowan/).waitFor();
+  assert.equal(await page.locator('.ppanel__heat-opt.is-off input').isDisabled(), true);
+  assert.match(await page.locator('[data-enquiry-cta]').getAttribute('href'), /heating=advice/, 'the enquiry link must carry the reconciled preference');
+  assert.doesNotMatch(await page.locator('[data-enquiry-cta]').getAttribute('href'), /heating=wood/);
+});
+
 await step('Selector: a result never outlives the answers that produced it (audit A08)', async () => {
   await page.goto(base + '/compare#selector', { waitUntil: 'networkidle' });
   await page.locator('#selector').scrollIntoViewIfNeeded();

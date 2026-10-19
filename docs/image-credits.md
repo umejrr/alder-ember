@@ -29,7 +29,7 @@ Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requi
 
 ## Selection notes
 
-- Photographs were chosen by eye from Commons categories for sauna buildings, interiors, stoves, garden gates and timber cladding.
+- Photographs were chosen by eye from Wikimedia Commons categories and searches for sauna buildings, interiors, stoves, garden gates and timber cladding. Where a slot needed a particular composition the photograph is cropped at export, not by CSS. `npm run images` rebuilds them from `scripts/images/preview-photos.manifest.json`.
 - A candidate hero photograph turned out to show a competitor's product (OKOPOD) and was excluded, together with two other photographs from the same series. Competitor imagery is not used.
-- Photographs of people were avoided. Images showing visible brand marks were avoided where possible.
+- Photographs whose subject is a person were avoided (one exterior shows someone seated outside the cabin, incidentally). Images showing visible brand marks were avoided where possible.
 - None of these may be used as evidence of a Rowan, Alder, Ember or a completed installation.

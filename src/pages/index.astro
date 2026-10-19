@@ -44,7 +44,7 @@ const details = [
         <span class="display hero__headline">A quieter moment, just outside.</span>
       </h1>
       <p class="lead">
-        Planned around your space and installed with care, with a model for every garden.
+        Planned around your space and installed with care. Three models, with help choosing and installation coordinated for you.
       </p>
       <div class="actions">
         <a class="btn" href="#find-your-fit">Explore the saunas</a>
@@ -333,6 +333,11 @@ const details = [
   .hero__headline { max-width: 13ch; font-size: clamp(2.375rem, 1.1rem + 3.9vw, 4.25rem); }
   .hero__copy .lead { color: var(--c-on-forest); max-width: 28em; }
   .hero .btn--secondary { --btn-border: rgba(244, 240, 232, 0.7); }
+  /* a short entrance for the copy only: the photograph is there immediately and the actions are reachable throughout */
+  @keyframes hero-in { from { opacity: 0; transform: translateY(12px); } }
+  .hero__copy > * { animation: hero-in 620ms var(--ease) both; }
+  .hero__copy > :nth-child(2) { animation-delay: 70ms; }
+  .hero__copy > :nth-child(3) { animation-delay: 140ms; }
 
   @media (max-width: 640px) {
     /* image first, then copy on a deep forest panel: legibility never depends on the photo */
