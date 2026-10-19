@@ -230,10 +230,10 @@ interface Stock {
 
 /** Which stock preview photo fills which slot, with accurate alt text and focal points. */
 const STOCK: Record<string, Stock> = {
-  'hero-wide': { photo: 'hero', focal: { x: 70, y: 60 }, alt: 'A dark timber A-frame cabin with a large glazed front, standing among pine trees at the edge of a grassy clearing.' },
-  'hero-mobile': { photo: 'hero', focal: { x: 72, y: 55 }, mobileFocal: { x: 72, y: 55 }, alt: 'A dark timber A-frame cabin with a large glazed front, standing among pine trees at the edge of a grassy clearing.' },
-  'rowan-exterior': { photo: 'rowan-exterior', focal: { x: 50, y: 62 }, alt: 'A compact timber cabin with an arched roof and a door with a small window, on a paved lakeside path.' },
-  'alder-exterior': { photo: 'alder-exterior', focal: { x: 56, y: 52 }, alt: 'A modern timber cabin with large glazed corners and a stone chimney stack, set in open moorland with mountains behind.' },
+  'hero-wide': { photo: 'hero', focal: { x: 50, y: 50 }, alt: 'A small timber sauna cabin in a garden at night, light glowing from its open door and steam rising from the chimney.' },
+  'hero-mobile': { photo: 'hero-mobile', focal: { x: 50, y: 50 }, alt: 'A small timber sauna cabin in a garden at night, light glowing from its open door and steam rising from the chimney.' },
+  'rowan-exterior': { photo: 'rowan-exterior', focal: { x: 50, y: 52 }, alt: 'A compact, weathered log sauna with a white-framed window and a metal chimney, standing among birch and spruce trees.' },
+  'alder-exterior': { photo: 'alder-exterior', focal: { x: 48, y: 58 }, alt: 'A dark timber cabin with a steep gable and a large glazed front, at the edge of a grassy clearing among pine trees.' },
   'ember-exterior': { photo: 'ember-exterior', focal: { x: 72, y: 55 }, alt: 'A larger octagonal timber cabin lit warmly from inside at dusk, on a lawn beside a wooden hot tub.' },
   'rowan-interior': { photo: 'rowan-interior', focal: { x: 50, y: 55 }, alt: 'Inside a small sauna: a long bench along a pine-panelled wall and a stainless heater in the corner.' },
   'alder-interior': { photo: 'alder-interior', focal: { x: 50, y: 50 }, alt: 'A sauna interior panelled in warm timber, with stepped benches and a heater, lit by wall lights.' },
@@ -242,11 +242,11 @@ const STOCK: Record<string, Stock> = {
   'alder-detail': { photo: 'alder-detail', focal: { x: 50, y: 40 }, alt: 'Looking out through a tall triangular glazed gable of a timber-lined cabin towards a lake.' },
   'ember-detail': { photo: 'ember-detail', focal: { x: 50, y: 45 }, alt: 'A modern black heater topped with grey sauna stones.' },
   'detail-timber': { photo: 'detail-timber', focal: { x: 62, y: 50 }, alt: 'Weathered timber cladding on a wall with a small window, in low sunlight.' },
-  'detail-interior-finish': { photo: 'detail-interior-finish', focal: { x: 55, y: 50 }, alt: 'Smooth timber wall panelling and a bench inside a sauna.' },
+  'detail-interior-finish': { photo: 'detail-interior-finish', focal: { x: 50, y: 50 }, alt: 'Close-up of a smooth timber bench against the pine-panelled wall of a sauna.' },
   'detail-construction': { photo: 'detail-construction', focal: { x: 50, y: 50 }, alt: 'Two walls of horizontal timber cladding meeting at an outside corner.' },
   'detail-glazing-heater': { photo: 'detail-glazing-heater', focal: { x: 50, y: 50 }, alt: 'Inside a barrel sauna: benches, a heater and an arched window looking out to trees.' },
   'site-access': { photo: 'site-access', focal: { x: 50, y: 64 }, alt: 'A weathered timber gate at the top of stone garden steps between old walls.' },
-  'closing-warmth': { photo: 'ember-interior', focal: { x: 50, y: 58 }, alt: 'A large sauna with wide stepped benches along timber walls, two small windows and a stone-clad heater.' },
+  'closing-warmth': { photo: 'alder-interior', focal: { x: 50, y: 50 }, alt: 'A sauna interior panelled in warm timber, with stepped benches and a heater, lit by wall lights.' },
   'installation-process': { photo: 'installation-process', focal: { x: 50, y: 55 }, alt: 'A small red timber cabin on a twin-axle trailer, parked on a lawn.' },
 };
 

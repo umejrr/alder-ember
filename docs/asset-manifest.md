@@ -6,23 +6,24 @@ Generated from `src/content/assets.ts` by `npm run manifest`. Do not edit by han
 
 | ID | Role | Model | Ratio | Evidence type | Kind | Rights / credit | Approval | Focal point | Intended use |
 |---|---|---|---|---|---|---|---|---|---|
-| `hero-wide` | hero-wide | any | 16:9 | atmosphere | stock-preview | CC BY-SA 4.0, Jules Verne Times Two (via Wikimedia Commons) | working | 70% 60% | Homepage hero (desktop) |
-| `hero-mobile` | hero-mobile | any | 4:5 | atmosphere | stock-preview | CC BY-SA 4.0, Jules Verne Times Two (via Wikimedia Commons) | working | 72% 55% | Homepage hero (mobile) |
-| `rowan-exterior` | model-exterior | rowan | 4:3 | atmosphere | stock-preview | CC BY 4.0, 1904.CC (via Wikimedia Commons) | working | 50% 62% | Model showcase, collection card, product gallery (1st image) |
+| `hero-wide` | hero-wide | any | 16:9 | atmosphere | stock-preview | CC BY-SA 3.0, www.saunowisko.pl Lucjan Morawski (via Wikimedia Commons) | working | 50% 50% | Homepage hero (desktop) |
+| `hero-mobile` | hero-mobile | any | 4:5 | atmosphere | stock-preview | CC BY-SA 3.0, www.saunowisko.pl Lucjan Morawski (via Wikimedia Commons) | working | 50% 50% | Homepage hero (mobile) |
+| `rowan-exterior` | model-exterior | rowan | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, Tiia Monto (via Wikimedia Commons) | working | 50% 52% | Model showcase, collection card, product gallery (1st image) |
 | `rowan-interior` | model-interior | rowan | 4:3 | atmosphere | stock-preview | CC0, W.carter (via Wikimedia Commons) | working | 50% 55% | Product gallery (2nd image) |
 | `rowan-detail` | model-detail | rowan | 3:2 | atmosphere | stock-preview | CC BY-SA 4.0, Cheburgenator (via Wikimedia Commons) | working | 50% 50% | Product gallery (3rd image) |
-| `alder-exterior` | model-exterior | alder | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, Nuklear1234 (via Wikimedia Commons) | working | 56% 52% | Model showcase, collection card, product gallery (1st image) |
+| `alder-exterior` | model-exterior | alder | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, Jules Verne Times Two (via Wikimedia Commons) | working | 48% 58% | Model showcase, collection card, product gallery (1st image) |
 | `alder-interior` | model-interior | alder | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, Basile Morin (via Wikimedia Commons) | working | 50% 50% | Product gallery (2nd image) |
 | `alder-detail` | model-detail | alder | 3:2 | atmosphere | stock-preview | CC BY-SA 4.0, Jules Verne Times Two (via Wikimedia Commons) | working | 50% 40% | Product gallery (3rd image) |
 | `ember-exterior` | model-exterior | ember | 4:3 | atmosphere | stock-preview | CC BY-SA 3.0, www.saunowisko.pl Lucjan Morawski (via Wikimedia Commons) | working | 72% 55% | Model showcase, collection card, product gallery (1st image) |
 | `ember-interior` | model-interior | ember | 4:3 | atmosphere | stock-preview | CC BY 3.0, Olaf Tausch (via Wikimedia Commons) | working | 50% 58% | Product gallery (2nd image) |
 | `ember-detail` | model-detail | ember | 3:2 | atmosphere | stock-preview | CC BY-SA 4.0, Santeri Viinamäki (via Wikimedia Commons) | working | 50% 45% | Product gallery (3rd image) |
 | `detail-timber` | detail-timber | any | 4:5 | atmosphere | stock-preview | CC BY 2.0, cogdogblog (via Wikimedia Commons) | working | 62% 50% | Homepage "Considered in every detail" chapter |
-| `detail-interior-finish` | detail-interior-finish | any | 3:2 | atmosphere | stock-preview | Public domain, Unknown (public domain) (via Wikimedia Commons) | working | 55% 50% | Homepage craft chapter; product page |
+| `detail-interior-finish` | detail-interior-finish | any | 3:2 | atmosphere | stock-preview | CC0, W.carter (via Wikimedia Commons) | working | 50% 50% | Homepage craft chapter; product page |
 | `detail-construction` | detail-construction | any | 4:3 | atmosphere | stock-preview | CC0, W.carter (via Wikimedia Commons) | working | 50% 50% | Homepage craft chapter |
 | `detail-glazing-heater` | detail-glazing-heater | any | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, W.carter (via Wikimedia Commons) | working | 50% 50% | Homepage craft chapter; Alder page |
 | `site-access` | site-access | any | 3:2 | atmosphere | stock-preview | CC BY-SA 4.0, Acabashi (via Wikimedia Commons) | working | 50% 64% | Installation & delivery; homepage process |
 | `installation-process` | installation-process | any | 3:2 | atmosphere | stock-preview | CC0, Ville-Matias Parkkonen (via Wikimedia Commons) | working | 50% 55% | Installation & delivery; about |
+| `closing-warmth` | closing | any | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, Basile Morin (via Wikimedia Commons) | working | 50% 50% | Homepage closing |
 
 ## How to replace a placeholder
 

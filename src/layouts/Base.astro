@@ -1,6 +1,9 @@
 ---
 import '@fontsource-variable/newsreader/opsz.css';
 import '@fontsource-variable/manrope/index.css';
+// the two latin files that every page's first paint needs; nothing else is preloaded
+import newsreaderLatin from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
@@ -57,6 +60,8 @@ const crumbLd =
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#111c16" />
     {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="preload" href={newsreaderLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={manropeLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />

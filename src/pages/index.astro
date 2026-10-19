@@ -329,7 +329,8 @@ const details = [
     vertical-align: middle;
     background: var(--c-ember-on-forest);
   }
-  .hero__headline { max-width: 13ch; }
+  /* sized so the headline ends before the cabin's doorway in the photograph (never across the door) */
+  .hero__headline { max-width: 13ch; font-size: clamp(2.375rem, 1.1rem + 3.9vw, 4.25rem); }
   .hero__copy .lead { color: var(--c-on-forest); max-width: 28em; }
   .hero .btn--secondary { --btn-border: rgba(244, 240, 232, 0.7); }
 

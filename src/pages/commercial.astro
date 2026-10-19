@@ -30,6 +30,10 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
     <p class="lead">
       We take on selected projects for venues where guests or clients use the sauna. Each one is assessed individually, because a standard model does not suit every venue.
     </p>
+    <div class="actions" style="margin-top: var(--s-6)">
+      <a class="btn" href="#enquire">Start a commercial enquiry</a>
+      <a class="btn btn--secondary" href="#factors-title">How we assess</a>
+    </div>
   </header>
 
   <section class="section section--flush-top" aria-labelledby="types-title">
@@ -38,7 +42,7 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
         <p class="label muted">Intended project types</p>
         <h2 id="types-title">Who this is for</h2>
       </div>
-      <ul class="c-7 c-start-6 type-list">
+      <ul class="c-8 type-grid">
         {types.map((t) => <li>{t}</li>)}
       </ul>
     </div>
@@ -51,9 +55,15 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
         <h2 id="factors-title">What we look at</h2>
         <p class="muted" style="margin-top: var(--s-4)">We would rather assess a project with you than promise that a standard model will work.</p>
       </div>
-      <dl class="c-7 c-start-6 facts factor-list">
-        {factors.map(([t, d]) => <div><dt>{t}</dt><dd><span class="sub" style="color: inherit; font-weight: 500">{d}</span></dd></div>)}
-      </dl>
+      <ol class="c-8 factor-grid">
+        {factors.map(([t, d], i) => (
+          <li>
+            <span class="factor-grid__n tnum" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="factor-grid__t">{t}</h3>
+            <p class="muted">{d}</p>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -89,8 +99,12 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
 </Base>
 
 <style is:global>
-  .type-list { display: grid; border-top: var(--border); }
-  .type-list li { padding: 1rem 0; border-bottom: var(--border); font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; }
-  .factor-list dt { font-weight: 700; color: var(--fg); font-size: var(--fs-body); }
-  .factor-list > div { grid-template-columns: minmax(10rem, 14rem) 1fr; }
+  .type-grid { display: grid; gap: var(--s-3); }
+  .type-grid li { padding: var(--s-4) var(--s-5); border: 1px solid var(--c-border); background: var(--c-surface); font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; line-height: 1.2; }
+  @media (min-width: 640px) { .type-grid { grid-template-columns: 1fr 1fr; } }
+  .factor-grid { display: grid; border-top: var(--border); }
+  .factor-grid li { display: grid; gap: var(--s-1); padding: var(--s-4) 0; border-bottom: var(--border); align-content: start; }
+  .factor-grid__n { font-size: var(--fs-small); font-weight: 700; letter-spacing: 0.06em; color: var(--c-timber); }
+  .factor-grid__t { font-size: var(--fs-h3); }
+  @media (min-width: 760px) { .factor-grid { grid-template-columns: 1fr 1fr; column-gap: var(--s-7); } }
 </style>

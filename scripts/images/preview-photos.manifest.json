@@ -1,0 +1,344 @@
+{
+ "_comment": "Sources and treatment for the stock PREVIEW photographs. Run scripts/images/build-preview-photos.py. Every photograph is openly licensed, shown only as a labelled preview, and is not Alder & Ember product or project photography.",
+ "grade": {},
+ "photos": [
+  {
+   "key": "hero",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg/1920px-Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
+   "title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg",
+   "author": "www.saunowisko.pl Lucjan Morawski",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
+   "aspect": "16:9",
+   "widths": [
+    1280,
+    1920
+   ],
+   "focus": [
+    0.5,
+    0.47
+   ]
+  },
+  {
+   "key": "hero-mobile",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg/1920px-Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
+   "title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg",
+   "author": "www.saunowisko.pl Lucjan Morawski",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
+   "aspect": "4:5",
+   "widths": [
+    480,
+    800
+   ],
+   "focus": [
+    0.55,
+    0.5
+   ]
+  },
+  {
+   "key": "rowan-exterior",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Heretty_-_sauna.jpg/1920px-Heretty_-_sauna.jpg",
+   "title": "Heretty - sauna.jpg",
+   "author": "Tiia Monto",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Heretty_-_sauna.jpg",
+   "aspect": "3:2",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "grade": {
+    "saturation": 0.94
+   }
+  },
+  {
+   "key": "alder-exterior",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Cabin_next_to_the_Fr%C3%B8ylandsvatnet%2C_Sandnes%2C_Norway_julesvernex2.jpg/1920px-Cabin_next_to_the_Fr%C3%B8ylandsvatnet%2C_Sandnes%2C_Norway_julesvernex2.jpg",
+   "title": "Cabin next to the Frøylandsvatnet, Sandnes, Norway julesvernex2.jpg",
+   "author": "Jules Verne Times Two",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Cabin_next_to_the_Fr%C3%B8ylandsvatnet,_Sandnes,_Norway_julesvernex2.jpg",
+   "aspect": "3:2",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.3,
+    0.62
+   ],
+   "zoom": 0.66,
+   "grade": {
+    "saturation": 0.94
+   }
+  },
+  {
+   "key": "ember-exterior",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Saunowisko_w_Kr%C4%85gu_01.jpg/1920px-Saunowisko_w_Kr%C4%85gu_01.jpg",
+   "title": "Saunowisko w Krągu 01.jpg",
+   "author": "www.saunowisko.pl Lucjan Morawski",
+   "license": "CC BY-SA 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_01.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "key": "rowan-interior",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Fj%C3%A4llastugan_sauna_with_heater.jpg/1280px-Fj%C3%A4llastugan_sauna_with_heater.jpg",
+   "seed": "public/images/preview/rowan-interior-1280.webp",
+   "title": "Fjällastugan sauna with heater.jpg",
+   "author": "W.carter",
+   "license": "CC0",
+   "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Fj%C3%A4llastugan_sauna_with_heater.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "alder-interior",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Sauna_of_the_spa_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg/1280px-Sauna_of_the_spa_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg",
+   "seed": "public/images/preview/alder-interior-1280.webp",
+   "title": "Sauna of the spa at Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg",
+   "author": "Basile Morin",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Sauna_of_the_spa_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "ember-interior",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/NaturTherme_Templin_Sauna_07.jpg/1280px-NaturTherme_Templin_Sauna_07.jpg",
+   "seed": "public/images/preview/ember-interior-1280.webp",
+   "title": "NaturTherme Templin Sauna 07.jpg",
+   "author": "Olaf Tausch",
+   "license": "CC BY 3.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:NaturTherme_Templin_Sauna_07.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "rowan-detail",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/%D0%92%D0%B0%D0%B3%D0%BE%D0%BD%D0%BA%D0%B0_%D0%B8%D0%B7_%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%BB%D0%B8%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%B8%D1%86%D1%8B.jpg/1280px-%D0%92%D0%B0%D0%B3%D0%BE%D0%BD%D0%BA%D0%B0_%D0%B8%D0%B7_%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%BB%D0%B8%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%B8%D1%86%D1%8B.jpg",
+   "seed": "public/images/preview/rowan-detail-1280.webp",
+   "title": "Вагонка из сибирской лиственницы.jpg",
+   "author": "Cheburgenator",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:%D0%92%D0%B0%D0%B3%D0%BE%D0%BD%D0%BA%D0%B0_%D0%B8%D0%B7_%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%BB%D0%B8%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%B8%D1%86%D1%8B.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "alder-detail",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Cabin_overlooking_the_Fr%C3%B8ylandsvatnet%2C_Sandnes%2C_Norway_julesvernex2.jpg/960px-Cabin_overlooking_the_Fr%C3%B8ylandsvatnet%2C_Sandnes%2C_Norway_julesvernex2.jpg",
+   "seed": "public/images/preview/alder-detail-960.webp",
+   "title": "Cabin overlooking the Frøylandsvatnet, Sandnes, Norway julesvernex2.jpg",
+   "author": "Jules Verne Times Two",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Cabin_overlooking_the_Fr%C3%B8ylandsvatnet,_Sandnes,_Norway_julesvernex2.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    960
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "ember-detail",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Sauna_stones_on_heater.jpg/1280px-Sauna_stones_on_heater.jpg",
+   "seed": "public/images/preview/ember-detail-1280.webp",
+   "title": "Sauna stones on heater.jpg",
+   "author": "Santeri Viinamäki",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Sauna_stones_on_heater.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "detail-timber",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/2012-366-20_Because_Sunset_Light_Makes_Everything_Look_Better_%286734734519%29.jpg/1280px-2012-366-20_Because_Sunset_Light_Makes_Everything_Look_Better_%286734734519%29.jpg",
+   "seed": "public/images/preview/detail-timber-1280.webp",
+   "title": "2012-366-20 Because Sunset Light Makes Everything Look Better (6734734519).jpg",
+   "author": "cogdogblog",
+   "license": "CC BY 2.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:2012-366-20_Because_Sunset_Light_Makes_Everything_Look_Better_(6734734519).jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP, colour saturation reduced 45% and slightly darkened"
+  },
+  {
+   "key": "detail-construction",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Corner_of_observation_deck_at_N%C3%B8rre_Vorup%C3%B8r.jpg/1280px-Corner_of_observation_deck_at_N%C3%B8rre_Vorup%C3%B8r.jpg",
+   "seed": "public/images/preview/detail-construction-1280.webp",
+   "title": "Corner of observation deck at Nørre Vorupør.jpg",
+   "author": "W.carter",
+   "license": "CC0",
+   "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Corner_of_observation_deck_at_N%C3%B8rre_Vorup%C3%B8r.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "detail-glazing-heater",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Barrel_sauna_in_Lah%C3%A4lla_5.jpg/1280px-Barrel_sauna_in_Lah%C3%A4lla_5.jpg",
+   "seed": "public/images/preview/detail-glazing-heater-1280.webp",
+   "title": "Barrel sauna in Lahälla 5.jpg",
+   "author": "W.carter",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Barrel_sauna_in_Lah%C3%A4lla_5.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "site-access",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Brick_garden_steps_Walled_Garden_at_Parham_House%2C_West_Sussex%2C_England.jpg/960px-Brick_garden_steps_Walled_Garden_at_Parham_House%2C_West_Sussex%2C_England.jpg",
+   "seed": "public/images/preview/site-access-960.webp",
+   "title": "Brick garden steps Walled Garden at Parham House, West Sussex, England.jpg",
+   "author": "Acabashi",
+   "license": "CC BY-SA 4.0",
+   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Brick_garden_steps_Walled_Garden_at_Parham_House,_West_Sussex,_England.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    960
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "installation-process",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Tuttisauna.jpg/1280px-Tuttisauna.jpg",
+   "seed": "public/images/preview/installation-process-1280.webp",
+   "title": "Tuttisauna.jpg",
+   "author": "Ville-Matias Parkkonen",
+   "license": "CC0",
+   "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Tuttisauna.jpg",
+   "aspect": "auto",
+   "widths": [
+    640,
+    1280
+   ],
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "adapted": "Resized, converted to AVIF and WebP"
+  },
+  {
+   "key": "detail-interior-finish",
+   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Fj%C3%A4llastugan_sauna_with_heater.jpg/1280px-Fj%C3%A4llastugan_sauna_with_heater.jpg",
+   "seed": "public/images/preview/rowan-interior-1280.webp",
+   "title": "Fjällastugan sauna with heater.jpg",
+   "author": "W.carter",
+   "license": "CC0",
+   "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:Fj%C3%A4llastugan_sauna_with_heater.jpg",
+   "aspect": "3:2",
+   "zoom": 0.62,
+   "widths": [
+    640,
+    800
+   ],
+   "focus": [
+    0.32,
+    0.62
+   ],
+   "adapted": "Resized, cropped to a close detail, converted to AVIF and WebP"
+  }
+ ]
+}
