@@ -10,6 +10,10 @@ import { toModelView } from '@/lib/model-view';
 import { installationsRouteEnabled, visibleInstallations } from '@/lib/visibility';
 import { getAsset } from '@/content/assets';
 
+// the phone crop sets how tall the image panel is, so a square crop is shown whole instead of being cropped to a fixed height
+const heroM = getAsset('hero-mobile');
+const heroMRatio = heroM?.width && heroM?.height ? (heroM.width / heroM.height).toFixed(3) : '1';
+
 // an image that is not an approved photograph is always labelled, in preview and in production, so it can never pass as one
 const heroKind = getAsset('hero-wide')?.kind;
 const heroTag =
@@ -40,10 +44,9 @@ const details = [
   preloadFonts
 >
   <!-- Arrive: one large image, a short offer -->
-  <section class="hero is-forest" data-hero aria-labelledby="hero-title">
+  <section class="hero is-forest" data-hero aria-labelledby="hero-title" style={`--hero-m-ratio:${heroMRatio}`}>
     <div class="hero__media">
-      <Picture id="hero-wide" priority fill class="hero__pic hero__pic--wide" quiet />
-      <Picture id="hero-mobile" priority fill class="hero__pic hero__pic--narrow" quiet />
+      <Picture id="hero-wide" art={{ id: 'hero-mobile', media: '(max-width: 40rem)' }} priority fill class="hero__pic" quiet />
       <div class="hero__scrim" aria-hidden="true"></div>
       {heroTag && <span class="hero__tag chip">{heroTag}</span>}
     </div>
@@ -296,7 +299,6 @@ const details = [
     overflow: hidden;
   }
   .hero__pic { position: absolute; inset: 0; }
-  .hero__pic--narrow { display: none; }
   .hero__scrim {
     position: absolute;
     inset: 0;
@@ -357,17 +359,17 @@ const details = [
   .hero__copy > :nth-child(2) { animation-delay: 70ms; }
   .hero__copy > :nth-child(3) { animation-delay: 140ms; }
 
-  @media (max-width: 40rem) {
-    /* image first, then copy on a deep forest panel: legibility never depends on the photo */
+  /* Stacked layout: the image first, then the copy on a deep forest panel, so legibility never depends on the photo.
+     Used on phones, and on any window that is nearly square or taller than wide (a portrait tablet), where a full-bleed
+     photograph would put the headline across the cabin's glazing. Only phones swap to the square crop (see <picture>). */
+  @media (max-width: 40rem), (max-aspect-ratio: 5/4) {
     .hero {
       min-height: 0;
       grid-template-rows: min(64svh, 30rem) auto;
     }
     .hero__media { position: relative; grid-row: 1; }
-    .hero__pic--wide { display: none; }
-    .hero__pic--narrow { display: block; }
     .hero__scrim {
-      background: linear-gradient(0deg, rgba(17, 28, 22, 1) 0%, rgba(17, 28, 22, 0) 38%);
+      background: linear-gradient(0deg, rgba(17, 28, 22, 1) 0%, rgba(17, 28, 22, 0) 32%);
     }
     .hero__tag { left: var(--gutter); right: auto; top: calc(var(--header-h) + 0.75rem); bottom: auto; }
     .hero__copy {
@@ -378,6 +380,9 @@ const details = [
       margin: 0;
       padding-top: var(--s-5);
     }
+  }
+  @media (max-width: 40rem) {
+    .hero { grid-template-rows: min(64svh, 30rem, calc(100vw / var(--hero-m-ratio, 1))) auto; }
   }
 
   /* ---------- bridge ---------- */

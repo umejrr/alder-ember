@@ -130,8 +130,10 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     gap: clamp(1rem, 2.2vw, 2.25rem);
     align-items: center;
   }
-  .site-nav__item { position: relative; }
+  .site-nav__item { position: relative; overflow-wrap: normal; }
+  .site-nav .btn { white-space: nowrap; }
   .site-nav__item > a {
+    white-space: nowrap; /* a nav label is never broken inside a word; the bar switches to the menu button before it runs out of room */
     display: inline-block;
     padding: 0.6rem 0;
     font-size: 0.8125rem;
@@ -272,8 +274,8 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   html.menu-open .site-header::before { display: none; }
 
   /* breakpoints are in rem so that a larger browser text size switches to the menu button earlier, instead of letting the
-     desktop navigation run out of room (980 px at the default size) */
-  @media (max-width: 61.25rem) {
+     desktop navigation run out of room (about 1056 px at the default size; it fits down to roughly 1000 px, and the rest is margin for font rendering) */
+  @media (max-width: 66rem) {
     .site-nav { display: none; }
     .menu-toggle { display: inline-flex; }
     .site-header__logo { width: min(12.8rem, 56vw); }
@@ -284,7 +286,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     /* the word stays for assistive tech; on the narrowest bars (or large text) the icon alone is enough */
     .menu-toggle__label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   }
-  @media (min-width: 61.3125rem) {
+  @media (min-width: 66.0625rem) {
     .mobile-nav { display: none !important; }
   }
 </style>
@@ -363,7 +365,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       }
     }
   });
-  window.matchMedia('(min-width: 61.3125rem)').addEventListener('change', (m) => {
+  window.matchMedia('(min-width: 66.0625rem)').addEventListener('change', (m) => {
     if (m.matches && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
   });
 </script>

@@ -6,8 +6,8 @@ Generated from `src/content/assets.ts` by `npm run manifest`. Do not edit by han
 
 | ID | Role | Model | Ratio | Evidence type | Kind | Rights / credit | Approval | Focal point | Intended use |
 |---|---|---|---|---|---|---|---|---|---|
-| `hero-wide` | hero-wide | any | 16:9 | atmosphere | supplied-preview | MISSING | working | 85% 45% | Homepage hero (desktop) |
-| `hero-mobile` | hero-mobile | any | 4:5 | atmosphere | supplied-preview | MISSING | working | 50% 30% | Homepage hero (mobile) |
+| `hero-wide` | hero-wide | any | 21:9 | atmosphere | supplied-preview | MISSING | working | 92% 50% | Homepage hero (desktop) |
+| `hero-mobile` | hero-mobile | any | 1:1 | atmosphere | supplied-preview | MISSING | working | 50% 30% | Homepage hero (mobile) |
 | `rowan-exterior` | model-exterior | rowan | 4:3 | atmosphere | stock-preview | CC BY-SA 4.0, Tiia Monto (via Wikimedia Commons) | working | 50% 52% | Model showcase, collection card, product gallery (1st image) |
 | `rowan-interior` | model-interior | rowan | 4:3 | atmosphere | stock-preview | CC0, W.carter (via Wikimedia Commons) | working | 50% 55% | Product gallery (2nd image) |
 | `rowan-detail` | model-detail | rowan | 3:2 | atmosphere | stock-preview | CC BY-SA 4.0, Cheburgenator (via Wikimedia Commons) | working | 50% 50% | Product gallery (3rd image) |

@@ -2,7 +2,7 @@
 
 For Alder & Ember and the photographer. It describes the one image the homepage opens with, what the website needs from it, and how to deliver it. Everything below is written to match how the site actually lays the image out, so the finished photograph can go straight in.
 
-The image on the site today is a **supplied preview**, labelled "awaiting approval": a dark timber cabin with a glazed front, lit at dusk, with a hedge and silver birch behind. It is close to what this brief describes and it already passes the legibility check, but its origin and rights are unconfirmed, it is 1536 × 1024 px (too small for large screens), and nothing confirms it shows an Alder & Ember sauna. It stands in until the shoot.
+The image on the site today is a **supplied preview**, labelled "awaiting approval": a dark timber cabin with a glazed front, lit at dusk, with a hedge and silver birch behind. It is close to what this brief describes and it already passes the legibility check, but its origin and rights are unconfirmed, it is 1884 × 835 px (too small for large screens), and nothing confirms it shows an Alder & Ember sauna. It stands in until the shoot.
 
 ## 1. The picture in one paragraph
 

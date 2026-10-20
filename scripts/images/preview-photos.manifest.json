@@ -6,30 +6,30 @@
    "key": "hero",
    "source": "scripts/images/sources/hero-supplied.webp",
    "supplied": true,
-   "aspect": "16:9",
+   "aspect": "auto",
    "widths": [
     640,
     960,
     1280,
-    1536
+    1884
    ],
    "focus": [
     0.5,
-    0.42
+    0.5
    ]
   },
   {
    "key": "hero-mobile",
    "source": "scripts/images/sources/hero-supplied.webp",
    "supplied": true,
-   "aspect": "4:5",
+   "aspect": "1:1",
    "widths": [
     480,
     640,
-    819
+    835
    ],
    "focus": [
-    0.693,
+    0.759,
     0.5
    ]
   },

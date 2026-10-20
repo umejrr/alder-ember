@@ -89,7 +89,7 @@ const baseAssets: Asset[] = [
     id: 'hero-wide',
     role: 'hero-wide',
     label: 'Hero: wide garden context',
-    ratio: '16:9',
+    ratio: '21:9',
     alt: 'An outdoor sauna cabin in a UK garden at low light, with planting and the approach path visible.',
     intendedCrop: 'Full width, cabin in the right two-thirds, sky or planting clear in the lower-left for the headline. Never put the headline across the door.',
     intendedUse: 'Homepage hero (desktop)',
@@ -100,9 +100,9 @@ const baseAssets: Asset[] = [
     id: 'hero-mobile',
     role: 'hero-mobile',
     label: 'Hero: mobile crop',
-    ratio: '4:5',
+    ratio: '1:1',
     alt: 'An outdoor sauna cabin in a UK garden, cropped to keep the cabin and its door in frame.',
-    intendedCrop: 'Portrait crop preserving the cabin, door and ground plane.',
+    intendedCrop: 'Square or portrait crop preserving the whole cabin, door and ground plane, with the top quarter quiet for the header and the bottom third dark enough to fade into the text panel.',
     intendedUse: 'Homepage hero (mobile)',
     tone: 'forest',
     focal: { x: 62, y: 55 },
@@ -257,13 +257,14 @@ const STOCK: Record<string, Stock> = {
 const SUPPLIED: Record<string, Stock> = {
   'hero-wide': {
     photo: 'hero',
-    focal: { x: 85, y: 45 },
-    alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on a lawn beside a clipped hedge with silver birch trees behind.',
+    focal: { x: 92, y: 50 },
+    mobileFocal: { x: 50, y: 45 },
+    alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on gravel at the end of a lawn, with a clipped hedge and silver birch trees behind.',
   },
   'hero-mobile': {
     photo: 'hero-mobile',
     focal: { x: 50, y: 30 },
-    alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on a lawn beside a clipped hedge with silver birch trees behind.',
+    alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on gravel at the end of a lawn, with a clipped hedge and silver birch trees behind.',
   },
 };
 

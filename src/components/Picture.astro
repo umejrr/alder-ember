@@ -15,13 +15,16 @@ interface Props {
   sizes?: string;
   /** hide the preview label (e.g. when the surrounding UI already labels it) */
   quiet?: boolean;
+  /** art direction: another asset served instead, from one <picture>, when `media` matches (only the matching file is fetched) */
+  art?: { id: string; media: string };
 }
-const { id, priority = false, fill = false, class: className = '', sizes = '100vw', quiet = false } = Astro.props;
+const { id, priority = false, fill = false, class: className = '', sizes = '100vw', quiet = false, art } = Astro.props;
 const asset = getAsset(id);
 if (!asset) throw new Error(`Unknown asset id: ${id}`);
 const ratio = asset.ratio.replace(':', ' / ');
 const pos = `${asset.focal.x}% ${asset.focal.y}%`;
 const mobilePos = asset.mobileFocal ? `${asset.mobileFocal.x}% ${asset.mobileFocal.y}%` : pos;
+const artAsset = art ? getAsset(art.id) : undefined;
 const tag = previewTag(asset);
 const isImage = asset.kind !== 'placeholder' && Boolean(asset.src);
 ---
@@ -29,6 +32,8 @@ const isImage = asset.kind !== 'placeholder' && Boolean(asset.src);
   isImage ? (
     <div class:list={['pic', fill && 'pic--fill', className]} style={`--ratio:${ratio};--pos:${pos};--pos-m:${mobilePos}`}>
       <picture>
+        {art && artAsset?.srcsetAvif && <source type="image/avif" media={art.media} srcset={artAsset.srcsetAvif} sizes={sizes} />}
+        {art && artAsset?.srcset && <source media={art.media} srcset={artAsset.srcset} sizes={sizes} />}
         {asset.srcsetAvif && <source type="image/avif" srcset={asset.srcsetAvif} sizes={sizes} />}
         <img
           src={asset.src}

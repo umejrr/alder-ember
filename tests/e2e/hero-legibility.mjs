@@ -1,11 +1,12 @@
 // Text over the home hero photograph cannot be checked by axe, which does not sample images. This hides the copy, captures what is
 // behind it, and measures the contrast the headline and lead would have against the brightest 1% of those pixels.
 //   node tests/e2e/hero-legibility.mjs [baseUrl]
-// The headline is large text (3:1 needed); the lead is body text (4.5:1). Narrow screens put the copy on a solid panel, so only desktop widths are sampled.
+// The headline is large text (3:1 needed); the lead is body text (4.5:1). Phones, and any window that is nearly square or portrait,
+// stack the copy on a solid panel under the photograph, so only landscape widths (where the copy overlays the image) are sampled.
 import { chromium } from 'playwright';
 
 const base = process.argv[2] || 'http://127.0.0.1:4321';
-const widths = [[769, 700], [1024, 768], [1280, 800], [1440, 900], [1920, 1080], [2560, 1300]];
+const widths = [[900, 680], [1024, 768], [1280, 800], [1440, 900], [1920, 1080], [2560, 1300]];
 const FG = [244, 240, 232]; // --c-on-forest
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' });
 const problems = [];
@@ -18,6 +19,12 @@ for (const [w, h] of widths) {
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   await page.addStyleTag({ content: '.hero__copy > *{animation:none!important}.hero__headline,.hero__copy .lead,.hero__copy .btn{visibility:hidden!important}' });
   await page.waitForTimeout(400);
+  const stacked = await page.evaluate(() => getComputedStyle(document.querySelector('.hero__media')).position === 'relative');
+  if (stacked) {
+    problems.push(`${w}×${h}: the hero is stacked here, so this width does not test text over the photograph; choose a landscape size`);
+    await page.close();
+    continue;
+  }
   const boxes = await page.evaluate(() => [['headline', '.hero__headline'], ['lead', '.hero__copy .lead']].map(([name, sel]) => {
     const r = document.querySelector(sel).getBoundingClientRect();
     return { name, x: r.x, y: r.y, w: r.width, h: r.height };

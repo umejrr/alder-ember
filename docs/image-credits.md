@@ -30,7 +30,7 @@ Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requi
 - Hero: wide garden context (`hero-wide`)
 - Hero: mobile crop (`hero-mobile`)
 
-One image was supplied for review (`scripts/images/sources/hero-supplied.webp`, 1536 × 1024). Its source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, so it carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.
+One image was supplied for review (`scripts/images/sources/hero-supplied.webp`, 1884 × 835). Its source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, so it carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.
 
 ## Selection notes
 

@@ -9,7 +9,7 @@ import { join } from 'node:path';
 const base = process.argv[2] || 'http://127.0.0.1:4321';
 const routes = ['/', '/saunas', '/saunas/rowan', '/saunas/alder', '/saunas/ember', '/compare', '/installation-delivery', '/installations', '/installations/preview-template',
   '/commercial', '/about', '/care-support', '/guides', '/guides/choosing-a-sauna-for-your-space', '/plan-your-sauna', '/campaigns/meet-the-alder', '/privacy', '/cookies', '/terms', '/warranty', '/brand', '/image-credits', '/nope'];
-const widths = [320, 375, 390, 768, 1024, 1440, 1920];
+const widths = [320, 375, 390, 768, 1024, 1100, 1440, 1920];
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' });
 const problems = [];
 let checks = 0;
@@ -33,10 +33,15 @@ async function probe(page, label) {
       })
       .slice(0, 3)
       .map((e) => `${e.tagName.toLowerCase()}.${String(e.className).split(' ')[0]}`);
-    return { over: doc.scrollWidth - vw, wide };
+    // a navigation label broken across lines is a sign the bar ran out of room (it should have switched to the menu button)
+    const broken = [...document.querySelectorAll('.site-nav a, .site-nav .btn')]
+      .filter((a) => a.getClientRects().length && a.getBoundingClientRect().height > 3.2 * parseFloat(getComputedStyle(a).fontSize))
+      .map((a) => a.textContent.trim());
+    return { over: doc.scrollWidth - vw, wide, broken };
   });
   checks++;
   if (r.over > 0 || r.wide.length) problems.push(`${label}: page overflows by ${r.over}px ${r.wide.join(', ')}`);
+  if (r.broken.length) problems.push(`${label}: navigation labels wrap inside the header: ${r.broken.join(', ')}`);
 }
 
 for (const route of routes) {
