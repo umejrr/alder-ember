@@ -164,10 +164,10 @@ Never stage one to look like a customer's project.
 
 A team portrait for About, the manufacturer's workshop, a commercial or hospitality setting, and Care & support. None is used today. Add them only with real subjects, releases and approved wording.
 
-## 10. After delivery: what we do
+## 10. After delivery: what happens next
 
-1. Each chosen frame goes into `scripts/images/preview-photos.manifest.json` with its crop and focal point, and `npm run images` builds the AVIF and WebP sizes.
-2. `npm run hero` and the layout sweep re-check anything with text over a photograph.
-3. A "Stock preview" label disappears only when that image is marked approved with its rights and alt text. `npm run check:production` then stops listing it as a launch blocker.
-4. The social-share image switches on the link preview.
-5. We need back, for every file: **which model it shows**, so it can be used as product evidence.
+1. Each chosen photograph is cropped for its place on the site, and prepared in the file sizes that load quickly on phones and large screens.
+2. Anything with text over a photograph is checked again for legibility.
+3. A "Stock preview" label disappears from a slot only when the photograph that replaces it is marked approved, with its rights and a written description for screen readers.
+4. The link-preview image switches on social previews.
+5. **We need back, for every file, which model it shows**, so it can be used as proof of that model.

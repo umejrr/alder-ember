@@ -28,6 +28,7 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 | `npm test` | Unit tests: product data, content gating, selector rules, enquiry validation and handler |
 | `npm run check` | Type-check Astro, TypeScript and React (`astro check`) |
 | `npm run build:production` | Production-mode build (hides unapproved values and routes) |
+| `npm run brief` | Rebuilds the downloadable photography brief (PDF and Word) from `docs/photo-brief.md` and `docs/hero-photo-brief.md` (needs pandoc and python-docx) |
 | `npm run check:production` | Builds in production mode and scans the output for leaked working values, drafts and unapproved routes |
 | `npm run e2e` / `npm run a11y` / `npm run responsive` / `npm run hero` | Browser journey checks / axe accessibility scan / layout sweep at seven widths and 200% text / contrast of the hero copy over the photograph (need a running build: `npm run build && npm run serve`; the enquiry API rate-limits, so restart the server between `e2e` runs) |
 | `npm run build:static` | Static, sub-path-safe preview bundle (`STATIC_BASE=/repo-name/` anchors `404.html` for a project-page host) |

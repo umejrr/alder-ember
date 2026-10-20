@@ -12,7 +12,7 @@ The emotional promise is the site's line: **"A quieter moment, just outside."**
 
 ## 2. Subject
 
-- **Which sauna.** One model, shot exactly as it is sold. Our recommendation is **the Alder**, because it has the glazed front, which gives the warm interior glow that makes this image work, and it is the middle of the range. The Rowan and Ember are shot separately (see section 8). Whichever model is used, the photograph must show the **standard product**: the real cladding, real glazing, real door and hardware, the real heater flue if it has one. No one-off custom additions and no options we do not sell. This image becomes product evidence, so it must be accurate.
+- **Which sauna.** One model, shot exactly as it is sold. Our recommendation is **the Alder**, because it has the glazed front, which gives the warm interior glow that makes this image work, and it is the middle of the range. The Rowan and Ember are shot separately (see the main brief). Whichever model is used, the photograph must show the **standard product**: the real cladding, real glazing, real door and hardware, the real heater flue if it has one. No one-off custom additions and no options we do not sell. This image becomes product evidence, so it must be accurate.
 - **Condition.** Brand new and clean: no scuffs, no weathering, no stickers, nothing left on the roof.
 - **Door.** Closed, with the glazed front lit from inside so the interior (benches, warm timber) is visible through the glass. If the model has a solid door, light the interior through the glazing or window only.
 - **Base.** A simple, honest base: compacted gravel, paving or a plain timber platform, whichever the product really needs. Do not show decking, steps, planters or an electrical connection that would suggest they are included in the price. (The site says ground preparation and electrical connection are assessed separately.)
@@ -37,23 +37,23 @@ The emotional promise is the site's line: **"A quieter moment, just outside."**
 The homepage shows this photograph full-bleed behind the header, with the headline, short paragraph and two buttons over its lower left. So the frame has to leave room for them. The diagram is the **16:9 desktop crop**.
 
 ```
- 0%                                                              100%
- +----------------------------------------------------------------+ 0%
- |  header zone: calm dark sky or foliage, no bright detail        |
- |  (logo left, navigation right, light text)                      | 12%
- |                                                                  |
- |            sky / trees                    roof, flue             |
- |                                      +----------------+          |
- |                                      |                |          |
- |   QUIET ZONE for headline            |   SAUNA        |          |
- |   left 45% of the width,             |   door and     |          |
- |   from 45% to 90% down:              |   glazed front |          |
- |   dark lawn, hedge or shadow.        |   centred at   |          |
- |   No door, no bright object,         |   60 to 70%    |          |
- |   no heater, no face.                |   across       |          |
- |                                      +----------------+          |
- |   dark, low-detail foreground (lawn, gravel)                     | 90%
- +----------------------------------------------------------------+ 100%
+ 0%                                                             100%
++------------------------------------------------------------------+ 0%
+|  header zone: calm dark sky or foliage, no bright detail         |
+|  (logo left, navigation right, light text)                       | 12%
+|                                                                  |
+|            sky / trees                    roof, flue             |
+|                                      +----------------+          |
+|                                      |                |          |
+|   QUIET ZONE for headline            |   SAUNA        |          |
+|   left 45% of the width,             |   door and     |          |
+|   from 45% to 90% down:              |   glazed front |          |
+|   dark lawn, hedge or shadow.        |   centred at   |          |
+|   No door, no bright object,         |   60 to 70%    |          |
+|   no heater, no face.                |   across       |          |
+|                                      +----------------+          |
+|   dark, low-detail foreground (lawn, gravel)                     | 90%
++------------------------------------------------------------------+ 100%
 ```
 
 - **Sauna size and position.** The cabin spans about **45% to 90% of the width** and from about **22% to 85% of the height**. Its **door and glazing sit between 55% and 75% across**, never under the headline, which ends at about 45% of the width.
@@ -84,19 +84,9 @@ While the camera is in position, also capture a **text-free 1200 × 630 composit
 
 People or faces; competitor or third-party products and logos; added steam, fire or smoke; heavy orange grading; HDR; dramatic storm or cinematic skies; clutter or styling props beyond two or three quiet ones (a folded natural-linen towel on a timber stool, a plain timber bucket); anything implying included extras; a bright foreground or a bright object under the headline.
 
-## 8. While the crew is there: the other pictures the site needs
+## 8. The other pictures the site needs
 
-The site has a slot for each of these, all currently stock. Shooting them in the same session, in the same light, is what makes the site feel like one place.
-
-| Image | Where it appears | Format | Notes |
-|---|---|---|---|
-| **Exterior of each model** (Rowan, Alder, Ember) | The model explorer on the home page, collection and model pages | 3:2 landscape | **One consistent angle, distance, height and light for all three**, so they compare fairly. Neutral garden background. Leave margin: the stage is 3:2 and the panel sits beside it |
-| **Interior of each model** | Model page gallery | 3:2 or 4:3 | Benches shown with real depth and scale, heater visible, no fisheye. Hands are fine, faces are not |
-| **Details** | The "Considered in every detail" chapter and model pages | 3:2 and portrait | Exterior cladding close-up; interior timber and benches; construction (wall build-up, only if real and verified); glazing and heater |
-| **Site and access** | Installation and delivery | 3:2 | A real delivery route, gate or path, a base being prepared |
-| **Installation in progress** | Installation and delivery | 3:2 | Real team, real site, with the customer's permission |
-| **Closing image** | Bottom of the home page | wide | A warm interior or an evening garden |
-| **Completed projects** | Our installations | 3:2 | Only real, approved installations. Never staged to look like customers |
+The main brief lists every other photograph the site needs (17 in all, with sizes, crops and direction for each). Shooting them in the same session and the same light is what makes the site feel like one place.
 
 ## 9. Delivery and rights
 
@@ -108,7 +98,7 @@ The site has a slot for each of these, all currently stock. Shooting them in the
 
 ## 10. What happens after delivery
 
-1. The chosen frames are added to `scripts/images/preview-photos.manifest.json` with a focal point and crop for each use, and rebuilt with `npm run images` (AVIF and WebP, several widths, a separate 4:5 for phones).
-2. `npm run hero` measures the headline and paragraph against the real photograph at six desktop widths. If the headline falls under 3:1 (or the paragraph under 4.5:1), the scrim or the crop is adjusted, or a different candidate is chosen.
-3. The "Stock preview" label disappears from an image only when it is marked approved with its rights and alt text. `npm run check:production` then stops listing it as a launch blocker.
-4. The approved 1200 × 630 frame becomes the social-share image.
+1. The chosen frames are cropped for each use and prepared in several file sizes, with a separate square crop for phones.
+2. The headline and paragraph are measured against the real photograph at six screen widths. If the headline falls under 3:1 contrast (or the paragraph under 4.5:1), the darkening behind the text or the crop is adjusted, or a different candidate is chosen.
+3. The photograph is marked approved with its rights and a written description, which removes any preview label.
+4. The approved 1200 × 630 frame becomes the link-preview image.
