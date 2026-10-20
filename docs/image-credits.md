@@ -25,12 +25,14 @@ Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requi
 | Installation in progress | [Tuttisauna](https://commons.wikimedia.org/wiki/File:Tuttisauna.jpg) | Ville-Matias Parkkonen | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | Resized, converted to AVIF and WebP |
 | Closing: a warm interior or an evening garden | [Sauna of the spa at Amantaka luxury Resort & Hotel in Luang Prabang Laos](https://commons.wikimedia.org/wiki/File:Sauna_of_the_spa_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg) | Basile Morin | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Resized, converted to AVIF and WebP |
 
-## Supplied image awaiting approval
+## Approved photographs
 
-- Hero: wide garden context (`hero-wide`)
-- Hero: mobile crop (`hero-mobile`)
+- Hero: wide garden context (`hero-wide`): Supplied by Alder & Ember. Confirmed by the site owner on 20 October 2026 as a real photograph, approved for use as the homepage hero. Photographer, licence terms and which sauna it shows are not yet recorded.
+- Hero: mobile crop (`hero-mobile`): Supplied by Alder & Ember. Confirmed by the site owner on 20 October 2026 as a real photograph, approved for use as the homepage hero. Photographer, licence terms and which sauna it shows are not yet recorded.
 
-One image was supplied for review (`scripts/images/sources/hero-supplied.webp`, 1884 × 835). Its source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, so it carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.
+## Supplied images awaiting approval
+
+None.
 
 ## Selection notes
 

@@ -119,6 +119,21 @@ describe('asset manifest', () => {
     }
   });
 
+  it('never presents an approved photograph as product evidence unless it records which model it shows', () => {
+    for (const a of assets.filter((x) => x.kind === 'photo' && x.evidence === 'product-evidence')) {
+      expect(a.modelId).toBeDefined();
+    }
+  });
+
+  it('labels a supplied image that has not been approved, and an approved photograph carries its rights record', () => {
+    expect(previewTag({ kind: 'supplied-preview' } as never)).toMatch(/awaiting approval/);
+    const hero = getAsset('hero-wide')!;
+    expect(hero.kind).toBe('photo');
+    expect(hero.approval).toBe('approved');
+    expect(hero.rights).toMatch(/Confirmed by the site owner/);
+    expect(previewTag(hero)).toBeNull();
+  });
+
   it('labels every image that is not an approved photograph', () => {
     for (const a of assets.filter((x) => x.kind !== 'photo' && x.kind !== 'placeholder')) {
       expect(previewTag(a)).toBeTruthy();

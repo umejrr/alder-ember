@@ -253,7 +253,7 @@ const STOCK: Record<string, Stock> = {
   'installation-process': { photo: 'installation-process', focal: { x: 50, y: 55 }, alt: 'A small red timber cabin on a twin-axle trailer, parked on a lawn.' },
 };
 
-/** Images supplied for review (origin and rights unconfirmed). Never product or project evidence until approved. */
+/** Images supplied by the owner. Labelled previews until an approval record travels with the photograph; atmosphere until the model shown is recorded. */
 const SUPPLIED: Record<string, Stock> = {
   'hero-wide': {
     photo: 'hero',
@@ -289,7 +289,12 @@ function withPhoto(a: Asset): Asset {
     ...(st.mobileFocal ? { mobileFocal: st.mobileFocal } : {}),
     approval: 'working',
   };
-  if (supplied) return { ...common, kind: 'supplied-preview', rights: null };
+  if (supplied) {
+    // once the owner has approved it (the record travels with the photograph), it is their photograph; until then it is a labelled preview.
+    // Approval is not product evidence: that also needs the model it shows, so `evidence` stays 'atmosphere'.
+    if (ph.approval) return { ...common, kind: 'photo', rights: ph.approval.rights, approval: 'approved' };
+    return { ...common, kind: 'supplied-preview', rights: null };
+  }
   if (!ph.credit) throw new Error(`Stock photo "${st.photo}" has no credit; a photograph without a licence is a supplied image`);
   return { ...common, kind: 'stock-preview', credit: ph.credit, rights: `${ph.credit.license}, ${ph.credit.author} (via Wikimedia Commons)` };
 }

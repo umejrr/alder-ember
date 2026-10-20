@@ -3,6 +3,7 @@ import { writeFileSync } from 'node:fs';
 const { assets } = await import('../src/content/assets.ts');
 const stock = assets.filter((a) => a.kind === 'stock-preview');
 const supplied = assets.filter((a) => a.kind === 'supplied-preview');
+const approved = assets.filter((a) => a.kind === 'photo');
 const rows = stock.map((a) => `| ${a.label} | [${a.credit.title.replace(/\.jpe?g$/i, '')}](${a.credit.sourceUrl}) | ${a.credit.author} | ${a.credit.licenseUrl ? `[${a.credit.license}](${a.credit.licenseUrl})` : a.credit.license} | ${a.credit.adapted} |`);
 const md = `# Image credits
 
@@ -16,9 +17,13 @@ Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requi
 |---|---|---|---|---|
 ${rows.join('\n')}
 
-## Supplied image awaiting approval
+## Approved photographs
 
-${supplied.length ? supplied.map((a) => `- ${a.label} (\`${a.id}\`)`).join('\n') + '\n\nOne image was supplied for review (`scripts/images/sources/hero-supplied.webp`, 1884 × 835). Its source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, so it carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.' : 'None.'}
+${approved.length ? approved.map((a) => `- ${a.label} (\`${a.id}\`): ${a.rights}`).join('\n') : 'None.'}
+
+## Supplied images awaiting approval
+
+${supplied.length ? supplied.map((a) => `- ${a.label} (\`${a.id}\`)`).join('\n') + '\n\nAn image supplied for review, whose source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.' : 'None.'}
 
 ## Selection notes
 

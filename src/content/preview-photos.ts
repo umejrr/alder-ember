@@ -17,6 +17,8 @@ export interface PreviewPhoto {
   avif?: boolean;
   /** width of the small variant used for gallery thumbnails (WebP only) */
   thumbWidth?: number;
+  /** present once the owner has approved the image for use as their own photograph; its rights wording travels with it */
+  approval?: { status: 'approved'; date: string; rights: string };
   /** null for a supplied image whose origin and rights are not yet confirmed */
   credit: { title: string; author: string; license: string; licenseUrl: string | null; sourceUrl: string; adapted: string } | null;
 }
@@ -29,6 +31,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [640, 960, 1280, 1884],
     avif: true,
     thumbWidth: 320,
+    approval: {"status": "approved", "date": "2026-10-20", "rights": "Supplied by Alder & Ember. Confirmed by the site owner on 20 October 2026 as a real photograph, approved for use as the homepage hero. Photographer, licence terms and which sauna it shows are not yet recorded."},
     credit: null,
   },
   'hero-mobile': {
@@ -38,6 +41,7 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
     widths: [480, 640, 835],
     avif: true,
     thumbWidth: 320,
+    approval: {"status": "approved", "date": "2026-10-20", "rights": "Supplied by Alder & Ember. Confirmed by the site owner on 20 October 2026 as a real photograph, approved for use as the homepage hero. Photographer, licence terms and which sauna it shows are not yet recorded."},
     credit: null,
   },
   'rowan-exterior': {

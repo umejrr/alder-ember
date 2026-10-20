@@ -12,9 +12,9 @@ For every entry in scripts/images/preview-photos.manifest.json it
 and finally rewrites src/content/preview-photos.ts with the credit that travels with each photo.
 
 Most are openly licensed stock photographs shown as clearly labelled previews. An entry marked "supplied" is an
-image handed over for review whose origin and rights are not yet confirmed: it carries no credit and is labelled
-"awaiting approval". None is approved Alder & Ember product or project photography, and each must be replaced
-or approved before launch.
+image handed over for review: until it has an "approval" record (who confirmed what, and the rights wording) it
+carries no credit and is labelled "awaiting approval"; with one, it is treated as the owner's approved photograph.
+Everything else must be replaced or approved before launch.
 """
 import argparse, io, json, os, re, sys, time, urllib.request
 from pathlib import Path
@@ -155,7 +155,7 @@ def main():
             full = im if biggest == im.width else im.resize((biggest, round(im.height * biggest / im.width)), Image.LANCZOS)
             w_, h_ = full.size
             size = sum((OUT / f"{key}-{w}.{ext}").stat().st_size for w in emitted for ext in ("webp", "avif"))
-            print(f"{key:24} {w_}x{h_}  widths {emitted}  {size // 1024:5d} KB total  {p.get('license', 'supplied, rights unconfirmed')}", flush=True)
+            print(f"{key:24} {w_}x{h_}  widths {emitted}  {size // 1024:5d} KB total  {p.get('license', 'supplied, approved by owner' if p.get('approval') else 'supplied, rights unconfirmed')}", flush=True)
         else:
             existing = sorted(int(m.group(1)) for f in OUT.glob(f"{key}-*.webp") if (m := re.match(rf"{re.escape(key)}-(\d+)\.webp$", f.name)) and int(m.group(1)) != THUMB_W)
             emitted = existing
@@ -164,6 +164,7 @@ def main():
         entries[key] = {
             "file": f"/images/preview/{key}", "width": w_, "height": h_, "widths": emitted,
             # a supplied image has no licence to credit; it is labelled "awaiting approval" instead
+            "approval": p.get("approval"),
             "credit": None if p.get("supplied") else {
                 "title": p["title"], "author": p["author"], "license": p["license"], "licenseUrl": p["licenseUrl"],
                 "sourceUrl": p["page"], "adapted": p.get("adapted") or adapted_text(g, aspect, p.get("zoom", 1.0)),
@@ -193,6 +194,8 @@ export interface PreviewPhoto {
   avif?: boolean;
   /** width of the small variant used for gallery thumbnails (WebP only) */
   thumbWidth?: number;
+  /** present once the owner has approved the image for use as their own photograph; its rights wording travels with it */
+  approval?: { status: 'approved'; date: string; rights: string };
   /** null for a supplied image whose origin and rights are not yet confirmed */
   credit: { title: string; author: string; license: string; licenseUrl: string | null; sourceUrl: string; adapted: string } | null;
 }
@@ -201,7 +204,8 @@ export const previewPhotos: Record<string, PreviewPhoto> = {
 '''
     body = ""
     for k, v in entries.items():
-        body += f"  '{k}': {{\n    file: '{v['file']}',\n    width: {v['width']},\n    height: {v['height']},\n    widths: {json.dumps(v['widths'])},\n    avif: true,\n    thumbWidth: {THUMB_W},\n    credit: {json.dumps(v['credit'], ensure_ascii=False)},\n  }},\n"
+        appr = f"    approval: {json.dumps(v['approval'], ensure_ascii=False)},\n" if v.get("approval") else ""
+        body += f"  '{k}': {{\n    file: '{v['file']}',\n    width: {v['width']},\n    height: {v['height']},\n    widths: {json.dumps(v['widths'])},\n    avif: true,\n    thumbWidth: {THUMB_W},\n{appr}    credit: {json.dumps(v['credit'], ensure_ascii=False)},\n  }},\n"
     TS.write_text(head + body + "};\n")
 
 

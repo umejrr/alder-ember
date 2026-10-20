@@ -1,5 +1,5 @@
 {
- "_comment": "Sources and treatment for the PREVIEW photographs. Run scripts/images/build-preview-photos.py. Entries with a 'download' are openly licensed stock photographs; entries with 'supplied': true are images supplied for review whose origin and rights are not yet confirmed. Every one is shown only as a labelled preview, and none is approved Alder & Ember product or project photography.",
+ "_comment": "Sources and treatment for the PREVIEW photographs. Run scripts/images/build-preview-photos.py. Entries with a 'download' are openly licensed stock photographs; entries with 'supplied': true are images supplied for review whose origin and rights are not yet confirmed. Every one is shown only as a labelled preview, and none is approved Alder & Ember product or project photography unless it carries an 'approval' record.",
  "grade": {},
  "photos": [
   {
@@ -16,7 +16,12 @@
    "focus": [
     0.5,
     0.5
-   ]
+   ],
+   "approval": {
+    "status": "approved",
+    "date": "2026-10-20",
+    "rights": "Supplied by Alder & Ember. Confirmed by the site owner on 20 October 2026 as a real photograph, approved for use as the homepage hero. Photographer, licence terms and which sauna it shows are not yet recorded."
+   }
   },
   {
    "key": "hero-mobile",
@@ -31,7 +36,12 @@
    "focus": [
     0.759,
     0.5
-   ]
+   ],
+   "approval": {
+    "status": "approved",
+    "date": "2026-10-20",
+    "rights": "Supplied by Alder & Ember. Confirmed by the site owner on 20 October 2026 as a real photograph, approved for use as the homepage hero. Photographer, licence terms and which sauna it shows are not yet recorded."
+   }
   },
   {
    "key": "rowan-exterior",
