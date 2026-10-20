@@ -14,6 +14,11 @@
  * kind 'stock-preview' = a real, openly licensed photograph (Wikimedia Commons) standing in for imagery
  * that has not been supplied. It is always labelled on the page, carries its credit, is never product or
  * project evidence, and is reported as a launch blocker until replaced. See docs/image-credits.md.
+ *
+ * kind 'supplied-preview' = an image handed over for review whose origin and rights are not yet confirmed
+ * (it may be a photograph, a render or a reference). It is labelled "awaiting approval", is atmosphere only,
+ * and stays a launch blocker until its source, licence and what it shows are recorded and it is approved:
+ * only then does it become kind 'photo'.
  */
 import type { ApprovalStatus, ProductId } from './types';
 import { previewPhotos, type PreviewPhoto } from './preview-photos.ts';
@@ -48,7 +53,7 @@ export interface Asset {
   /** separate focal point when the mobile crop differs */
   mobileFocal?: { x: number; y: number };
   intendedCrop: string;
-  kind: 'placeholder' | 'stock-preview' | 'photo';
+  kind: 'placeholder' | 'stock-preview' | 'supplied-preview' | 'photo';
   evidence: 'atmosphere' | 'product-evidence' | 'project-evidence';
   intendedUse: string;
   src?: string;
@@ -230,8 +235,6 @@ interface Stock {
 
 /** Which stock preview photo fills which slot, with accurate alt text and focal points. */
 const STOCK: Record<string, Stock> = {
-  'hero-wide': { photo: 'hero', focal: { x: 50, y: 50 }, alt: 'A small timber sauna cabin in a garden at night, light glowing from its open door and steam rising from the chimney.' },
-  'hero-mobile': { photo: 'hero-mobile', focal: { x: 50, y: 50 }, alt: 'A small timber sauna cabin in a garden at night, light glowing from its open door and steam rising from the chimney.' },
   'rowan-exterior': { photo: 'rowan-exterior', focal: { x: 50, y: 52 }, alt: 'A compact, weathered log sauna with a white-framed window and a metal chimney, standing among birch and spruce trees.' },
   'alder-exterior': { photo: 'alder-exterior', focal: { x: 48, y: 58 }, alt: 'A dark timber cabin with a steep gable and a large glazed front, at the edge of a grassy clearing among pine trees.' },
   'ember-exterior': { photo: 'ember-exterior', focal: { x: 72, y: 55 }, alt: 'A larger octagonal timber cabin lit warmly from inside at dusk, on a lawn beside a wooden hot tub.' },
@@ -250,15 +253,29 @@ const STOCK: Record<string, Stock> = {
   'installation-process': { photo: 'installation-process', focal: { x: 50, y: 55 }, alt: 'A small red timber cabin on a twin-axle trailer, parked on a lawn.' },
 };
 
-function withStock(a: Asset): Asset {
-  const st = STOCK[a.id];
+/** Images supplied for review (origin and rights unconfirmed). Never product or project evidence until approved. */
+const SUPPLIED: Record<string, Stock> = {
+  'hero-wide': {
+    photo: 'hero',
+    focal: { x: 85, y: 45 },
+    alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on a lawn beside a clipped hedge with silver birch trees behind.',
+  },
+  'hero-mobile': {
+    photo: 'hero-mobile',
+    focal: { x: 50, y: 30 },
+    alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on a lawn beside a clipped hedge with silver birch trees behind.',
+  },
+};
+
+function withPhoto(a: Asset): Asset {
+  const supplied = SUPPLIED[a.id];
+  const st = supplied ?? STOCK[a.id];
   if (!st) return a;
   const ph = previewPhotos[st.photo];
   const widths = [...ph.widths].sort((x, y) => x - y);
-  return {
+  const common: Asset = {
     ...a,
-    kind: 'stock-preview',
-    // a stock photograph is atmosphere at best: never evidence of a Rowan, Alder, Ember or a completed project
+    // a stock or supplied image is atmosphere at best: never evidence of a Rowan, Alder, Ember or a completed project
     evidence: 'atmosphere',
     src: `${ph.file}-${widths[widths.length - 1]}.webp`,
     srcset: widths.map((w) => `${ph.file}-${w}.webp ${w}w`).join(', '),
@@ -266,23 +283,25 @@ function withStock(a: Asset): Asset {
     thumb: `${ph.file}-${ph.thumbWidth ?? widths[0]}.webp`,
     width: ph.width,
     height: ph.height,
-    credit: ph.credit,
     alt: st.alt,
     focal: st.focal,
     ...(st.mobileFocal ? { mobileFocal: st.mobileFocal } : {}),
-    rights: `${ph.credit.license}, ${ph.credit.author} (via Wikimedia Commons)`,
     approval: 'working',
   };
+  if (supplied) return { ...common, kind: 'supplied-preview', rights: null };
+  if (!ph.credit) throw new Error(`Stock photo "${st.photo}" has no credit; a photograph without a licence is a supplied image`);
+  return { ...common, kind: 'stock-preview', credit: ph.credit, rights: `${ph.credit.license}, ${ph.credit.author} (via Wikimedia Commons)` };
 }
 
-export const assets: Asset[] = baseAssets.map(withStock);
+export const assets: Asset[] = baseAssets.map(withPhoto);
 
 const byId = new Map(assets.map((a) => [a.id, a]));
 
 const MODEL_NAMES: Record<ProductId, string> = { rowan: 'The Rowan', alder: 'The Alder', ember: 'The Ember' };
 
-/** The visible label a stock preview must carry; null for real photos and placeholders (which label themselves). */
+/** The visible label an unapproved image must carry; null for real photos and placeholders (which label themselves). */
 export function previewTag(a: Asset): string | null {
+  if (a.kind === 'supplied-preview') return 'Preview image · awaiting approval';
   if (a.kind !== 'stock-preview') return null;
   return a.modelId ? `Stock preview · not ${MODEL_NAMES[a.modelId]}` : 'Stock preview photo';
 }

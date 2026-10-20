@@ -4,12 +4,13 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import { assets } from '@/content/assets';
 
 const stock = assets.filter((a) => a.kind === 'stock-preview' && a.credit);
+const supplied = assets.filter((a) => a.kind === 'supplied-preview');
 // Credits are required whenever these photographs are published; the page exists only while they are in use.
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
 ---
 <Base
   title="Image credits | Alder & Ember"
-  description="Credits and licences for the stock preview photographs used on this preview site."
+  description="Credits and licences for the preview images used on this preview site."
   breadcrumbs={crumbs}
   noindex
 >
@@ -17,12 +18,19 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
     <Breadcrumbs items={crumbs} />
     <h1>Image credits</h1>
     <p class="lead">
-      The photographs on this preview are openly licensed stock images from Wikimedia Commons, standing in until Alder &amp; Ember’s own photography is ready. They are not photographs of our saunas, projects or customers.
+      Apart from the image marked “awaiting approval”, the photographs on this preview are openly licensed stock images from Wikimedia Commons, standing in until Alder &amp; Ember’s own photography is ready. They are not photographs of our saunas, projects or customers.
     </p>
   </header>
 
   <section class="section section--flush-top">
     <div class="container">
+      {supplied.length > 0 && (
+        <div class="notice" style="max-width: 44rem; margin-bottom: var(--s-6)">
+          <p>
+            <strong>Awaiting approval.</strong> The homepage hero is an image supplied for review. Its source, licence and what it shows have not yet been confirmed, so it is labelled on the page and is not presented as a photograph of an Alder &amp; Ember product or project. It will be replaced, or recorded and approved, before launch.
+          </p>
+        </div>
+      )}
       <p class="muted" style="max-width: 44rem; margin-bottom: var(--s-6)">
         Images were resized and converted to WebP for the web (one also had its colour saturation reduced). Where a licence is “BY-SA”, the adapted image is shared under that same licence.
       </p>

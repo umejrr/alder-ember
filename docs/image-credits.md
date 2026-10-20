@@ -2,14 +2,12 @@
 
 Generated from `src/content/assets.ts` by `npm run manifest`. Do not edit by hand.
 
-The preview site uses openly licensed stock photographs from [Wikimedia Commons](https://commons.wikimedia.org/) in place of Alder & Ember's own photography, which has not been supplied. They are **not** photographs of Alder & Ember's saunas, projects or customers. Each is labelled on the page, and the live site lists them at `/image-credits`.
+Apart from the supplied image described below, the preview site uses openly licensed stock photographs from [Wikimedia Commons](https://commons.wikimedia.org/) in place of Alder & Ember's own photography, which has not been supplied. They are **not** photographs of Alder & Ember's saunas, projects or customers. Each is labelled on the page, and the live site lists them at `/image-credits`.
 
 Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requires credit and that adapted copies are shared under the same licence (resizing, cropping and format conversion count as adaptation, so those copies are BY-SA too). Remove or replace an image to be free of its terms.
 
 | Used for | Photograph | Author | Licence | Changes made |
 |---|---|---|---|---|
-| Hero: wide garden context | [Saunowisko w Krągu - Domek Saunowy Wako](https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg) | www.saunowisko.pl Lucjan Morawski | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) | Resized, cropped to 16:9, converted to AVIF and WebP |
-| Hero: mobile crop | [Saunowisko w Krągu - Domek Saunowy Wako](https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg) | www.saunowisko.pl Lucjan Morawski | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) | Resized, cropped to 4:5, converted to AVIF and WebP |
 | The Rowan: exterior | [Heretty - sauna](https://commons.wikimedia.org/wiki/File:Heretty_-_sauna.jpg) | Tiia Monto | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Resized, cropped to 3:2, converted to AVIF and WebP, colour saturation reduced |
 | The Rowan: interior | [Fjällastugan sauna with heater](https://commons.wikimedia.org/wiki/File:Fj%C3%A4llastugan_sauna_with_heater.jpg) | W.carter | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | Resized, converted to AVIF and WebP |
 | The Rowan: detail | [Вагонка из сибирской лиственницы](https://commons.wikimedia.org/wiki/File:%D0%92%D0%B0%D0%B3%D0%BE%D0%BD%D0%BA%D0%B0_%D0%B8%D0%B7_%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%BB%D0%B8%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%B8%D1%86%D1%8B.jpg) | Cheburgenator | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Resized, converted to AVIF and WebP |
@@ -26,6 +24,13 @@ Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requi
 | Site and access check | [Brick garden steps Walled Garden at Parham House, West Sussex, England](https://commons.wikimedia.org/wiki/File:Brick_garden_steps_Walled_Garden_at_Parham_House,_West_Sussex,_England.jpg) | Acabashi | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Resized, converted to AVIF and WebP |
 | Installation in progress | [Tuttisauna](https://commons.wikimedia.org/wiki/File:Tuttisauna.jpg) | Ville-Matias Parkkonen | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | Resized, converted to AVIF and WebP |
 | Closing: a warm interior or an evening garden | [Sauna of the spa at Amantaka luxury Resort & Hotel in Luang Prabang Laos](https://commons.wikimedia.org/wiki/File:Sauna_of_the_spa_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg) | Basile Morin | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Resized, converted to AVIF and WebP |
+
+## Supplied image awaiting approval
+
+- Hero: wide garden context (`hero-wide`)
+- Hero: mobile crop (`hero-mobile`)
+
+One image was supplied for review (`scripts/images/sources/hero-supplied.webp`, 1536 × 1024). Its source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, so it carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.
 
 ## Selection notes
 

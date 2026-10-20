@@ -2,18 +2,23 @@
 import { writeFileSync } from 'node:fs';
 const { assets } = await import('../src/content/assets.ts');
 const stock = assets.filter((a) => a.kind === 'stock-preview');
+const supplied = assets.filter((a) => a.kind === 'supplied-preview');
 const rows = stock.map((a) => `| ${a.label} | [${a.credit.title.replace(/\.jpe?g$/i, '')}](${a.credit.sourceUrl}) | ${a.credit.author} | ${a.credit.licenseUrl ? `[${a.credit.license}](${a.credit.licenseUrl})` : a.credit.license} | ${a.credit.adapted} |`);
 const md = `# Image credits
 
 Generated from \`src/content/assets.ts\` by \`npm run manifest\`. Do not edit by hand.
 
-The preview site uses openly licensed stock photographs from [Wikimedia Commons](https://commons.wikimedia.org/) in place of Alder & Ember's own photography, which has not been supplied. They are **not** photographs of Alder & Ember's saunas, projects or customers. Each is labelled on the page, and the live site lists them at \`/image-credits\`.
+Apart from the supplied image described below, the preview site uses openly licensed stock photographs from [Wikimedia Commons](https://commons.wikimedia.org/) in place of Alder & Ember's own photography, which has not been supplied. They are **not** photographs of Alder & Ember's saunas, projects or customers. Each is labelled on the page, and the live site lists them at \`/image-credits\`.
 
 Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requires credit and that adapted copies are shared under the same licence (resizing, cropping and format conversion count as adaptation, so those copies are BY-SA too). Remove or replace an image to be free of its terms.
 
 | Used for | Photograph | Author | Licence | Changes made |
 |---|---|---|---|---|
 ${rows.join('\n')}
+
+## Supplied image awaiting approval
+
+${supplied.length ? supplied.map((a) => `- ${a.label} (\`${a.id}\`)`).join('\n') + '\n\nOne image was supplied for review (`scripts/images/sources/hero-supplied.webp`, 1536 × 1024). Its source, licence and what it shows (a photograph of a real sauna, a render, or a reference) have **not** been confirmed, so it carries no credit, is labelled "Preview image · awaiting approval", is atmosphere only, and stays a launch blocker. To approve it: record who made it, the rights, and whether it shows an Alder & Ember product; then set its asset record to `photo` with `approved`.' : 'None.'}
 
 ## Selection notes
 

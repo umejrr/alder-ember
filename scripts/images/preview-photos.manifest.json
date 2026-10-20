@@ -1,40 +1,35 @@
 {
- "_comment": "Sources and treatment for the stock PREVIEW photographs. Run scripts/images/build-preview-photos.py. Every photograph is openly licensed, shown only as a labelled preview, and is not Alder & Ember product or project photography.",
+ "_comment": "Sources and treatment for the PREVIEW photographs. Run scripts/images/build-preview-photos.py. Entries with a 'download' are openly licensed stock photographs; entries with 'supplied': true are images supplied for review whose origin and rights are not yet confirmed. Every one is shown only as a labelled preview, and none is approved Alder & Ember product or project photography.",
  "grade": {},
  "photos": [
   {
    "key": "hero",
-   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg/1920px-Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
-   "title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg",
-   "author": "www.saunowisko.pl Lucjan Morawski",
-   "license": "CC BY-SA 3.0",
-   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "page": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
+   "source": "scripts/images/sources/hero-supplied.webp",
+   "supplied": true,
    "aspect": "16:9",
    "widths": [
+    640,
+    960,
     1280,
-    1920
+    1536
    ],
    "focus": [
     0.5,
-    0.47
+    0.42
    ]
   },
   {
    "key": "hero-mobile",
-   "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg/1920px-Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
-   "title": "Saunowisko w Krągu - Domek Saunowy Wako.jpg",
-   "author": "www.saunowisko.pl Lucjan Morawski",
-   "license": "CC BY-SA 3.0",
-   "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-   "page": "https://commons.wikimedia.org/wiki/File:Saunowisko_w_Kr%C4%85gu_-_Domek_Saunowy_Wako.jpg",
+   "source": "scripts/images/sources/hero-supplied.webp",
+   "supplied": true,
    "aspect": "4:5",
    "widths": [
     480,
-    800
+    640,
+    819
    ],
    "focus": [
-    0.55,
+    0.693,
     0.5
    ]
   },

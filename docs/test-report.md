@@ -6,7 +6,7 @@ Everything below was actually run on 19 October 2026 against the review branch (
 
 | Check | Command | Result |
 |---|---|---|
-| Unit tests | `npm test` | **69 passed** in 4 files |
+| Unit tests | `npm test` | **70 passed** in 4 files |
 | Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 92 files (Astro, TypeScript, React) |
 | Contrast | `npm run contrast` | **20 pairs pass, 0 fail** (text pairs at 4.5:1, controls and focus at 3:1) |
 | Broken links, anchors, assets | `npm run crawl` on a preview build | **25 pages crawled, none broken** |
@@ -14,11 +14,11 @@ Everything below was actually run on 19 October 2026 against the review branch (
 | Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 24 routes at 1440 px and 375 px |
 | Browser journeys | `npm run e2e` | **20 of 20 steps pass** (below) |
 | Layout sweep | `npm run responsive` | **227 checks, no horizontal overflow**: 23 routes at 320, 375, 390, 768, 1024, 1440 and 1920 px, and 22 routes at 390, 768 and 1440 px with the browser's own default text size raised to 200% (the internal `/brand` specimen sheet is excluded from that pass) |
-| Hero text legibility | `npm run hero` | **Pass at 769, 1024, 1280, 1440, 1920 and 2560 px.** The copy is hidden, what sits behind it is captured, and contrast is taken against the brightest 1% of those pixels: headline 3.7:1 or better (large text needs 3:1), lead paragraph 5.5:1 or better (needs 4.5:1). Axe cannot sample photographs, so this is the only check of text over the hero image |
+| Hero text legibility | `npm run hero` | **Pass at 769, 1024, 1280, 1440, 1920 and 2560 px.** The copy is hidden, what sits behind it is captured, and contrast is taken against the brightest 1% of those pixels: headline 5.2:1 or better (large text needs 3:1), lead paragraph 5.6:1 or better (needs 4.5:1), on the supplied hero image. The lowest figures are at the narrowest and widest-overlap widths, and the check must be re-run on every replacement hero photograph. Axe cannot sample photographs, so this is the only check of text over the hero image |
 | Static bundle from a nested sub-path | `npm run e2e:static` | **10 of 10 steps pass**: styles, fonts and islands load from `/a/b/c/`; static and React-created links navigate; every generated link is a real `href` under the prefix and a Ctrl-click opens a new tab inside it; five nested missing URLs return 404 with the branded, styled page and working recovery links; every page loads; compare and the gallery work; the demo form sends no request; the mobile menu works; and **no request escaped the prefix** |
 | Logo SVG validity | `npm run logo` | All 25 files are well-formed XML |
 
-**Negative controls.** The nested-404 step was run against a bundle built without the base anchor and **failed**, as it should. The hero check was run against the previous scrim and **failed** at 769, 1024, 1280 and 1440 px (headline 1.8:1 to 2.6:1 where it crosses the cabin wall); that is what it caught and the scrim now fixes. The responsive sweep failed before the fixes below: its first run found the 320 px header overflow, the 200% text overflows in the header, the 12-column grid and long headings, and the gallery label collision.
+**Negative controls.** The nested-404 step was run against a bundle built without the base anchor and **failed**, as it should. The hero check was run against the previous stock hero and scrim and **failed** at 769, 1024, 1280 and 1440 px (headline 1.8:1 to 2.6:1 where it crosses the cabin wall), which led to a stronger scrim; on the supplied hero it also **failed** once, the lead paragraph at 769 px (3.6:1), when the scrim was lightened, which is why a stronger scrim is kept at tablet widths. The responsive sweep failed before the fixes below: its first run found the 320 px header overflow, the 200% text overflows in the header, the 12-column grid and long headings, and the gallery label collision.
 
 ### What the audit follow-up added
 
@@ -56,7 +56,7 @@ Everything below was actually run on 19 October 2026 against the review branch (
 
 ## Performance (lab only)
 
-Lighthouse 12, median of three runs per page and device, before and after, with the same script and settings: see [performance.md](performance.md). They are lab numbers from one machine, taken just before the final CSS-only change to the hero scrim (a background gradient, so no network or layout effect was expected, but the benchmark was not repeated after it). **No field Core Web Vitals and no Lighthouse run against the live host have been collected.**
+Lighthouse 12, median of three runs per page and device, before and after, with the same script and settings: see [performance.md](performance.md). They are lab numbers from one machine. The Home row was re-measured on the final build (with the supplied hero image and the lighter scrim); Model, Compare and Enquiry do not use the hero and were measured earlier on the same code. **No field Core Web Vitals and no Lighthouse run against the live host have been collected.**
 
 ## Hosted preview
 
@@ -67,7 +67,7 @@ The **live GitHub Pages site (https://umejrr.github.io/alder-ember/) is still th
 - **A real HubSpot portal.** None was supplied; the adapter follows the documented endpoint and has only been tested against a mock. Property names are placeholders.
 - **Screen readers and keyboard use on real devices.** Only automated axe checks and scripted keyboard journeys have been run, in Chromium. NVDA, JAWS, VoiceOver and TalkBack have not been used. WCAG 2.2 AA is a target, not a claim.
 - **Other browsers and real devices.** Firefox, Safari (WebKit), and iOS and Android devices have not been tested: only Chromium is installed here, and the instructions for this environment say not to install others. The `:has()` selected-state styling, `<dialog>`, native `<details>`, `overflow-wrap: anywhere`, AVIF and `<picture>` are all widely supported but unchecked outside Chromium.
-- **Alder & Ember photography.** The site uses 17 openly licensed stock photographs as clearly labelled previews (see [image-credits.md](image-credits.md)). Crop, focal points, heading-over-image contrast and AVIF/WebP delivery were checked against these, but not against the real product, installation or site photography, which does not exist yet. Stock photos are atmosphere only: none shows the Rowan, Alder or Ember, and every one is tagged on the page.
+- **Alder & Ember photography.** The site uses 14 openly licensed stock photographs (in 16 slots) and one supplied hero image whose origin and rights are unconfirmed, all as clearly labelled previews (see [image-credits.md](image-credits.md)). Crop, focal points, heading-over-image contrast and AVIF/WebP delivery were checked against these, but not against the real product, installation or site photography, which does not exist yet. Stock and supplied images are atmosphere only: none is shown as the Rowan, Alder or Ember, and every one is tagged on the page ("Stock preview" or "Preview image · awaiting approval").
 - **A deployed environment.** No HTTPS host, CDN, caching, shared rate-limit store or multi-instance behaviour.
 - **Email.** No confirmation or alert emails exist.
 - **Print** reproduction of the logo, and **trademark clearance** of the identity.

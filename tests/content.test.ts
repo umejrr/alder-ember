@@ -104,9 +104,24 @@ describe('asset manifest', () => {
         expect(a.src && a.srcset && a.credit?.license && a.credit?.author && a.credit?.sourceUrl).toBeTruthy();
         expect(a.approval).not.toBe('approved');
         expect(a.alt.length).toBeGreaterThan(20);
+      } else if (a.kind === 'supplied-preview') {
+        // a supplied image has no confirmed origin or rights: atmosphere only, labelled, no credit, never "approved"
+        expect(a.evidence).toBe('atmosphere');
+        expect(a.src && a.srcset).toBeTruthy();
+        expect(a.rights).toBeNull();
+        expect(a.credit).toBeUndefined();
+        expect(a.approval).not.toBe('approved');
+        expect(previewTag(a)).toMatch(/awaiting approval/);
+        expect(a.alt.length).toBeGreaterThan(20);
       } else {
         expect(a.rights).toBeNull();
       }
+    }
+  });
+
+  it('labels every image that is not an approved photograph', () => {
+    for (const a of assets.filter((x) => x.kind !== 'photo' && x.kind !== 'placeholder')) {
+      expect(previewTag(a)).toBeTruthy();
     }
   });
 

@@ -8,10 +8,18 @@ import { stages } from '@/content/site';
 import { faqs, homeFaqIds } from '@/content/faqs';
 import { toModelView } from '@/lib/model-view';
 import { installationsRouteEnabled, visibleInstallations } from '@/lib/visibility';
-import { isPreview } from '@/lib/mode';
 import { getAsset } from '@/content/assets';
 
-const heroTag = getAsset('hero-wide')?.kind === 'stock-preview' ? 'Stock preview photo · to be replaced with your own' : 'Preview image · hero photograph to be supplied';
+// an image that is not an approved photograph is always labelled, in preview and in production, so it can never pass as one
+const heroKind = getAsset('hero-wide')?.kind;
+const heroTag =
+  heroKind === 'photo'
+    ? null
+    : heroKind === 'stock-preview'
+      ? 'Stock preview photo · to be replaced with your own'
+      : heroKind === 'supplied-preview'
+        ? 'Preview image · awaiting approval'
+        : 'Preview image · hero photograph to be supplied';
 
 const models = productList.map((p) => toModelView(p));
 const homeFaqs = homeFaqIds.map((id) => faqs.find((f) => f.id === id)!);
@@ -37,7 +45,7 @@ const details = [
       <Picture id="hero-wide" priority fill class="hero__pic hero__pic--wide" quiet />
       <Picture id="hero-mobile" priority fill class="hero__pic hero__pic--narrow" quiet />
       <div class="hero__scrim" aria-hidden="true"></div>
-      {isPreview() && <span class="hero__tag chip">{heroTag}</span>}
+      {heroTag && <span class="hero__tag chip">{heroTag}</span>}
     </div>
     <div class="container hero__copy">
       <h1 id="hero-title">
@@ -293,9 +301,18 @@ const details = [
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(70% 62% at 24% 76%, rgba(10, 16, 12, 0.72) 0%, rgba(10, 16, 12, 0) 76%),
-      linear-gradient(0deg, rgba(10, 16, 12, 0.78) 0%, rgba(10, 16, 12, 0.4) 30%, rgba(10, 16, 12, 0) 58%),
-      linear-gradient(90deg, rgba(10, 16, 12, 0.6) 0%, rgba(10, 16, 12, 0.38) 36%, rgba(10, 16, 12, 0) 62%);
+      radial-gradient(64% 58% at 22% 76%, rgba(10, 16, 12, 0.5) 0%, rgba(10, 16, 12, 0) 74%),
+      linear-gradient(0deg, rgba(10, 16, 12, 0.66) 0%, rgba(10, 16, 12, 0.28) 28%, rgba(10, 16, 12, 0) 52%),
+      linear-gradient(90deg, rgba(10, 16, 12, 0.34) 0%, rgba(10, 16, 12, 0.16) 36%, rgba(10, 16, 12, 0) 58%);
+  }
+  /* where the copy reaches over the glazed front (tablet widths), the scrim is stronger; the photograph is bright there */
+  @media (min-width: 40.0625rem) and (max-width: 56rem) {
+    .hero__scrim {
+      background:
+        radial-gradient(70% 62% at 24% 76%, rgba(10, 16, 12, 0.72) 0%, rgba(10, 16, 12, 0) 76%),
+        linear-gradient(0deg, rgba(10, 16, 12, 0.78) 0%, rgba(10, 16, 12, 0.4) 30%, rgba(10, 16, 12, 0) 58%),
+        linear-gradient(90deg, rgba(10, 16, 12, 0.6) 0%, rgba(10, 16, 12, 0.38) 36%, rgba(10, 16, 12, 0) 62%);
+    }
   }
   .hero__tag {
     position: absolute;
