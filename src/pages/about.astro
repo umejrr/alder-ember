@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Picture from '@/components/Picture.astro';
 
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'About Alder & Ember' }];
 const controls = [
@@ -96,6 +97,7 @@ const controls = [
         <p class="lead">Tell us where you’re based and what you have in mind. We’ll help you choose the next step.</p>
         <a class="btn" href="/plan-your-sauna">Plan your sauna</a>
       </div>
+      <div class="closing__media"><Picture id="alder-detail" sizes="(min-width: 60rem) 44vw, 100vw" /></div>
     </div>
   </section>
 </Base>

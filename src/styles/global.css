@@ -834,6 +834,11 @@ table.data td {
 
 /* ---------- closing call to action (shared by every page that ends on one) ---------- */
 .closing { padding-block: var(--rs-4); border-bottom: 1px solid var(--rule); }
+/* the photograph beside the closing call to action, the same on every page that has one */
+.closing__media .pic { aspect-ratio: 4 / 3; }
+@media (min-width: 60rem) {
+  .closing__media .pic { aspect-ratio: 5 / 4; }
+}
 .closing__inner { display: grid; gap: var(--sp-3); }
 .closing__text,
 .closing__copy { display: grid; gap: var(--sp-2); align-content: center; max-width: 30rem; }
