@@ -59,9 +59,9 @@ Everything below was actually run on 22 October 2026 against the final build, in
 
 Lighthouse 12, median of three runs per page and device, before and after, with the same script and settings: see [performance.md](performance.md). They are lab numbers from one machine. The Home row was re-measured on the final build (with the supplied hero image and the lighter scrim); Model, Compare and Enquiry do not use the hero and were measured earlier on the same code. **No field Core Web Vitals and no Lighthouse run against the live host have been collected.**
 
-## Hosted preview
+## Hosted site
 
-The **live GitHub Pages site (https://umejrr.github.io/alder-ember/) is still the audited build**: this work is on the review branch, which the Pages workflow does not watch, so nothing was published. The earlier live checks (7 October, and 19 October for reachability) therefore say nothing about this branch. The identical static bundle was tested from a nested sub-path with a host-style 404 fallback (above); publishing it is a separate, explicit step.
+Published to https://umejrr.github.io/alder-ember/ on 22 October 2026 (commit `f9b8b4c`) and checked on the live URL afterwards: the home page carries no preview, demo or stock wording; `/cookies`, `/installations`, `/warranty` and `/image-credits` return 404; `/privacy` and `/terms` return 200; every page says `noindex` and `robots.txt` blocks crawling, because no domain is set; and the 10-step static-bundle test passes against the real host (styles, fonts and islands from the sub-path, Ctrl-click links, nested 404s, no request escaping the prefix).
 
 ## Not verified, and why
 
@@ -69,7 +69,9 @@ The **live GitHub Pages site (https://umejrr.github.io/alder-ember/) is still th
 - **Screen readers and keyboard use on real devices.** Only automated axe checks and scripted keyboard journeys have been run, in Chromium. NVDA, JAWS, VoiceOver and TalkBack have not been used. WCAG 2.2 AA is a target, not a claim.
 - **Other browsers and real devices.** Firefox, Safari (WebKit), and iOS and Android devices have not been tested: only Chromium is installed here, and the instructions for this environment say not to install others. The `:has()` selected-state styling, `<dialog>`, native `<details>`, `overflow-wrap: anywhere`, AVIF and `<picture>` are all widely supported but unchecked outside Chromium.
 - **Alder & Ember photography.** Every image on the site is a photograph supplied by the owner, who confirmed on 22 October 2026 that they are real photographs and approved them (see [image-credits.md](image-credits.md)). Crop, focal points, heading-over-image contrast and AVIF/WebP delivery were checked against them. Not verified: who took them, the licence terms, which sauna each shows (so none is treated as proof of a specific model), and that the installation and site-access pictures are real jobs. They are 1448 to 1884 px wide, so they are soft on very large or high-density screens.
-- **A deployed environment.** No HTTPS host, CDN, caching, shared rate-limit store or multi-instance behaviour.
+- **A production environment.** The site is on GitHub Pages only: no custom domain, CDN configuration, shared rate-limit store or multi-instance behaviour, and no server to receive enquiries.
+- **Enquiry delivery.** No inbox is connected, so the forms cannot deliver an enquiry and say so. Nothing was sent anywhere in any test against the live site.
+- **Privacy notice and website terms.** Standard UK boilerplate, not reviewed by a solicitor.
 - **Email.** No confirmation or alert emails exist.
 - **Print** reproduction of the logo, and **trademark clearance** of the identity.
 - **Zoom and text-scaling.** 400% reflow is approximated by the 320 px width, and 200% text by raising Chromium's default font size (a faithful emulation of the setting, run in `npm run responsive`). Real browser zoom, and text-only zoom in Safari or Firefox, were not run. Overflow was checked; clipped or overlapping content at large text was only reviewed on a few pages by eye.
