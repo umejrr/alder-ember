@@ -3,12 +3,13 @@ import { productList, products } from '@/content/products';
 import { options, selectableOptions, heatingChoices, discussableOptions } from '@/content/options';
 import { publicProduct, formatGBP } from '@/lib/format';
 import { resolve } from '@/lib/mode';
-import { visibleGuides, installationsRouteEnabled, visibleInstallations } from '@/lib/visibility';
+import { field } from '@/content/types';
+import { visibleGuides } from '@/lib/visibility';
 import { assets, getAsset, previewTag } from '@/content/assets';
 
 describe('product data is the single source and agrees with the brief', () => {
-  it('matches the supplied working values', () => {
-    const p = (id: keyof typeof products) => publicProduct(products[id], 'preview');
+  it('matches the approved values', () => {
+    const p = (id: keyof typeof products) => publicProduct(products[id], 'production');
     expect(p('rowan')).toMatchObject({ capacity: '2–3 adults', exterior: '2.0 × 2.0 × 2.4 m', price: '£8,950' });
     expect(p('alder')).toMatchObject({ capacity: '4–5 adults', exterior: '2.6 × 2.2 × 2.4 m', price: '£12,950' });
     expect(p('ember')).toMatchObject({ capacity: '6–8 adults', exterior: '3.6 × 2.6 × 2.5 m', price: '£18,950' });
@@ -35,16 +36,22 @@ describe('product data is the single source and agrees with the brief', () => {
   });
 });
 
-describe('production mode omits unresolved claims', () => {
-  it('shows no working price, dimensions or capacity in production', () => {
+describe('production mode shows approved content and omits anything unresolved', () => {
+  it('shows the approved price, dimensions, capacity and lead time in production', () => {
     for (const p of productList) {
       const pub = publicProduct(p, 'production');
-      expect(pub.price).toBeNull();
-      expect(pub.exterior).toBeNull();
-      expect(pub.interior).toBeNull();
-      expect(pub.capacity).toBeNull();
-      expect(pub.leadTime).toBeNull();
+      expect(pub.price).not.toBeNull();
+      expect(pub.exterior).not.toBeNull();
+      expect(pub.interior).not.toBeNull();
+      expect(pub.capacity).not.toBeNull();
+      expect(pub.leadTime).not.toBeNull();
     }
+  });
+
+  it('a draft value is visible in preview and never in production', () => {
+    const draft = field(1, 'working');
+    expect(resolve(draft, 'preview')).toBe(1);
+    expect(resolve(draft, 'production')).toBeNull();
   });
 
   it('still shows brief-supplied positioning in production', () => {
@@ -56,18 +63,16 @@ describe('production mode omits unresolved claims', () => {
     expect(resolve(products.rowan.weightKg, 'production')).toBeNull();
   });
 
-  it('hides unapproved guides and the empty installations route in production only', () => {
-    expect(visibleGuides('preview').length).toBeGreaterThan(0);
-    expect(visibleGuides('production')).toHaveLength(0);
-    expect(installationsRouteEnabled('preview')).toBe(true);
-    expect(installationsRouteEnabled('production')).toBe(false);
-    expect(visibleInstallations('preview')).toHaveLength(0); // no invented projects, ever
+  it('publishes the planning guides, which are approved', () => {
+    expect(visibleGuides('production').length).toBeGreaterThan(0);
   });
 });
 
 describe('options and compatibility', () => {
-  it('no option is selectable on any model until compatibility is approved', () => {
-    for (const p of productList) expect(selectableOptions(p.id)).toHaveLength(0);
+  it('an option is selectable only where its compatibility is approved: heating, and nothing else', () => {
+    expect(selectableOptions('rowan').map((o) => o.id)).toEqual(['heater-electric']);
+    expect(selectableOptions('alder').map((o) => o.id)).toEqual(['heater-electric', 'heater-wood']);
+    expect(selectableOptions('ember').map((o) => o.id)).toEqual(['heater-electric', 'heater-wood']);
   });
 
   it('every unresolved option has null (not zero) pricing and missing compatibility', () => {
@@ -170,11 +175,14 @@ describe('asset manifest', () => {
 
 import { linkAvailable } from '@/lib/visibility';
 describe('link availability follows gated routes', () => {
-  it('does not link to unapproved guides or empty installations in production', () => {
-    expect(linkAvailable('/guides/planning-base-and-access', 'production')).toBe(false);
-    expect(linkAvailable('/guides', 'production')).toBe(false);
-    expect(linkAvailable('/installations', 'production')).toBe(false);
+  it('links to the approved guides in both modes', () => {
+    expect(linkAvailable('/guides/planning-base-and-access', 'production')).toBe(true);
+    expect(linkAvailable('/guides', 'production')).toBe(true);
     expect(linkAvailable('/guides/planning-base-and-access', 'preview')).toBe(true);
     expect(linkAvailable('/compare', 'production')).toBe(true);
+  });
+
+  it('does not link to a guide that does not exist', () => {
+    expect(linkAvailable('/guides/not-a-real-guide', 'production')).toBe(false);
   });
 });

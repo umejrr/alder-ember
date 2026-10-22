@@ -24,7 +24,7 @@ const BASE = process.env.STATIC_BASE ? `/${process.env.STATIC_BASE.replace(/^\/+
 rmSync(RAW, { recursive: true, force: true });
 rmSync(OUT, { recursive: true, force: true });
 execFileSync('npx', ['astro', 'build', '--outDir', RAW], {
-  env: { ...process.env, ASSETS_DIR: ASSETS, PUBLIC_CONTENT_MODE: 'preview', PUBLIC_STATIC_DEMO: 'true', PUBLIC_ENQUIRY_MODE: 'demo' },
+  env: { ...process.env, ASSETS_DIR: ASSETS, PUBLIC_CONTENT_MODE: 'production', PUBLIC_STATIC_DEMO: 'true', PUBLIC_ENQUIRY_MODE: 'demo' },
   stdio: 'pipe',
 });
 cpSync(join(RAW, 'client'), OUT, { recursive: true });

@@ -125,7 +125,7 @@ await step('missing pages at any depth return 404 with the branded, styled page 
 });
 
 await step('every page in the bundle loads without errors', async () => {
-  const routes = ['index.html', 'saunas/index.html', 'saunas/rowan/index.html', 'saunas/alder/index.html', 'saunas/ember/index.html', 'compare/index.html', 'installation-delivery/index.html', 'installations/index.html', 'installations/preview-template/index.html', 'commercial/index.html', 'about/index.html', 'care-support/index.html', 'guides/index.html', 'guides/planning-base-and-access/index.html', 'plan-your-sauna/index.html', 'campaigns/meet-the-alder/index.html', 'privacy/index.html', 'cookies/index.html', 'terms/index.html', 'warranty/index.html', 'brand/index.html', '404.html'];
+  const routes = ['index.html', 'saunas/index.html', 'saunas/rowan/index.html', 'saunas/alder/index.html', 'saunas/ember/index.html', 'compare/index.html', 'installation-delivery/index.html', 'commercial/index.html', 'about/index.html', 'care-support/index.html', 'guides/index.html', 'guides/planning-base-and-access/index.html', 'plan-your-sauna/index.html', 'campaigns/meet-the-alder/index.html', 'privacy/index.html', 'terms/index.html', '404.html'];
   for (const r of routes) {
     const res = await page.goto(base + r, { waitUntil: 'networkidle' });
     assert.equal(res.status(), 200, r);
@@ -142,7 +142,7 @@ await step('compare and the gallery work on the model page', async () => {
   await page.getByText('2 / 3').first().waitFor();
 });
 
-await step('enquiry: real validation, then a clearly labelled client-side demo (nothing is sent)', async () => {
+await step('enquiry: real validation, then a plain statement that nothing was sent', async () => {
   const requests = [];
   page.on('request', (r) => { if (r.method() === 'POST') requests.push(r.url()); });
   await page.goto(base + 'plan-your-sauna/index.html', { waitUntil: 'networkidle' });
@@ -152,8 +152,8 @@ await step('enquiry: real validation, then a clearly labelled client-side demo (
   await page.fill('#enq-name', 'Sam Taylor'); await page.fill('#enq-email', 'sam@example.com'); await page.fill('#enq-postcode', 'SW1A 1AA');
   await page.selectOption('#enq-model', 'alder'); await page.fill('#enq-description', 'A flat lawn behind the house with side access.');
   await page.getByRole('button', { name: 'Send your enquiry' }).click();
-  await page.getByText('Demo mode: nothing was sent').waitFor();
-  assert.deepEqual(requests, [], 'the static demo must not POST anywhere');
+  await page.getByText('Your enquiry has not been sent').waitFor();
+  assert.deepEqual(requests, [], 'the unconnected static form must not POST anywhere');
 });
 
 await step('mobile menu works and nothing escaped the sub-path', async () => {

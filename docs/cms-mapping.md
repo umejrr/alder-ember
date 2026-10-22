@@ -6,18 +6,17 @@ This repository is a code-based reference implementation. It is **not** an edita
 
 | Route | Template | Data source | Status |
 |---|---|---|---|
-| `/` | Home | products, site, faqs, installations | Built |
+| `/` | Home | products, site, faqs | Built |
 | `/saunas` | Collection | products | Built |
 | `/saunas/[rowan\|alder\|ember]` | Product (one template) | products, options, faqs, assets | Built, three pages from one template |
 | `/compare` | Compare + selector | products, selector rules | Built |
 | `/installation-delivery` | Content page | site, faqs | Built |
-| `/installations`, `/installations/[slug]` | Index + story | installations | Index and story templates built; **no stories exist**; production omits both until one is approved |
 | `/commercial` | Content page + form | site | Built |
 | `/about`, `/care-support` | Content pages | site | Built; contact channels and profiles pending |
 | `/guides`, `/guides/[slug]` | Index + article | guides | Built with six **draft** guides; production omits them until approved |
-| `/plan-your-sauna` | Enquiry | products | Built; demo submission until configured |
+| `/plan-your-sauna` | Enquiry | products | Built; says nothing was sent until an inbox is connected |
 | `/campaigns/[slug]` | Campaign | campaigns, products | Template built; one introduction campaign with no offer |
-| `/privacy`, `/cookies`, `/terms`, `/warranty` | Policy | policies | Templates built; **no approved text**; `noindex` until approved. Cookies has working preference controls |
+| `/privacy`, `/terms` | Policy | policies | Built, with standard UK boilerplate approved by the owner. No cookie or warranty page |
 | 404 | Not found | none | Built |
 | `/brand` | Internal review sheet | none | Preview only |
 | `/robots.txt`, `/sitemap.xml` | Endpoints | visibility rules | Built; sitemap needs `PUBLIC_SITE_URL` |
@@ -40,7 +39,7 @@ Webflow notes: keep **price in minor units** or a number field and format in the
 
 ## Styles (Client First-style)
 
-Tokens map to Webflow variables: `--c-*` to colour variables, `--s-*` to spacing, `--fs-*` to type sizes, `--w-*` to container widths. Utility-level classes mirror `global.css`: `container`, `section`, `grid-12` with `c-N` spans, `btn`/`btn--secondary`, `text-link`, `label`, `facts`, `accordion`, `is-forest`, `is-surface`.
+Tokens map to Webflow variables: `--c-*` to colour variables, `--sp-*` to spacing, `--fs-*` to type sizes, `--w-*` to container widths. Utility-level classes mirror `global.css`: `container`, `section`, `grid-12` with `c-N` spans, `btn`/`btn--secondary`, `text-link`, `label`, `facts`, `accordion`, `is-forest`, `is-surface`.
 
 ## Interactions that need custom code in Webflow
 

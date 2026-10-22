@@ -10,14 +10,13 @@ interface Props {
   compareIds: string[];
   /** estimated lead time, shown after the call to action */
   leadTime?: string | null;
-  leadWorking?: boolean;
 }
 
 /**
  * Enquiry panel on a model page. A heating choice here is a PREFERENCE carried into the
  * enquiry, not a confirmed configuration, and the panel says so.
  */
-export default function ProductPanel({ model, heating, compareIds, leadTime = null, leadWorking = false }: Props) {
+export default function ProductPanel({ model, heating, compareIds, leadTime = null }: Props) {
   const [pref, setPref] = useState<HeatingPreference | null>(null);
   // said aloud when a heating preference carried from another model is not offered on this one
   const [changed, setChanged] = useState<string | null>(null);
@@ -62,7 +61,7 @@ export default function ProductPanel({ model, heating, compareIds, leadTime = nu
 
       {leadTime && (
         <p className="ppanel__lead">
-          <span className="label muted">Estimated lead time{leadWorking ? ' (working figure)' : ''}</span>
+          <span className="label muted">Estimated lead time</span>
           <br />
           {leadTime}
         </p>

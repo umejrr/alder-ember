@@ -37,12 +37,12 @@ export const options: ProductOption[] = [
     group: 'heating',
     description:
       'Suits customers who want straightforward controls and regular use. Equipment sizing and electrical supply follow the approved equipment specification.',
-    compatibleProductIds: field<ProductId[]>(['rowan', 'alder', 'ember'], 'working'),
+    compatibleProductIds: field<ProductId[]>(['rowan', 'alder', 'ember'], 'approved'),
     kind: 'included',
     priceType: 'included',
     priceMinor: missing<number>(),
     requiresAssessment: true,
-    approval: 'working',
+    approval: 'approved',
   },
   {
     id: 'heater-wood',
@@ -50,12 +50,12 @@ export const options: ProductOption[] = [
     group: 'heating',
     description:
       'Selected configurations suit people comfortable tending a fire and managing the associated maintenance and site considerations. Ventilation, flues and clearances follow the approved equipment specification.',
-    compatibleProductIds: field<ProductId[]>(['alder', 'ember'], 'working', 'Selected configurations, subject to assessment'),
+    compatibleProductIds: field<ProductId[]>(['alder', 'ember'], 'approved', 'Selected configurations, subject to assessment'),
     kind: 'optional',
     priceType: 'quoted-after-assessment',
     priceMinor: missing<number>(),
     requiresAssessment: true,
-    approval: 'working',
+    approval: 'approved',
   },
   unresolved('glazing-upgrade', 'Glazing upgrades', 'glazing', 'Alternative or additional glazing.'),
   unresolved('exterior-finish', 'Exterior finishes', 'finish', 'Alternative approved exterior finishes.'),
@@ -64,7 +64,7 @@ export const options: ProductOption[] = [
   unresolved('backrests', 'Backrests', 'comfort', 'Added bench backrests.'),
   unresolved('lighting', 'Lighting options', 'comfort', 'Lighting beyond the standard lighting.'),
   unresolved('entrance-platform', 'Entrance platforms', 'access', 'A platform or step at the cabin door.'),
-  unresolved('changing-area', 'Changing area', 'layout', 'Whether a changing area is included, optional or a separate configuration is still being confirmed.'),
+  unresolved('changing-area', 'Changing area', 'layout', 'Whether a changing area is included, optional or a separate configuration is confirmed in your quotation.'),
 ];
 
 /** Options a customer may select as a preference: approved compatibility only. */

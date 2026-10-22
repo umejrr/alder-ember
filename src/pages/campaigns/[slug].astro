@@ -40,7 +40,7 @@ const campFaqs = [faqs.find((f) => f.id === 'price')!, faqs.find((f) => f.id ===
   <section class="section section--flush-top">
     <div class="container grid-12">
       <div class="c-7"><Picture id={product.heroAsset} sizes="(min-width: 60rem) 58vw, 100vw" priority /></div>
-      <div class="c-5 stack" style="--stack: var(--s-5)">
+      <div class="c-5 stack" style="--stack: var(--sp-2)">
         <ModelFacts product={product} rows={['capacity', 'exterior', 'heating']} />
         <PriceBlock product={product} />
         <div class="actions">
@@ -53,14 +53,14 @@ const campFaqs = [faqs.find((f) => f.id === 'price')!, faqs.find((f) => f.id ===
 
   <section class="section is-surface" aria-labelledby="faq-title">
     <div class="container grid-12">
-      <div class="c-4"><h2 id="faq-title">Questions</h2></div>
+      <div class="c-4 side"><h2 id="faq-title">Questions</h2></div>
       <div class="c-7 c-start-6"><FaqList items={campFaqs} /></div>
     </div>
   </section>
 
   <section class="section" id="enquire" aria-labelledby="enq-title">
     <div class="container grid-12">
-      <div class="c-4"><h2 id="enq-title">Plan your {product.shortName}</h2><p class="muted" style="margin-top: var(--s-4)">Tell us where you’re based and what you have in mind.</p></div>
+      <div class="c-4 side"><h2 id="enq-title">Plan your {product.shortName}</h2><p class="muted" style="margin-top: var(--sp-1)">Tell us where you’re based and what you have in mind.</p></div>
       <div class="c-8">
         <EnquiryForm client:visible kind="residential" models={models} campaignId={campaign.attributionId} submissionMode={mode} responseTime={resolve(site.responseTime)} />
       </div>

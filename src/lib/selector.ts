@@ -111,7 +111,7 @@ export function runSelector(input: SelectorInput): SelectorResult {
       return {
         kind: 'advice',
         reasons: [
-          'You would like a changing area. Only the Ember is described with one, and how that is specified is still being confirmed, so we would rather talk it through than guess.',
+          'You would like a changing area. Only the Ember is described with one, and how that is specified is confirmed in your quotation, so we would rather talk it through than guess.',
         ],
         compare: ['ember', chosen],
       };

@@ -33,7 +33,7 @@ export const campaigns: Campaign[] = [
     validFrom: null,
     validTo: null,
     attributionId: 'campaign-meet-the-alder',
-    approval: 'working',
+    approval: 'approved',
     published: true,
   },
 ];

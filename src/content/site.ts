@@ -25,8 +25,8 @@ export const site = {
   ),
   coverage: field(
     'We install in England and Wales. Scotland needs an individual postcode assessment. Northern Ireland, islands and other locations need separate arrangements.',
-    'working',
-    'Initial coverage; confirm with Operations before it is shown as a promise',
+    'approved',
+    'Confirmed with the owner on 22 October 2026',
   ),
   social: [] as { label: string; href: string }[],
   /**
@@ -39,14 +39,11 @@ export const site = {
 export interface NavItem {
   label: string;
   href: string;
-  /** production-only gate: hidden until real content exists */
-  requires?: 'installations';
 }
 
 export const primaryNav: NavItem[] = [
   { label: 'Saunas', href: '/saunas' },
   { label: 'Installation & delivery', href: '/installation-delivery' },
-  { label: 'Our installations', href: '/installations', requires: 'installations' },
   { label: 'Commercial', href: '/commercial' },
   { label: 'About', href: '/about' },
 ];
@@ -82,14 +79,12 @@ export const footerNav: { heading: string; links: (NavItem & { gate?: 'guides' |
     heading: 'Company',
     links: [
       { label: 'About Alder & Ember', href: '/about' },
-      { label: 'Warranty', href: '/warranty', gate: 'policy' },
     ],
   },
 ];
 
 export const legalNav: { label: string; href: string }[] = [
   { label: 'Privacy', href: '/privacy' },
-  { label: 'Cookies', href: '/cookies' },
   { label: 'Terms', href: '/terms' },
 ];
 

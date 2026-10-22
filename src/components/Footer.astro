@@ -2,9 +2,6 @@
 import Logo from './Logo.astro';
 import { footerNav, legalNav, site } from '@/content/site';
 import { guidesRouteEnabled } from '@/lib/visibility';
-import { assets } from '@/content/assets';
-
-const usesStock = assets.some((a) => a.kind === 'stock-preview');
 
 const links = footerNav.map((col) => ({
   ...col,
@@ -38,8 +35,6 @@ const links = footerNav.map((col) => ({
     <div class="site-footer__legal">
       <ul>
         {legalNav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-        <li><a href="/cookies#preferences">Cookie preferences</a></li>
-        {usesStock && <li><a href="/image-credits">Image credits</a></li>}
       </ul>
       <p>© {new Date().getFullYear()} {site.name}</p>
     </div>
@@ -49,26 +44,26 @@ const links = footerNav.map((col) => ({
 <style is:global>
   .site-footer {
     padding-top: var(--section);
-    padding-bottom: var(--s-6);
+    padding-bottom: var(--sp-2);
     --logo-accent: var(--c-ember-on-forest);
   }
   .site-footer a { text-decoration: none; }
   .site-footer a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
-  .site-footer__about { display: grid; gap: var(--s-4); align-content: start; max-width: 28rem; }
-  .site-footer__about .btn { justify-self: start; margin-top: var(--s-2); }
+  .site-footer__about { display: grid; gap: var(--sp-1); align-content: start; max-width: 28rem; }
+  .site-footer__about .btn { justify-self: start; margin-top: var(--sp-05); }
   .site-footer__lead { font-size: var(--fs-h3); line-height: 1.25; font-weight: 300; }
   .site-footer__about .muted { font-size: var(--fs-small); }
   .site-footer__cols {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    gap: var(--s-6) var(--s-5);
+    gap: var(--sp-2) var(--sp-2);
   }
-  .site-footer__cols h2 { color: var(--c-on-forest-muted); margin-bottom: var(--s-4); font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.14em; }
-  .site-footer__cols ul { display: grid; gap: 0.25rem; }
-  .site-footer__cols a { display: inline-block; padding: 0.35rem 0; min-height: 32px; }
+  .site-footer__cols h2 { color: var(--c-on-forest-muted); margin-bottom: var(--sp-1); font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.14em; }
+  .site-footer__cols ul { display: grid; gap: 0.5rem; }
+  .site-footer__cols a { display: inline-block; padding: 0.5rem 0; min-height: 32px; }
   .site-footer__mark {
-    margin-top: clamp(3rem, 8vw, 7rem);
-    padding-top: var(--s-6);
+    margin-top: var(--rs-4);
+    padding-top: var(--sp-2);
     border-top: 1px solid rgba(244, 240, 232, 0.2);
     color: var(--c-on-forest);
     opacity: 0.92;
@@ -78,12 +73,12 @@ const links = footerNav.map((col) => ({
   .site-footer__legal {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-3) var(--s-6);
+    gap: var(--sp-1) var(--sp-2);
     justify-content: space-between;
-    margin-top: var(--s-6);
+    margin-top: var(--sp-2);
     font-size: var(--fs-small);
     color: var(--c-on-forest-muted);
   }
-  .site-footer__legal ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
-  .site-footer__legal a { display: inline-block; padding: 0.3rem 0; }
+  .site-footer__legal ul { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; }
+  .site-footer__legal a { display: inline-block; padding: 0.5rem 0; }
 </style>

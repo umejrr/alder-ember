@@ -1,7 +1,6 @@
 ---
 import type { Product } from '@/content/types';
 import { publicProduct, FALLBACK } from '@/lib/format';
-import { isWorking } from '@/lib/mode';
 
 interface Props {
   product: Product;
@@ -11,10 +10,9 @@ interface Props {
 const { product, compact = false } = Astro.props;
 const SHORT = 'Delivery and installation are confirmed in your itemised quotation.';
 const pub = publicProduct(product);
-const working = isWorking(product.priceFromMinor);
 ---
 <div class="price-block">
-  <span class="label muted">Starting price{working ? ' (working figure)' : ''}</span>
+  <span class="label muted">Starting price</span>
   <p class="price-block__value tnum">
     {
       pub.price ? (
@@ -41,7 +39,7 @@ const working = isWorking(product.priceFromMinor);
 </div>
 
 <style is:global>
-  .price-block { display: grid; gap: 0.3rem; }
+  .price-block { display: grid; gap: 0.5rem; }
   .price-block__value {
     font-family: var(--font-serif);
     font-size: var(--fs-h2);
@@ -60,5 +58,5 @@ const working = isWorking(product.priceFromMinor);
   .price-block__scope { font-size: var(--fs-small); color: var(--fg-muted); max-width: 36em; }
   .price-block__more { font-size: var(--fs-small); color: var(--fg-muted); }
   .price-block__more > summary { cursor: pointer; width: fit-content; min-height: 24px; color: var(--fg); text-decoration: underline; text-underline-offset: 0.2em; }
-  .price-block__more > p { margin-top: 0.4rem; max-width: 36em; }
+  .price-block__more > p { margin-top: 0.5rem; max-width: 36em; }
 </style>

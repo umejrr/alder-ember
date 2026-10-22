@@ -10,7 +10,7 @@ Boundaries are small and explicit. Nothing here has been connected to a live sys
 | HubSpot Forms API | **Implemented, not verified against a real portal.** Awaiting configuration | `src/lib/enquiry/hubspot.ts` |
 | Sales alert and customer confirmation email | **Not configured.** Returns "not sent"; the UI never claims an email was sent | `src/lib/enquiry/notify.ts` |
 | Analytics and consent | **Boundary built, no provider chosen**, so nothing is sent and no banner is shown | `src/lib/analytics.ts`, `src/lib/consent.ts` |
-| Static preview form | **Client-side demo only.** Validates, then shows the demo confirmation; sends and stores nothing | `PUBLIC_STATIC_DEMO=true` (`npm run build:static`) |
+| Static preview form | **Client-side only.** Validates, then says plainly that nothing was sent; sends and stores nothing | `PUBLIC_STATIC_DEMO=true` (`npm run build:static`) |
 | Booking | **Not built.** No calendar or booking process exists; no slots are invented | n/a |
 | Accessory checkout | **Not built.** No approved catalogue, prices, stock process, payment provider or terms; no pretend cart | n/a |
 | Email marketing | **Not connected.** The opt-in is a separate, optional checkbox that travels as a property | `ae_marketing_opt_in` |
@@ -21,7 +21,7 @@ Boundaries are small and explicit. Nothing here has been connected to a live sys
 1. The browser validates (for usability), then POSTs JSON to `/api/enquiry`.
 2. The server rejects wrong content types, cross-origin requests, oversize bodies (20 KB), honeypot hits, submissions faster than 2 s and rate-limit breaches (5 per IP per 10 minutes), then **validates again** (never trusting the client).
 3. A client-generated idempotency key makes a repeat submission return the original result rather than creating a duplicate.
-4. **Demo mode:** nothing is stored or sent, and the response says so. The page shows "Demo mode: nothing was sent". A demo is never counted as a conversion.
+4. **Demo mode:** nothing is stored or sent, and the response says so. The page shows "Your enquiry has not been sent". An unsent enquiry is never counted as a conversion.
 5. **Live mode:** if no destination is configured the server returns 503 rather than accepting into a void. Otherwise it writes the enquiry to the outbox (success is returned only after that write), then sends it to HubSpot. If HubSpot fails the record stays queued and is retried by `npm run outbox:retry`. The response says `delivered` or `queued`; the page only ever says it has *received* the enquiry.
 6. Analytics `submit_enquiry_success` fires only for a live, accepted enquiry.
 

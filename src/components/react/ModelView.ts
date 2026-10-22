@@ -16,8 +16,6 @@ export interface ModelView {
   price: string | null;
   vat: string | null;
   priceScope: string | null;
-  /** true while the starting price is a working figure awaiting approval (preview builds only) */
-  priceWorking: boolean;
   leadTime: string | null;
   changingArea: string | null;
   electric: string | null;

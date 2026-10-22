@@ -44,7 +44,7 @@ const mode = import.meta.env.PUBLIC_ENQUIRY_MODE === 'live' ? 'live' : 'demo';
 </Base>
 
 <style is:global>
-  .enq-aside__sticky { padding: var(--s-5); background: var(--c-surface); border: var(--border); }
-  .enq-aside__steps { display: grid; gap: var(--s-3); list-style: decimal; padding-left: 1.25rem; }
-  @media (min-width: 60rem) { .enq-aside__sticky { position: sticky; top: calc(var(--header-h) + 1.25rem); } }
+  .enq-aside__sticky { padding: var(--sp-2); background: var(--c-surface); border: var(--border); }
+  .enq-aside__steps { display: grid; gap: var(--sp-1); list-style: decimal; padding-left: 1rem; }
+  @media (min-width: 60rem) { .enq-aside__sticky { position: sticky; top: var(--sticky-top); } }
 </style>

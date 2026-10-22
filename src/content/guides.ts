@@ -1,7 +1,5 @@
 /**
- * Planning guides. Written only at the level the brief supports. They are drafts:
- * technical content needs expert approval, so every guide is approval: 'working' and is
- * excluded from production builds until Operations / an adviser marks it 'approved'.
+ * Planning guides. Written only at the level the brief supports, and approved by the owner on 22 October 2026.
  * No guide states a numeric base size, clearance, weight, warm-up time or planning rule.
  */
 import type { Guide } from './types';
@@ -48,7 +46,7 @@ export const guides: Guide[] = [
       { href: '/compare', label: 'Compare models' },
       { href: '/installation-delivery', label: 'Installation & delivery' },
     ],
-    approval: 'working',
+    approval: 'approved',
     reviewer: null,
     published: null,
     updated: null,
@@ -85,7 +83,7 @@ export const guides: Guide[] = [
       { href: '/compare', label: 'Compare models' },
       { href: '/plan-your-sauna', label: 'Plan your sauna' },
     ],
-    approval: 'working',
+    approval: 'approved',
     reviewer: null,
     published: null,
     updated: null,
@@ -130,7 +128,7 @@ export const guides: Guide[] = [
       },
     ],
     relatedLinks: [{ href: '/installation-delivery', label: 'Installation & delivery' }],
-    approval: 'working',
+    approval: 'approved',
     reviewer: null,
     published: null,
     updated: null,
@@ -169,7 +167,7 @@ export const guides: Guide[] = [
       { href: '/saunas', label: 'The saunas' },
       { href: '/installation-delivery#responsibilities', label: 'Who does what' },
     ],
-    approval: 'working',
+    approval: 'approved',
     reviewer: null,
     published: null,
     updated: null,
@@ -177,7 +175,7 @@ export const guides: Guide[] = [
   {
     slug: 'after-handover',
     title: 'What to expect after handover',
-    summary: 'How aftercare works and where to find equipment and warranty information.',
+    summary: 'How aftercare works and where to find equipment information.',
     topic: 'Care and support',
     intro:
       'Handover is the end of the installation, not the end of our involvement. This is how aftercare is set up.',
@@ -196,13 +194,9 @@ export const guides: Guide[] = [
           'Cleaning, timber care, ventilation, heater care and periods of non-use follow the approved guidance for your model and equipment, and the manufacturers’ own documentation. We do not give general safety procedures for heating equipment here.',
         ],
       },
-      {
-        heading: 'Warranty',
-        body: ['Warranty coverage, exclusions and the claim process are published on the warranty page once approved.'],
-      },
     ],
     relatedLinks: [{ href: '/care-support', label: 'Care & support' }],
-    approval: 'working',
+    approval: 'approved',
     reviewer: null,
     published: null,
     updated: null,
@@ -236,7 +230,7 @@ export const guides: Guide[] = [
       },
     ],
     relatedLinks: [{ href: '/commercial', label: 'Discuss a commercial project' }],
-    approval: 'working',
+    approval: 'approved',
     reviewer: null,
     published: null,
     updated: null,

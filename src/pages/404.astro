@@ -7,7 +7,7 @@ import { productList } from '@/content/products';
     <p class="label muted">404</p>
     <h1>We can’t find that page.</h1>
     <p class="lead muted">It may have moved, or the link may be wrong. These will get you back on track.</p>
-    <div class="actions" style="margin-top: var(--s-6)">
+    <div class="actions" style="margin-top: var(--sp-2)">
       <a class="btn" href="/saunas">Explore the saunas</a>
       <a class="btn btn--secondary" href="/plan-your-sauna">Plan your sauna</a>
     </div>
@@ -20,6 +20,6 @@ import { productList } from '@/content/products';
 </Base>
 
 <style is:global>
-  .nf { padding-top: clamp(3rem, 8vw, 7rem); min-height: 60vh; }
-  .nf__links { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-6); margin-top: var(--s-7); }
+  .nf { padding-top: var(--rs-4); min-height: 60vh; }
+  .nf__links { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); margin-top: var(--sp-3); }
 </style>

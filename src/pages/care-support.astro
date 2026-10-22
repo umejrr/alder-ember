@@ -4,16 +4,16 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'Care & support' }];
 const topics = [
-  ['Cleaning', 'Approved cleaning guidance for your model and timber.'],
+  ['Cleaning', 'Cleaning guidance for your model and its timber.'],
   ['Timber maintenance', 'How to look after the exterior and interior timber.'],
-  ['Ventilation', 'Approved guidance for your configuration.'],
+  ['Ventilation', 'Guidance for your configuration.'],
   ['Heater care', 'Guidance from the heater manufacturer for the heater you have.'],
   ['Periods of non-use', 'What to do if the sauna is not used for a while.'],
 ];
 ---
 <Base
   title="Outdoor Sauna Care & Support | Alder & Ember"
-  description="How aftercare works with Alder & Ember: a first point of contact after handover, care guidance for your model, and warranty information once approved."
+  description="How aftercare works with Alder & Ember: a first point of contact after handover, and care guidance for your model and equipment."
   breadcrumbs={crumbs}
 >
   <header class="page-head container">
@@ -24,33 +24,29 @@ const topics = [
 
   <section class="section section--flush-top" aria-labelledby="contact-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">Who to ask</p>
         <h2 id="contact-title">Your first point of contact</h2>
       </div>
       <div class="c-7 c-start-6 prose">
         <p>We give you contact details for aftercare at handover. If something is not right, start there, and we will either help directly or point you to the equipment manufacturer.</p>
-        <div class="alert alert--info" role="note">
-          <h3>Contact channels are not yet published</h3>
-          <p>Approved support contact details will be shown here before launch. Until then, <a href="/plan-your-sauna">send us a message</a> and mention that it is a care question.</p>
-        </div>
+        <p>Have a question about a sauna you already have? <a href="/plan-your-sauna">Send us a message</a> and say that it is a care question.</p>
       </div>
     </div>
   </section>
 
   <section class="section is-surface" aria-labelledby="guidance-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">Care guidance</p>
         <h2 id="guidance-title">Looking after your sauna</h2>
-        <p class="muted" style="margin-top: var(--s-4)">Guidance is specific to your model and equipment, and comes from approved instructions rather than general advice.</p>
+        <p class="muted" style="margin-top: var(--sp-1)">Guidance is specific to your model and equipment. We take you through it at handover, rather than giving general advice.</p>
       </div>
       <ul class="c-8 care-grid">
         {topics.map(([t, d]) => (
           <li>
             <h3 class="care-grid__t">{t}</h3>
             <p class="muted">{d}</p>
-            <p class="pending">Published here once approved.</p>
           </li>
         ))}
       </ul>
@@ -59,25 +55,12 @@ const topics = [
 
   <section class="section" aria-labelledby="equip-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">Equipment</p>
         <h2 id="equip-title">Manufacturer documentation</h2>
       </div>
       <div class="c-7 c-start-6 prose">
-        <p>Heating equipment comes with its manufacturer’s own documentation, and you should follow it. We do not write safety procedures for heating equipment from general knowledge, and we link to the manufacturer’s documents once we have approved copies.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section is-surface" aria-labelledby="warranty-title">
-    <div class="container grid-12">
-      <div class="c-4">
-        <p class="label muted">Warranty</p>
-        <h2 id="warranty-title">What is covered</h2>
-      </div>
-      <div class="c-7 c-start-6 prose">
-        <p>Warranty cover, exclusions, responsibilities and the claim process are published on the warranty page once approved. Equipment is covered under each manufacturer’s own terms.</p>
-        <p><a class="text-link" href="/warranty">Warranty <span class="arrow" aria-hidden="true">→</span></a></p>
+        <p>Heating equipment comes with its manufacturer’s own documentation, and you should follow it. We do not write safety procedures for heating equipment from general knowledge.</p>
       </div>
     </div>
   </section>
@@ -85,7 +68,7 @@ const topics = [
 
 <style is:global>
   .care-grid { display: grid; border-top: var(--border); }
-  .care-grid li { display: grid; gap: var(--s-1); padding: var(--s-4) 0; border-bottom: var(--border); align-content: start; }
+  .care-grid li { display: grid; gap: var(--sp-05); padding: var(--sp-1) 0; border-bottom: var(--border); align-content: start; }
   .care-grid__t { font-size: var(--fs-h3); }
-  @media (min-width: 47.5rem) { .care-grid { grid-template-columns: 1fr 1fr; column-gap: var(--s-7); } }
+  @media (min-width: 47.5rem) { .care-grid { grid-template-columns: 1fr 1fr; column-gap: var(--sp-3); } }
 </style>

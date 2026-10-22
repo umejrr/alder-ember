@@ -1,7 +1,7 @@
 import type { Availability, Product } from '@/content/types';
 import { getAsset, previewTag } from '@/content/assets';
 import { publicProduct } from './format';
-import { isWorking, resolve } from './mode';
+import { resolve } from './mode';
 import type { ModelView } from '@/components/react/ModelView';
 
 const AVAIL: Record<Availability, string> = {
@@ -51,7 +51,6 @@ export function toModelView(p: Product, assetId: string = p.heroAsset): ModelVie
     price: pub.price,
     vat: pub.vat,
     priceScope: pub.priceScope,
-    priceWorking: Boolean(pub.price) && isWorking(p.priceFromMinor),
     leadTime: pub.leadTime,
     changingArea: pub.changingArea,
     electric: electric ? AVAIL[electric] : null,

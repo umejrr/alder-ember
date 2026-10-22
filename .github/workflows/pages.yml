@@ -38,7 +38,7 @@ jobs:
       - name: Unit tests
         run: npm test
 
-      - name: Build the static bundle (relative links, demo-only form)
+      - name: Build the static bundle (production mode, relative links)
         run: npm run build:static
         env:
           # anchors 404.html (served at any depth) to the project path; every other page stays relative

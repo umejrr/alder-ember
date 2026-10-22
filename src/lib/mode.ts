@@ -1,12 +1,13 @@
 import type { ApprovalStatus, ContentMode, Field } from '@/content/types';
 
 /**
- * PUBLIC_CONTENT_MODE=preview (default) | production
- * See docs/content-editing.md for the consequences of switching.
+ * PUBLIC_CONTENT_MODE=production (default) | preview
+ * Production shows only approved content. Preview additionally shows draft values with a visible notice, and exists
+ * for staging new content before it is approved. See docs/content-editing.md.
  */
 export function currentMode(): ContentMode {
-  const raw = (import.meta.env?.PUBLIC_CONTENT_MODE as string | undefined) ?? 'preview';
-  return raw === 'production' ? 'production' : 'preview';
+  const raw = (import.meta.env?.PUBLIC_CONTENT_MODE as string | undefined) ?? 'production';
+  return raw === 'preview' ? 'preview' : 'production';
 }
 
 export const isPreview = (mode: ContentMode = currentMode()) => mode === 'preview';
@@ -24,9 +25,4 @@ export function isVisibleStatus(status: ApprovalStatus, mode: ContentMode = curr
 export function resolve<T>(f: Field<T>, mode: ContentMode = currentMode()): T | null {
   if (f.value === null || f.value === undefined) return null;
   return isVisibleStatus(f.status, mode) ? f.value : null;
-}
-
-/** True when a preview-only (working) value is being shown. Used for the editorial preview markers. */
-export function isWorking<T>(f: Field<T>, mode: ContentMode = currentMode()): boolean {
-  return mode === 'preview' && f.value !== null && f.status === 'working';
 }

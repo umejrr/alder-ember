@@ -1,7 +1,6 @@
 ---
 import Logo from './Logo.astro';
 import { primaryNav, saunaSubNav, site } from '@/content/site';
-import { installationsRouteEnabled } from '@/lib/visibility';
 
 interface Props {
   /** transparent over a hero image until the visitor scrolls past it */
@@ -9,7 +8,7 @@ interface Props {
   currentPath: string;
 }
 const { overHero = false, currentPath } = Astro.props;
-const nav = primaryNav.filter((i) => i.requires !== 'installations' || installationsRouteEnabled());
+const nav = primaryNav;
 const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(href + '/');
 ---
 <header class="site-header" data-over={overHero ? 'true' : 'false'} data-solid={overHero ? 'false' : 'true'}>
@@ -96,7 +95,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     /* soft top scrim so nav stays legible over bright skies without washing the photo */
     content: '';
     position: absolute;
-    inset: 0 0 -40px 0;
+    inset: 0 0 -3rem 0;
     background: linear-gradient(180deg, rgba(10, 16, 12, 0.72), rgba(10, 16, 12, 0));
     pointer-events: none;
     z-index: -1;
@@ -107,7 +106,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--s-5);
+    gap: var(--sp-2);
   }
   /* width, not height, is the constraint: the lockup keeps its proportions and can never be wider than half the bar,
      whatever the text size (a rem height alone overflowed at 200% text) */
@@ -123,11 +122,11 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   .site-nav {
     display: flex;
     align-items: center;
-    gap: clamp(1rem, 2.4vw, 2.5rem);
+    gap: var(--nav-gap);
   }
   .site-nav__list {
     display: flex;
-    gap: clamp(1rem, 2.2vw, 2.25rem);
+    gap: var(--nav-gap);
     align-items: center;
   }
   .site-nav__item { position: relative; overflow-wrap: normal; }
@@ -135,7 +134,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   .site-nav__item > a {
     white-space: nowrap; /* a nav label is never broken inside a word; the bar switches to the menu button before it runs out of room */
     display: inline-block;
-    padding: 0.6rem 0;
+    padding: 0.5rem 0;
     font-size: 0.8125rem;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -171,7 +170,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   }
   .subnav a {
     display: block;
-    padding: 0.6rem 1rem;
+    padding: 0.5rem 1rem;
     font-size: 0.9375rem;
     text-decoration: none;
   }
@@ -180,7 +179,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     background: #fff;
     text-decoration: underline;
   }
-  .site-header__cta { min-height: 44px; padding: 0.55rem 1.15rem; font-size: 0.875rem; }
+  .site-header__cta { min-height: 44px; padding: 0.5rem 1rem; font-size: 0.875rem; }
   .site-header[data-over='true'][data-solid='false'] .site-header__cta {
     --btn-bg: var(--c-canvas);
     --btn-fg: var(--c-charcoal);
@@ -193,9 +192,9 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   .menu-toggle {
     display: none;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
     min-height: 44px;
-    padding: 0 0.25rem;
+    padding: 0 0.5rem;
     background: transparent;
     border: 0;
     color: inherit;
@@ -239,12 +238,12 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: var(--s-7);
-    padding-block: var(--s-6) calc(var(--s-6) + env(safe-area-inset-bottom));
+    gap: var(--sp-3);
+    padding-block: var(--sp-2) calc(var(--sp-2) + env(safe-area-inset-bottom));
   }
   .mobile-nav__list > li > a {
     display: block;
-    padding: 0.7rem 0;
+    padding: 0.5rem 0;
     font-family: var(--font-serif);
     font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.25rem);
     font-weight: 300;
@@ -255,8 +254,8 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   .mobile-nav__sub {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.25rem;
-    padding: 0.75rem 0 0.9rem;
+    gap: 0.5rem 1rem;
+    padding: 1rem 0 1rem;
   }
   .mobile-nav__sub a {
     display: inline-block;
@@ -266,7 +265,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     font-size: 0.9375rem;
     text-decoration: none;
   }
-  .mobile-nav__foot { display: grid; gap: var(--s-3); }
+  .mobile-nav__foot { display: grid; gap: var(--sp-1); }
   .mobile-nav__foot .btn { --btn-bg: var(--c-canvas); --btn-fg: var(--c-charcoal); --btn-border: var(--c-canvas); }
   .mobile-nav__foot .muted { color: var(--c-on-forest-muted); font-size: var(--fs-small); }
   html.menu-open { overflow: hidden; }
@@ -281,7 +280,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
     .site-header__logo { width: min(12.8rem, 56vw); }
   }
   @media (max-width: 22.5rem) {
-    .site-header__bar { gap: var(--s-3); }
+    .site-header__bar { gap: var(--sp-1); }
     .site-header__logo { width: min(11rem, 52vw); }
     /* the word stays for assistive tech; on the narrowest bars (or large text) the icon alone is enough */
     .menu-toggle__label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

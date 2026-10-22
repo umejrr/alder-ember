@@ -30,7 +30,7 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
     <p class="lead">
       We take on selected projects for venues where guests or clients use the sauna. Each one is assessed individually, because a standard model does not suit every venue.
     </p>
-    <div class="actions" style="margin-top: var(--s-6)">
+    <div class="actions" style="margin-top: var(--sp-2)">
       <a class="btn" href="#enquire">Start a commercial enquiry</a>
       <a class="btn btn--secondary" href="#factors-title">How we assess</a>
     </div>
@@ -38,7 +38,7 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
 
   <section class="section section--flush-top" aria-labelledby="types-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">Intended project types</p>
         <h2 id="types-title">Who this is for</h2>
       </div>
@@ -50,10 +50,10 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
 
   <section class="section is-surface" aria-labelledby="factors-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">How we assess</p>
         <h2 id="factors-title">What we look at</h2>
-        <p class="muted" style="margin-top: var(--s-4)">We would rather assess a project with you than promise that a standard model will work.</p>
+        <p class="muted" style="margin-top: var(--sp-1)">We would rather assess a project with you than promise that a standard model will work.</p>
       </div>
       <ol class="c-8 factor-grid">
         {factors.map(([t, d], i) => (
@@ -69,7 +69,7 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
 
   <section class="section" aria-labelledby="range-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">The range as a starting point</p>
         <h2 id="range-title">Three models to start the conversation</h2>
       </div>
@@ -84,10 +84,10 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
 
   <section class="section is-surface" id="enquire" aria-labelledby="enquire-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">Start a conversation</p>
         <h2 id="enquire-title">Commercial enquiry</h2>
-        <p class="muted" style="margin-top: var(--s-4)">
+        <p class="muted" style="margin-top: var(--sp-1)">
           Tell us about the venue and the project. Keep it brief; we will ask for more detail when we reply.
         </p>
       </div>
@@ -99,12 +99,12 @@ const types = ['Boutique holiday accommodation', 'Premium cabins', 'Small hotels
 </Base>
 
 <style is:global>
-  .type-grid { display: grid; gap: var(--s-3); }
-  .type-grid li { padding: var(--s-4) var(--s-5); border: 1px solid var(--c-border); background: var(--c-surface); font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; line-height: 1.2; }
+  .type-grid { display: grid; gap: var(--sp-1); }
+  .type-grid li { padding: var(--sp-1) var(--sp-2); border: 1px solid var(--c-border); background: var(--c-surface); font-family: var(--font-serif); font-size: var(--fs-h3); font-weight: 340; line-height: 1.2; }
   @media (min-width: 40rem) { .type-grid { grid-template-columns: 1fr 1fr; } }
   .factor-grid { display: grid; border-top: var(--border); }
-  .factor-grid li { display: grid; gap: var(--s-1); padding: var(--s-4) 0; border-bottom: var(--border); align-content: start; }
+  .factor-grid li { display: grid; gap: var(--sp-05); padding: var(--sp-1) 0; border-bottom: var(--border); align-content: start; }
   .factor-grid__n { font-size: var(--fs-small); font-weight: 700; letter-spacing: 0.06em; color: var(--c-timber); }
   .factor-grid__t { font-size: var(--fs-h3); }
-  @media (min-width: 47.5rem) { .factor-grid { grid-template-columns: 1fr 1fr; column-gap: var(--s-7); } }
+  @media (min-width: 47.5rem) { .factor-grid { grid-template-columns: 1fr 1fr; column-gap: var(--sp-3); } }
 </style>

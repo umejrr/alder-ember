@@ -1,23 +1,23 @@
 # Alder & Ember
 
-Website and brand system for **Alder & Ember**, a UK supplier and installer of premium outdoor saunas. This is a **reviewable prototype**, built to the master brief. It is not a launched site: prices, dimensions and lead times are working values awaiting approval, photos are labelled, openly licensed stock previews (credits at `/image-credits`) that stand in for real product photography, and the enquiry form runs in demo mode until a destination is configured.
+Website and brand system for **Alder & Ember**, a UK supplier and installer of premium outdoor saunas, built to the master brief. The content is final: every value is approved, the photographs are the owner's, and the preview, demo and "working figure" labels are gone. One thing is not connected: **the enquiry forms have no inbox to send to**, so they check the visitor's answers and say plainly that nothing was sent (see [docs/launch-dependencies.md](docs/launch-dependencies.md)).
 
 ![Home, desktop](docs/screenshots/home-desktop-hero.jpg)
 
 ## What is here
 
-- **Original identity:** logo system (editable SVG), palette, type and tokens. See `/brand` in a preview build and [docs/design-system.md](docs/design-system.md).
-- **The full launch sitemap:** home, collection, three model pages from one product source, compare, installation & delivery, installations (preview template only), commercial, about, care & support, guides, campaigns, plan your sauna, policies, 404.
+- **Original identity:** logo system (editable SVG), palette, type and tokens. The specimen sheet at `/brand` exists in preview mode only. See [docs/design-system.md](docs/design-system.md).
+- **The sitemap:** home, collection, three model pages from one product source, compare, installation & delivery, commercial, about, care & support, planning guides, a model campaign page, plan your sauna, privacy notice, website terms, 404.
 - **Signature component, the model explorer:** a stable-ratio stage, a rail of all three models and a concise panel on the home page, driven by the same product records as every other page. Around it, a materials chapter and a planning sequence that follow native scroll and have equivalent controls.
 - **Compare and a shortlist selector:** shareable compare URLs, a labelled narrow-screen layout, and a selector that never claims a model "fits" or approves a site.
-- **Enquiry journey:** residential and commercial forms, shared client/server validation, honest demo vs live submission, a durable outbox and a HubSpot adapter.
-- **Content integrity built in:** every fact carries an approval status. Preview shows working values; production omits anything unresolved.
+- **Enquiry journey:** residential and commercial forms, shared client/server validation, an honest not-sent result until an inbox is connected, a durable outbox and a HubSpot adapter.
+- **Content integrity built in:** every fact carries an approval status, and a value that was never supplied stays empty and is described as confirmed in the quotation or the site review. One spacing scale (0.5rem, then whole rems) is enforced by a test.
 
 ## Run it
 
 ```bash
 npm install
-npm run dev                  # http://localhost:4321, preview mode
+npm run dev                  # http://localhost:4321
 npm run build && npm start   # production-style server (static pages + the enquiry API)
 ```
 
@@ -29,11 +29,11 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 | `npm run check` | Type-check Astro, TypeScript and React (`astro check`) |
 | `npm run build:production` | Production-mode build (hides unapproved values and routes) |
 | `npm run brief` | Rebuilds the downloadable photography brief (PDF and Word) from `docs/photo-brief.md` and `docs/hero-photo-brief.md` (needs pandoc and python-docx) |
-| `npm run check:production` | Builds in production mode and scans the output for leaked working values, drafts and unapproved routes |
+| `npm run check:production` | Builds in production mode and fails on any preview, demo, draft or placeholder wording, a removed page that is still linked, a missing link-preview image, or indexing that does not follow the domain |
 | `npm run e2e` / `npm run a11y` / `npm run responsive` / `npm run hero` | Browser journey checks / axe accessibility scan / layout sweep at seven widths and 200% text / contrast of the hero copy over the photograph (need a running build: `npm run build && npm run serve`; the enquiry API rate-limits, so restart the server between `e2e` runs) |
 | `npm run build:static` | Static, sub-path-safe preview bundle (`STATIC_BASE=/repo-name/` anchors `404.html` for a project-page host) |
 | `npm run e2e:static` | Builds a bundle anchored to `/a/b/c/` and tests it from there: styles, islands, native (Ctrl-click) links, nested 404s, the demo form, and that no request escapes the prefix |
-| `npm run images` | Rebuilds the stock preview photographs (AVIF, WebP, crops, credits) from `scripts/images/preview-photos.manifest.json` |
+| `npm run images` | Rebuilds the photographs (AVIF and WebP at several widths, crops) from `scripts/images/preview-photos.manifest.json`; the owner's originals are in `incoming/` |
 | `npm run perf` | Median-of-three Lighthouse runs per page, mobile and desktop, against a running build |
 | `npm run crawl` | Crawls a running build for broken links, anchors and assets |
 | `npm run contrast` | WCAG contrast check for every text and control pair in the tokens |
@@ -49,15 +49,15 @@ Node 22+. Copy `.env.example` to `.env` to change modes. No secrets are needed t
 
 `npm run build` produces `dist/client` (static pages) and `dist/server` (the enquiry endpoint). Run it with `npm start` on any Node 22 host behind HTTPS; put `ENQUIRY_*` and `HUBSPOT_*` variables in the host's secret store, never in the repo. A static-only host can serve `dist/client` but cannot run `/api/enquiry`, so use the Node host (or swap in the matching Astro adapter) for the live form. Nothing has been deployed: production deployment needs the agreed environment and authorisation ([docs/launch-dependencies.md](docs/launch-dependencies.md)).
 
-## Hosted preview (static bundle)
+## Hosted site (static bundle)
 
-`npm run build:static` builds `dist-static/`: a fully static copy that works from any URL or sub-path (every link is relative, no server). The enquiry form there is a **client-side demo**: it validates for real, then says plainly that nothing was sent. `npm run package:artifact` prepares it for publishing as a hosted Artifact, and `npm run e2e:static` tests it from a nested sub-path, failing if any request escapes that path. The same bundle can go on any static host (for example GitHub Pages, Netlify or Vercel). A static host cannot run `/api/enquiry`, so live enquiries still need the Node build.
+`npm run build:static` builds `dist-static/`: a fully static copy that works from any URL or sub-path (every link is relative, no server). It is built in production mode. A static host cannot run `/api/enquiry`, so the form there validates for real and then says plainly that nothing was sent; live enquiries need the Node build or a form service ([docs/launch-dependencies.md](docs/launch-dependencies.md)). `npm run e2e:static` builds a bundle anchored to `/a/b/c/` and tests it from there, failing if any request escapes that path.
 
-**GitHub Pages:** `.github/workflows/pages.yml` runs the unit tests, builds the bundle and publishes it to the `gh-pages` branch on every push to `main` (and to the working branch named in the file). One-time setup, which needs repo admin: Settings, Pages, Source "Deploy from a branch", branch `gh-pages`, folder `/ (root)`. The result is a public preview (live at https://umejrr.github.io/alder-ember/): the pages ask search engines not to index them, but anyone with the link can open them.
+**GitHub Pages:** `.github/workflows/pages.yml` runs the unit tests, builds the bundle and publishes it to the `gh-pages` branch on every push to `main` (and to the working branch named in the file). One-time setup, which needs repo admin: Settings, Pages, Source "Deploy from a branch", branch `gh-pages`, folder `/ (root)`. The site is live at https://umejrr.github.io/alder-ember/. Every page says `noindex` until a real domain is set as `PUBLIC_SITE_URL`.
 
 ## Content modes
 
-`PUBLIC_CONTENT_MODE=preview` (default) shows brief and working values with a visible preview notice. `production` shows only approved and brief-supplied values and does not generate routes that lack approved content (guides, installations, campaigns, the brand sheet). Details and the consequences of changing a value are in [docs/content-editing.md](docs/content-editing.md).
+`PUBLIC_CONTENT_MODE=production` (the default) shows only approved and brief-supplied values. `preview` additionally shows draft values with a visible preview notice, and exists for staging new content before it is approved (it is also the only mode that builds the `/brand` sheet). Search engines are let in only when the mode is production **and** `PUBLIC_SITE_URL` is set. Details are in [docs/content-editing.md](docs/content-editing.md).
 
 ## Handover documents
 

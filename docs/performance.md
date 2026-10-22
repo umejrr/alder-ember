@@ -36,10 +36,10 @@ Each cell reads *before → after*. Total blocking time was 0 ms in every run of
 
 | Page | Device | Performance | LCP | CLS | Transferred |
 |---|---|---:|---:|---:|---:|
-| Home | mobile | 84 → **94** | 4.05 s → **3.08 s** | 0.023 → **0.000** | 1313 KiB → **413 KiB** |
-| Home | desktop | 95 → **100** | 1.47 s → **0.71 s** | 0.005 → **0.000** | 1709 KiB → **504 KiB** |
-| Model (Alder) | mobile | 78 → **82** | 5.71 s → **4.52 s** | 0.020 → **0.000** | 962 KiB → **676 KiB** |
-| Model (Alder) | desktop | 98 → **99** | 1.07 s → **0.92 s** | 0.006 → **0.000** | 845 KiB → **650 KiB** |
+| Home | mobile | 84 → **93** | 4.05 s → **3.09 s** | 0.023 → **0.000** | 1313 KiB → **412 KiB** |
+| Home | desktop | 95 → **100** | 1.47 s → **0.73 s** | 0.005 → **0.000** | 1709 KiB → **503 KiB** |
+| Model (Alder) | mobile | 78 → **80** | 5.71 s → **4.89 s** | 0.020 → **0.000** | 962 KiB → **704 KiB** |
+| Model (Alder) | desktop | 98 → **99** | 1.07 s → **0.93 s** | 0.006 → **0.000** | 845 KiB → **649 KiB** |
 | Compare | mobile | 95 → **98** | 2.41 s → **1.81 s** | 0.029 → **0.021** | 478 KiB → **486 KiB** |
 | Compare | desktop | 99 → **100** | 0.78 s → **0.72 s** | 0.002 → **0.004** | 478 KiB → **486 KiB** |
 | Enquiry | mobile | 99 → **95** | 1.66 s → **2.41 s** | 0.047 → **0.021** | 481 KiB → **490 KiB** |
@@ -47,7 +47,7 @@ Each cell reads *before → after*. Total blocking time was 0 ms in every run of
 
 What the table does and does not show:
 
-- **Image-led pages improved clearly.** Home transfers 413 KiB on mobile against 1313 KiB, and Model 676 KiB against 962 KiB; mobile LCP is 0.8 to 1.1 s faster and layout shift is 0. Home and Model were re-measured on the final build with the owner's photographs (encoded at higher quality than the stock photographs they replaced, with no measurable cost); Compare and Enquiry carry no photographs and were measured earlier on the same code.
+- **Image-led pages improved clearly.** Home transfers 412 KiB on mobile against 1313 KiB, and Model 704 KiB against 962 KiB; mobile LCP is 0.8 to 1.0 s faster and layout shift is 0. Home and Model were re-measured on the final build (22 October, after the gallery change). On the model page the three image tiles are now large, so it transfers about 30 KiB more and scores 2 points lower on mobile than just before that change (82 to 80, LCP 4.52 s to 4.89 s); Compare and Enquiry carry no photographs and were measured earlier on the same code.
 - **Compare and Enquiry are not a result either way.** They carry no photographs, so the image work does not touch them, and they transfer about 8 KiB more than before (the editable project summary and the new styles). Enquiry's mobile median fell from 99 to 95, but that row is noisy: five further single runs of the same page, on the same build and machine, scored 94, 83, 100, 81 and 95 (LCP 1.4 s to 3.9 s). The three-run median is the figure to read, and a gap of this size on that page is inside the spread, so it is reported as it came out rather than tuned.
 - The remaining shift on the text-led pages (about 0.02 to 0.05) is the web-font swap, left in on purpose; see the preload row above.
 

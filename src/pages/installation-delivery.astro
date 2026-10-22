@@ -43,8 +43,8 @@ const checklist = [
 
   <section class="section section--flush-top" id="area" aria-labelledby="area-title">
     <div class="container grid-12">
-      <div class="c-4">
-        <p class="label muted">1</p>
+      <div class="c-4 side">
+        <p class="label muted">Step 1</p>
         <h2 id="area-title">Check the area</h2>
       </div>
       <div class="c-7 c-start-6 prose">
@@ -60,37 +60,38 @@ const checklist = [
 
   <section class="section is-surface" id="assess" aria-labelledby="assess-title">
     <div class="container grid-12">
-      <div class="c-4">
-        <p class="label muted">2</p>
+      <div class="c-4 side">
+        <p class="label muted">Step 2</p>
         <h2 id="assess-title">Assess the space</h2>
-        <div style="margin-top: var(--s-5)"><Picture id="site-access" sizes="(min-width: 60rem) 32vw, 100vw" /></div>
       </div>
-      <div class="c-7 c-start-6 prose">
-        <p>Photographs and approximate measurements start the review. Tell us where the sauna would go and how it would get there.</p>
-        <p>Straightforward sites may be assessed through photos or a video call. More complex sites may need a visit. Either way, we check the space and access before your order is confirmed.</p>
-        <p><a class="text-link" href="/plan-your-sauna">Plan your sauna <span class="arrow" aria-hidden="true">→</span></a></p>
+      <div class="c-7 c-start-6 stack" style="--stack: var(--sp-3)">
+        <div class="prose">
+          <p>Photographs and approximate measurements start the review. Tell us where the sauna would go and how it would get there.</p>
+          <p>Straightforward sites may be assessed through photos or a video call. More complex sites may need a visit. Either way, we check the space and access before your order is confirmed.</p>
+          <p><a class="text-link" href="/plan-your-sauna">Plan your sauna <span class="arrow" aria-hidden="true">→</span></a></p>
+        </div>
+        <Picture id="site-access" sizes="(min-width: 60rem) 58vw, 100vw" />
       </div>
     </div>
   </section>
 
   <section class="section" id="prepare" aria-labelledby="prepare-title">
     <div class="container grid-12">
-      <div class="c-4">
-        <p class="label muted">3</p>
+      <div class="c-4 side">
+        <p class="label muted">Step 3</p>
         <h2 id="prepare-title">Prepare the site</h2>
-        <p class="muted" style="margin-top: var(--s-4)">
+        <p class="muted" style="margin-top: var(--sp-1)">
           A checklist of what we will ask about. We do not give generic measurements, because the right figures depend on your model, heater and site.
         </p>
       </div>
-      <div class="c-8 stack" style="--stack: var(--s-6)">
+      <div class="c-8 stack" style="--stack: var(--sp-2)">
         <ul class="check-list">
           {checklist.map((c) => <li>{c}</li>)}
         </ul>
         <div>
           <h3 class="h4">Model-specific requirements</h3>
-          <p class="muted" style="margin-top: var(--s-2); max-width: 40em">
-            Base size, clearances, access requirements and weight come from the manufacturer’s approved drawings. They are not yet published, so we confirm them for your model during the site review. Downloadable guides appear here once approved.
-          </p>
+          <p class="muted" style="margin-top: var(--sp-05); max-width: 40em">
+            Base size, clearances, access requirements and weight come from the manufacturer’s drawings for your model and heater, and we confirm them with you during the site review.</p>
           <ul class="plain-links">
             {productList.map((p) => <li><a href={`/saunas/${p.slug}#specifications`}>{p.name}: dimensions and requirements <span class="arrow" aria-hidden="true">→</span></a></li>)}
           </ul>
@@ -101,10 +102,10 @@ const checklist = [
 
   <section class="section is-surface" id="responsibilities" aria-labelledby="resp-title">
     <div class="container grid-12">
-      <div class="c-4">
-        <p class="label muted">4</p>
+      <div class="c-4 side">
+        <p class="label muted">Step 4</p>
         <h2 id="resp-title">Agree responsibilities</h2>
-        <p class="muted" style="margin-top: var(--s-4)">Your itemised quotation names who does each task.</p>
+        <p class="muted" style="margin-top: var(--sp-1)">Your itemised quotation names who does each task.</p>
       </div>
       <div class="c-8 two-col">
         <div>
@@ -132,21 +133,24 @@ const checklist = [
 
   <section class="section" id="delivery" aria-labelledby="delivery-title">
     <div class="container grid-12">
-      <div class="c-4">
-        <p class="label muted">5</p>
+      <div class="c-4 side">
+        <p class="label muted">Step 5</p>
         <h2 id="delivery-title">Delivery and handover</h2>
       </div>
-      <div class="c-7 c-start-6 prose">
-        <p>We confirm the schedule and site readiness before delivery. After installation checks, we hand over with you and give you an accessible first point of contact for care questions.</p>
-        <p>Lead times are confirmed in your quotation. They depend on a confirmed specification and production scheduling, so we do not promise installation dates in advance.</p>
-        <p><a class="text-link" href="/care-support">Care &amp; support <span class="arrow" aria-hidden="true">→</span></a></p>
+      <div class="c-7 c-start-6 stack" style="--stack: var(--sp-3)">
+        <div class="prose">
+          <p>We confirm the schedule and site readiness before delivery. After installation checks, we hand over with you and give you an accessible first point of contact for care questions.</p>
+          <p>Lead times are confirmed in your quotation. They depend on a confirmed specification and production scheduling, so we do not promise installation dates in advance.</p>
+          <p><a class="text-link" href="/care-support">Care &amp; support <span class="arrow" aria-hidden="true">→</span></a></p>
+        </div>
+        <Picture id="installation-process" sizes="(min-width: 60rem) 58vw, 100vw" />
       </div>
     </div>
   </section>
 
   <section class="section is-surface" aria-labelledby="journey-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">The whole journey</p>
         <h2 id="journey-title">From consultation to aftercare</h2>
       </div>
@@ -163,7 +167,7 @@ const checklist = [
 
   <section class="section" aria-labelledby="faq-title">
     <div class="container grid-12">
-      <div class="c-4">
+      <div class="c-4 side">
         <p class="label muted">Planning questions</p>
         <h2 id="faq-title">Common questions</h2>
       </div>
@@ -184,22 +188,22 @@ const checklist = [
 
 <style is:global>
   /* the five steps as a connected sequence: vertical on narrow screens, one line on wide ones */
-  .jump ol { display: grid; gap: 0; margin-top: var(--s-6); border-top: var(--border); max-width: 60rem; }
-  .jump a { display: flex; align-items: center; gap: var(--s-3); min-height: 48px; padding: 0.5rem 0; border-bottom: var(--border); font-size: var(--fs-small); font-weight: 600; text-decoration: none; }
+  .jump ol { display: grid; gap: 0; margin-top: var(--sp-2); border-top: var(--border); max-width: 60rem; }
+  .jump a { display: flex; align-items: center; gap: var(--sp-1); min-height: 48px; padding: 0.5rem 0; border-bottom: var(--border); font-size: var(--fs-small); font-weight: 600; text-decoration: none; }
   .jump a:hover { color: var(--c-ember-strong); }
-  .jump__n { display: inline-grid; place-items: center; flex: none; width: 1.75rem; height: 1.75rem; border: 1px solid var(--c-charcoal); border-radius: 50%; font-size: 0.8125rem; }
+  .jump__n { display: inline-grid; place-items: center; flex: none; width: 2rem; height: 2rem; border: 1px solid var(--c-charcoal); border-radius: 50%; font-size: 0.8125rem; }
   @media (min-width: 56.25rem) {
     .jump ol { grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 0; position: relative; }
-    .jump ol::before { content: ''; position: absolute; left: 0.875rem; right: 4rem; top: 1.375rem; height: 1px; background: var(--c-border); }
-    .jump a { flex-direction: column; align-items: flex-start; gap: var(--s-2); border-bottom: 0; padding-top: 0.5rem; position: relative; }
+    .jump ol::before { content: ''; position: absolute; left: 1rem; right: 4rem; top: 2rem; height: 1px; background: var(--c-border); }
+    .jump a { flex-direction: column; align-items: flex-start; gap: var(--sp-05); border-bottom: 0; padding-top: 1rem; position: relative; }
     .jump__n { background: var(--c-canvas); }
   }
   .check-list { display: grid; border-top: var(--border); counter-reset: c; }
-  .check-list li { position: relative; padding: 0.9rem 0 0.9rem 2.25rem; border-bottom: var(--border); }
-  .check-list li::before { content: ''; position: absolute; left: 0; top: 1.2rem; width: 1rem; height: 1rem; border: 1px solid var(--c-charcoal); }
-  .plain-links { display: grid; margin-top: var(--s-4); border-top: var(--border); }
-  .plain-links a { display: block; padding: 0.9rem 0; border-bottom: var(--border); text-decoration: none; font-weight: 600; }
+  .check-list li { display: grid; grid-template-columns: 1rem minmax(0, 1fr); column-gap: var(--sp-1); align-items: start; padding: 1rem 0; border-bottom: var(--border); }
+  .check-list li::before { content: ''; width: 1rem; height: 1rem; margin-top: 0.5rem; border: 1px solid var(--c-charcoal); }
+  .plain-links { display: grid; margin-top: var(--sp-1); border-top: var(--border); }
+  .plain-links a { display: block; padding: 1rem 0; border-bottom: var(--border); text-decoration: none; font-weight: 600; }
   .plain-links a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
-  .journey { display: grid; gap: 0; list-style: decimal; padding-left: 1.5rem; border-top: var(--border); }
+  .journey { display: grid; gap: 0; list-style: decimal; padding-left: 2rem; border-top: var(--border); }
   .journey li { padding: 1rem 0 1rem 0.5rem; border-bottom: var(--border); }
 </style>

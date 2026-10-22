@@ -28,14 +28,14 @@ Derived: `--c-on-forest` (`#F4F0E8`), `--c-on-forest-muted` (`#C3C8BC`), `--c-fo
 
 ## Layout
 
-12-column grid on desktop (spans set as `c-N` plus an optional `c-start-N`), simpler tablet layouts, single column on mobile. Content width 1320 px, wide 1680 px. Gutters 20–72 px. Section spacing `clamp(56px, … , 136px)`. Radius 2 px; borders 1 px; no shadows. Image frames dominate; no floating rounded cards.
+12-column grid on desktop (spans set as `c-N` plus an optional `c-start-N`), simpler tablet layouts, single column on mobile. Content width 1320 px, wide 1680 px. One spacing scale: `0.5rem`, then whole rems (`--sp-05`, `--sp-1` to `--sp-8`), used for every padding, margin, gap and offset. Gutters and section spacing step in whole scale steps at the 40rem, 64rem and 80rem breakpoints (`--gutter`, `--section`, `--rs-1` to `--rs-4`); none is fluid. `tests/spacing.test.ts` fails if an off-scale value (for example `0.3rem` or `1.25rem`) appears in the stylesheets. Two-column sections keep the left column (pre-heading, heading, short paragraph) sticky with `.side`, like the enquiry page's "What happens next". Radius 2 px; borders 1 px; no shadows. Image frames dominate; no floating rounded cards.
 
 ## Components
 
 | Component | File | Notes |
 |---|---|---|
 | Header + mobile menu | `components/Header.astro` | Transparent over the hero, solid after it, no height jump. Mobile panel traps focus, Esc closes, focus returns to the toggle, page scroll is locked while open |
-| Footer | `components/Footer.astro` | Large finishing wordmark, legal links and cookie preferences |
+| Footer | `components/Footer.astro` | Large finishing wordmark and the privacy and terms links |
 | Buttons and links | `global.css` | Primary (charcoal), secondary (outlined), text link with an arrow cue; dark-surface variants. 48 px minimum height |
 | Model explorer | `react/FindYourFit.tsx`, `styles/find-your-fit.css` | A 3:2 stage whose ratio never depends on the text beside it, a rail of all three models (above the stage on narrow screens, below it on wide ones), and a concise panel: name, one fit sentence, capacity, external size, price with its qualification beside it and the full scope one click away, then one primary action. Tabs change the model only (no navigation). The rail state and the shown image/facts/links only differ while the next image is fetched and decoded, so they never describe different models. Only the visible model's image loads up front. Arrow/Home/End keys, live-region announcement, selection stored for the enquiry |
 | Materials chapter | `pages/index.astro` | Three editorial details. With scripting on wide screens one sticky stage follows native scroll and visible buttons do the same; otherwise (narrow, no scripting) each detail carries its own image in a linear sequence |
@@ -46,7 +46,7 @@ Derived: `--c-on-forest` (`#F4F0E8`), `--c-on-forest-muted` (`#C3C8BC`), `--c-fo
 | Gallery | `react/Gallery.tsx` | Keyboard operable, image count, thumbnails, enlarged view with explicit close and focus restoration |
 | Compare | `react/CompareTool.tsx` | Real table on wide screens (at least two models, and it says so); on narrow ones two explicit selectors that swap on a clash, stacked groups with every value labelled and the price qualification beside each price. Shareable `?m=` URL, reset |
 | Selector | `react/ModelSelector.tsx` | Shortlist only. Each result carries the answer snapshot that produced it; once the answers change it is marked outdated and its links are withdrawn until updated. Result in an `aria-live` region |
-| Enquiry form | `react/EnquiryForm.tsx` | Persistent labels, inline errors plus a summary, input preserved on failure, honest demo vs live result, separate optional marketing consent |
+| Enquiry form | `react/EnquiryForm.tsx` | Persistent labels, inline errors plus a summary, input preserved on failure, an honest not-sent result until an inbox is connected, separate optional marketing consent |
 | Accordion | `FaqList.astro` | Native `<details>`: scroll position is kept and state is exposed to assistive tech |
 | Placeholder image | `Picture.astro` | Tonal frame with faint board lines and a visible label; never a drawn cabin |
 | Stock preview image | `Picture.astro` | Real, openly licensed photograph, cropped to the slot's ratio, with responsive AVIF and WebP sources, a visible "Stock preview · not The Alder" tag and a credit on `/image-credits`; atmosphere only, never shown as the product |

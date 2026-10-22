@@ -1,5 +1,4 @@
 import { guides } from '@/content/guides';
-import { installations } from '@/content/installations';
 import { campaigns } from '@/content/campaigns';
 import { policies, type Policy } from '@/content/policies';
 import type { ContentMode } from '@/content/types';
@@ -13,19 +12,8 @@ export function visibleGuides(mode: ContentMode = currentMode()) {
   return guides.filter((g) => mode === 'preview' || g.approval === 'approved');
 }
 
-export function visibleInstallations(mode: ContentMode = currentMode()) {
-  return installations.filter(
-    (i) => i.published && (mode === 'preview' || i.approval === 'approved'),
-  );
-}
-
 export function visibleCampaigns(mode: ContentMode = currentMode()) {
   return campaigns.filter((c) => c.published && (mode === 'preview' || c.approval === 'approved'));
-}
-
-/** The installations index and nav item exist in preview, or when approved stories exist. */
-export function installationsRouteEnabled(mode: ContentMode = currentMode()): boolean {
-  return mode === 'preview' || visibleInstallations(mode).length > 0;
 }
 
 export function guidesRouteEnabled(mode: ContentMode = currentMode()): boolean {
@@ -41,16 +29,18 @@ export function policyList(): Policy[] {
   return Object.values(policies);
 }
 
-/** True when an internal link target exists in the current build (guides and installations are gated). */
+/** True when an internal link target exists in the current build (guides are gated). */
 export function linkAvailable(href: string, mode: ContentMode = currentMode()): boolean {
   const path = href.split('#')[0];
   if (path === '/guides') return guidesRouteEnabled(mode);
   if (path.startsWith('/guides/')) return visibleGuides(mode).some((g) => path === `/guides/${g.slug}`);
-  if (path === '/installations') return installationsRouteEnabled(mode);
-  if (path.startsWith('/installations/')) return visibleInstallations(mode).some((i) => path === `/installations/${i.slug}`);
   return true;
 }
 
+/**
+ * Search engines are allowed in only when the content is final AND the real domain is confirmed (PUBLIC_SITE_URL),
+ * because canonical links and the sitemap need it. Until then every page says noindex.
+ */
 export function shouldIndex(mode: ContentMode = currentMode()): boolean {
-  return mode === 'production';
+  return mode === 'production' && Boolean(import.meta.env?.PUBLIC_SITE_URL);
 }

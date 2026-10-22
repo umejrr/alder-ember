@@ -21,7 +21,7 @@ interface Props {
   kind: 'residential' | 'commercial';
   models: ModelView[];
   campaignId?: string;
-  /** "live" only when the deployment has a configured destination; anything else is labelled as a demo */
+  /** "live" only when the deployment has a configured destination; anything else says plainly that nothing is sent */
   submissionMode: 'demo' | 'live';
   responseTime: string | null;
 }
@@ -154,7 +154,7 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
     }
     setErrors({});
     if (STATIC_DEMO) {
-      // Static preview hosting has no server. Validation above was real; nothing is sent and nothing is stored.
+      // Static hosting has no server and no inbox is connected. Validation above was real; nothing is sent and nothing is stored.
       const c = check.value;
       setStatus({ s: 'sent', mode: 'demo', snapshot: { model: c.model, heating: c.heating, projectType: c.projectType, people: c.people, changingArea: c.changingArea } });
       requestAnimationFrame(() => doneRef.current?.focus());
@@ -207,21 +207,27 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
     return (
       <div className="enq-done">
         {status.mode === 'demo' ? (
-          <div className="alert alert--info demo-banner" role="status">
-            <h2>Demo mode: nothing was sent</h2>
-            <p>This preview checked your answers and showed the confirmation layout, but no enquiry was sent to Alder & Ember and nothing was stored.</p>
+          <div className="alert alert--info" role="status">
+            <h2>Your enquiry has not been sent</h2>
+            <p>Your answers are complete, but this form is not connected to an inbox yet, so nothing was sent to Alder & Ember and nothing was stored.</p>
           </div>
         ) : null}
-        <h2 ref={doneRef} tabIndex={-1}>{status.mode === 'live' ? 'We’ve received your enquiry' : 'This is how the confirmation will look'}</h2>
+        <h2 ref={doneRef} tabIndex={-1}>{status.mode === 'live' ? 'We’ve received your enquiry' : 'Your answers'}</h2>
         {status.mode === 'live' && status.reference && <p className="muted">Your reference is <strong className="tnum">{status.reference}</strong>.</p>}
         <div className="enq__summary">
           <h2>What you told us</h2>
           <ul>{ctx.map((c) => <li key={c}>{c}</li>)}</ul>
         </div>
         <div className="prose">
-          <h3>What happens next</h3>
-          <p>{responseTime ?? 'The team reviews your project and replies as soon as they can.'}</p>
-          <p>We will ask about your space and access, and help you confirm the model and the site requirements. Photographs and approximate measurements are a good start, and you can send those when we reply.</p>
+          {status.mode === 'live' ? (
+            <>
+              <h3>What happens next</h3>
+              <p>{responseTime ?? 'The team reviews your project and replies as soon as they can.'}</p>
+              <p>We will ask about your space and access, and help you confirm the model and the site requirements. Photographs and approximate measurements are a good start, and you can send those when we reply.</p>
+            </>
+          ) : (
+            <p>Please send your enquiry again once online enquiries are switched on.</p>
+          )}
           <p><a className="text-link" href={pageHref('/installation-delivery')}>View installation guidance <span className="arrow" aria-hidden="true">→</span></a></p>
         </div>
       </div>
@@ -246,9 +252,9 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
   return (
     <form className="enq" onSubmit={submit} noValidate aria-describedby="enq-next">
       {submissionMode !== 'live' && (
-        <div className="alert alert--info demo-banner" role="note">
-          <h2>Demo mode</h2>
-          <p>This form checks your answers, but in this preview it does not send them anywhere. No enquiry will be sent or stored.</p>
+        <div className="alert alert--info" role="note">
+          <h2>Online enquiries are not switched on yet</h2>
+          <p>This form checks your answers but is not connected to an inbox, so it cannot send your enquiry or store anything.</p>
         </div>
       )}
 
@@ -353,7 +359,7 @@ export default function EnquiryForm({ kind, models, campaignId, submissionMode, 
                 <option value="no">No</option>
                 <option value="not-important">Not important</option>
               </select>
-              <span className="hint" id="enq-changing-hint">Only the Ember is described with one, and how it is specified is still being confirmed.</span>
+              <span className="hint" id="enq-changing-hint">Only the Ember is described with one, and how it is specified is confirmed in your quotation.</span>
             </div>
           </div>
 

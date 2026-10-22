@@ -86,7 +86,7 @@ await step('Selector: recommends from comfortable capacity and carries preferenc
   assert.equal(await page.locator('#enq-heating').inputValue(), 'electric');
 });
 
-await step('Enquiry: inline errors + summary, input preserved, honest demo success', async () => {
+await step('Enquiry: inline errors + summary, input preserved, honest not-sent result', async () => {
   await page.goto(base + '/plan-your-sauna', { waitUntil: 'networkidle' });
   await page.getByRole('button', { name: 'Send your enquiry' }).click();
   const alert = page.getByRole('alert').first();
@@ -100,53 +100,78 @@ await step('Enquiry: inline errors + summary, input preserved, honest demo succe
   await page.fill('#enq-description', 'A flat lawn behind the house with side access.');
   await page.waitForTimeout(2300); // anti-spam minimum fill time
   await page.getByRole('button', { name: 'Send your enquiry' }).click();
-  await page.getByText('Demo mode: nothing was sent').waitFor();
-  assert.ok(!(await page.content()).includes('We’ve received your enquiry'), 'a demo must not claim receipt');
+  await page.getByText('Your enquiry has not been sent').waitFor();
+  assert.ok(!(await page.content()).includes('We’ve received your enquiry'), 'an unconnected form must not claim receipt');
 });
 
-await step('Gallery: keyboard navigation, enlarged view with explicit close, focus restored', async () => {
+await step('Gallery: no lightbox, three large tiles spanning the gallery, buttons and tiles select the image', async () => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(base + '/saunas/alder', { waitUntil: 'networkidle' });
   await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
   const gallery = page.getByRole('group', { name: /The Alder images/ });
+  assert.equal(await page.getByRole('dialog').count(), 0, 'there is no enlarged view: with three images the tiles are the gallery');
+  assert.equal(await gallery.getByRole('button', { name: /View larger/ }).count(), 0, 'no "View larger" button');
+  // the tiles span the full width of the gallery and are large enough to judge a photograph
+  const stage = await gallery.locator('.gal__stage').boundingBox();
+  const tiles = await gallery.locator('.gal__thumb').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
+  assert.equal(tiles.length, 3);
+  assert.ok(Math.abs(tiles[0].left - stage.x) < 1.5, 'the first tile starts where the main image starts');
+  assert.ok(Math.abs(tiles[2].right - (stage.x + stage.width)) < 1.5, 'the last tile ends where the main image ends');
+  for (const t of tiles) assert.ok(t.width >= 200 && t.height >= 120, `tile is ${Math.round(t.width)} x ${Math.round(t.height)}`);
+  // beside the decision panel both columns end on one line
+  const col = await page.locator('.product-top__gallery').boundingBox();
+  const panel = await page.locator('.product-top__panel').boundingBox();
+  assert.ok(Math.abs(col.y + col.height - (panel.y + panel.height)) < 2, 'the gallery and the decision panel end together');
   await gallery.getByRole('button', { name: 'Next image' }).click();
-  await gallery.locator('.gal__count').first().getByText('2 / 3').waitFor();
-  const zoom = gallery.getByRole('button', { name: /View larger/ });
-  await zoom.focus();
-  await page.keyboard.press('Enter');
-  const dialog = page.getByRole('dialog');
-  await dialog.waitFor();
-  await dialog.getByRole('button', { name: 'Close' }).click();
-  await dialog.waitFor({ state: 'hidden' });
-  assert.equal(await page.evaluate(() => document.activeElement?.textContent?.includes('View larger')), true, 'focus must return to the opener');
+  await gallery.locator('.gal__count').getByText('2 / 3').waitFor();
+  await gallery.getByRole('button', { name: /Show image 3 of 3/ }).click();
+  await gallery.locator('.gal__count').getByText('3 / 3').waitFor();
+  assert.equal(await gallery.getByRole('button', { name: /Show image 3 of 3/ }).getAttribute('aria-current'), 'true');
 });
-
-await step('Gallery dialog: one arrow key press moves exactly one image, and wraps (audit A03)', async () => {
+await step('Gallery: one arrow key press moves exactly one image, and wraps (audit A03)', async () => {
   await page.goto(base + '/saunas/rowan', { waitUntil: 'networkidle' });
   await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'));
   const gallery = page.getByRole('group', { name: /The Rowan images/ });
-  await gallery.getByRole('button', { name: /View larger/ }).click();
-  const dialog = page.getByRole('dialog');
-  const count = dialog.locator('.gal__count');
+  const count = gallery.locator('.gal__count');
   await count.getByText('1 / 3').waitFor();
-  await dialog.getByRole('button', { name: 'Close' }).focus();
+  await gallery.getByRole('button', { name: 'Next image' }).focus();
   await page.keyboard.press('ArrowRight');
   assert.equal((await count.innerText()).trim(), '2 / 3', 'ArrowRight must advance one image');
   await page.keyboard.press('ArrowLeft');
   assert.equal((await count.innerText()).trim(), '1 / 3', 'ArrowLeft must go back one image');
   await page.keyboard.press('ArrowLeft');
   assert.equal((await count.innerText()).trim(), '3 / 3', 'ArrowLeft from the first image wraps to the last');
-  await page.keyboard.press('Escape');
-  await dialog.waitFor({ state: 'hidden' });
-  await page.waitForFunction(() => document.activeElement?.classList.contains('gal__zoom')); // focus is restored to the opener first
-  // inline gallery shares the state (now on image 3): focus a thumbnail and press once
   await gallery.getByRole('button', { name: /Show image 3 of 3/ }).focus();
   await page.keyboard.press('ArrowLeft');
-  assert.equal((await gallery.locator('.gal__count').first().innerText()).trim(), '2 / 3');
+  assert.equal((await count.innerText()).trim(), '2 / 3');
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowRight');
-  assert.equal((await gallery.locator('.gal__count').first().innerText()).trim(), '1 / 3', 'two presses, two images');
+  assert.equal((await count.innerText()).trim(), '1 / 3', 'two presses, two images');
 });
-
+await step('Sticky left columns stay in view beside long content, and every chapter has its own vertical padding', async () => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  for (const [route, sel] of [['/installation-delivery', '#prepare'], ['/commercial', '#enquire'], ['/saunas/alder', '#specifications']]) {
+    await page.goto(base + route, { waitUntil: 'networkidle' });
+    const side = page.locator(`${sel} .side`);
+    assert.equal(await side.evaluate((e) => getComputedStyle(e).position), 'sticky', `${route} ${sel} must have a sticky left column`);
+    const want = await page.evaluate(() => {
+      const root = getComputedStyle(document.documentElement);
+      const header = parseFloat(root.getPropertyValue('--header-h'));
+      return header + 32 + (document.querySelector('[data-local-nav]') ? 48 + 2 : 0); // the header, 2rem, and the local navigation on a model page
+    });
+    const top = await page.locator(sel).evaluate((e) => e.getBoundingClientRect().top + window.scrollY);
+    await page.evaluate((y) => window.scrollTo(0, y), top + 120);
+    await page.waitForTimeout(150);
+    const box = await side.boundingBox();
+    assert.ok(Math.abs(box.y - want) < 4, `${route} ${sel}: the left column sits at ${Math.round(box.y)}px, expected about ${Math.round(want)}px`);
+  }
+  // every section that is a dark photographic chapter or an ordinary section keeps its own vertical padding
+  await page.goto(base + '/saunas/rowan', { waitUntil: 'networkidle' });
+  const pad = await page.locator('#overview').evaluate((e) => parseFloat(getComputedStyle(e).paddingTop));
+  assert.ok(pad >= 64, `the "Why the Rowan" chapter has ${pad}px of top padding`);
+  const sides = await page.locator('.side').count();
+  assert.ok(sides >= 3, 'the left column is marked on the model page');
+});
 await step('Enquiry: changing the model reconciles the heating preference (audit A04)', async () => {
   await page.goto(base + '/plan-your-sauna?model=ember&heating=wood', { waitUntil: 'networkidle' });
   assert.equal(await page.locator('#enq-model').inputValue(), 'ember');
@@ -179,7 +204,7 @@ await step('Carried preferences are visible, editable, and the confirmation uses
   await page.fill('#enq-description', 'A flat lawn behind the house with side access.');
   await page.waitForTimeout(2300);
   await page.getByRole('button', { name: 'Send your enquiry' }).click();
-  await page.getByText('Demo mode: nothing was sent').waitFor();
+  await page.getByText('Your enquiry has not been sent').waitFor();
   const summary = await page.locator('.enq__summary').innerText();
   assert.match(summary, /Usual number of people: 4/);
   assert.ok(!/changing area/i.test(summary.replace(/Does not need a changing area/i, '')), 'the old changing-area answer must not come back');

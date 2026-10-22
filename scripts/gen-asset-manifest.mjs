@@ -9,7 +9,7 @@ const md = `# Photography and asset manifest
 
 Generated from \`src/content/assets.ts\` by \`npm run manifest\`. Do not edit by hand.
 
-**Status today:** no approved photography has been supplied or commissioned. The layouts use **stock preview photographs**: real, openly licensed images from Wikimedia Commons (credits in [image-credits.md](image-credits.md)), each labelled on the page as a stock preview and, for model slots, as \"not The Rowan/Alder/Ember\". They are atmosphere only, never product or project evidence, and a production build reports them as launch blockers. No generated imagery is used, and no competitor's photographs are used (one candidate turned out to be a competitor's product and was excluded).
+**Status today:** every slot shows a photograph supplied by the owner, who confirmed on 22 October 2026 that they are real photographs and approved them (the originals are in \`incoming/\`; credits and approval records are in [image-credits.md](image-credits.md)). No stock photography is in use. The photographer, the licence terms and which sauna each image shows are not recorded, so each image is approved as atmosphere and not treated as proof of a specific model or a completed job.
 
 | ID | Role | Model | Ratio | Evidence type | Kind | Rights / credit | Approval | Focal point | Intended use |
 |---|---|---|---|---|---|---|---|---|---|

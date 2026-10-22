@@ -23,7 +23,7 @@ const ROWS: Row[] = [
     label: 'Changing area',
     get: (m) =>
       m.changingArea
-        ? { text: m.changingArea, sub: 'How it is specified is still being confirmed' }
+        ? { text: m.changingArea, sub: 'Specified in your quotation' }
         : { text: 'Not described for this model' },
   },
   { key: 'exterior', label: 'External size (W × D × H)', get: (m) => val(m.exterior, 'Not the installation footprint') },
@@ -176,7 +176,7 @@ export default function CompareTool({ models }: { models: ModelView[] }) {
       {/* Desktop / tablet: real table */}
       <div className="cmp-table table-wrap">
         <table className="data">
-          <caption>Comparison of {shown.map((m) => m.name).join(', ')}. Working values until approved.</caption>
+          <caption>Comparison of {shown.map((m) => m.name).join(', ')}.</caption>
           <thead>
             <tr>
               <td />

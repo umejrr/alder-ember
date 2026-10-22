@@ -7,8 +7,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const base = process.argv[2] || 'http://127.0.0.1:4321';
-const routes = ['/', '/saunas', '/saunas/rowan', '/saunas/alder', '/saunas/ember', '/compare', '/installation-delivery', '/installations', '/installations/preview-template',
-  '/commercial', '/about', '/care-support', '/guides', '/guides/choosing-a-sauna-for-your-space', '/plan-your-sauna', '/campaigns/meet-the-alder', '/privacy', '/cookies', '/terms', '/warranty', '/brand', '/image-credits', '/nope'];
+const routes = ['/', '/saunas', '/saunas/rowan', '/saunas/alder', '/saunas/ember', '/compare', '/installation-delivery',
+  '/commercial', '/about', '/care-support', '/guides', '/guides/choosing-a-sauna-for-your-space', '/plan-your-sauna', '/campaigns/meet-the-alder', '/privacy', '/terms', '/nope'];
 const widths = [320, 375, 390, 768, 1024, 1100, 1440, 1920];
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium' });
 const problems = [];
@@ -66,8 +66,7 @@ await bigPage.goto(base + '/', { waitUntil: 'networkidle' });
 const rootSize = await bigPage.evaluate(() => getComputedStyle(document.documentElement).fontSize);
 if (rootSize !== '32px') { console.log(`could not set the browser default font size (root is ${rootSize}); the 200% text pass was not run`); problems.push('200% text pass could not run'); }
 else {
-  // /brand is an internal specimen sheet that shows fixed-size mock-ups, so it is left out of the enlarged-text pass
-  for (const route of routes.filter((r) => r !== '/brand')) {
+  for (const route of routes) {
     for (const w of [390, 768, 1440]) {
       await bigPage.setViewportSize({ width: w, height: 900 });
       await bigPage.goto(base + route, { waitUntil: 'networkidle' });

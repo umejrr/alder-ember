@@ -1,19 +1,20 @@
 # Test report
 
-Everything below was actually run on 19 October 2026 against the review branch (`claude/audit-upgrade-review`), in Chromium only, in a cloud container. Where something could not be verified, that is stated at the end rather than implied. The audit this follows is answered item by item in [audit-response.md](audit-response.md).
+Everything below was actually run on 22 October 2026 against the final build, in Chromium only, in a cloud container. Where something could not be verified, that is stated at the end rather than implied. The audit this follows is answered item by item in [audit-response.md](audit-response.md).
 
 ## Automated checks (all passing)
 
 | Check | Command | Result |
 |---|---|---|
-| Unit tests | `npm test` | **70 passed** in 4 files |
-| Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 92 files (Astro, TypeScript, React) |
+| Unit tests | `npm test` | **76 passed** in 5 files, including the spacing lint (below) |
+| Type check | `npm run check` | **0 errors, 0 warnings, 0 hints** across 89 files (Astro, TypeScript, React) |
 | Contrast | `npm run contrast` | **20 pairs pass, 0 fail** (text pairs at 4.5:1, controls and focus at 3:1) |
-| Broken links, anchors, assets | `npm run crawl` on a preview build | **24 pages crawled, none broken** (the credits page is no longer linked from the footer, because no stock photography remains) |
-| Production leak check | `npm run check:production` | **Pass.** 17 HTML files scanned: no working price, dimension, capacity or lead time, no preview notice, no draft or unapproved route, correct robots rules, sitemap contains only real pages. **No placeholder or stock images remain**, so it no longer reports a photography launch blocker; the link-preview image is present in the production build |
-| Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 24 routes at 1440 px and 375 px |
-| Browser journeys | `npm run e2e` | **20 of 20 steps pass** (below) |
-| Layout sweep | `npm run responsive` | **250 checks, no horizontal overflow and no navigation label wrapped inside the header**: 23 routes at 320, 375, 390, 768, 1024, 1100, 1440 and 1920 px, and 22 routes at 390, 768 and 1440 px with the browser's own default text size raised to 200% (the internal `/brand` specimen sheet is excluded from that pass) |
+| Broken links, anchors, assets | `npm run crawl` on a build | **20 pages crawled, none broken** |
+| Production check | `npm run check:production` | **Pass.** 22 HTML files scanned: no preview, demo, draft or placeholder wording on any page; no cookie, installations, warranty, brand or image-credits page; no link to a removed page; every page has the link-preview image; privacy and terms are indexable and everything else follows the domain. A second build **with no `PUBLIC_SITE_URL`** must say `noindex` on every page and block crawling, and does |
+| Accessibility scan | `npm run a11y` (axe-core, WCAG 2.0/2.1/2.2 A and AA tags) | **No violations** on 18 routes at 1440 px and 375 px |
+| Browser journeys | `npm run e2e` | **21 of 21 steps pass**, including: no lightbox and three large gallery tiles spanning the gallery and ending level with the decision panel; the left columns sticky at the right offset beside long content, on three pages; the "Why the Rowan" chapter's own top padding |
+| Layout sweep | `npm run responsive` | **187 checks, no horizontal overflow and no navigation label wrapped inside the header**: 17 routes at 320, 375, 390, 768, 1024, 1100, 1440 and 1920 px, and the same 17 routes at 390, 768 and 1440 px with the browser's own default text size raised to 200% |
+| Spacing scale | `npm test` (`tests/spacing.test.ts`) | **Pass.** Every padding, margin, gap and offset in the stylesheets and templates uses 0.5rem or a whole rem, or a token on that scale; a value such as 0.3rem or 1.25rem fails the test. **Negative control:** a `gap: 0.3rem` was added and the test failed, naming the file and line. 354 declarations were moved onto the scale on 22 October (for example 0.4rem to 0.5rem, 1.25rem to 1rem, 1.5rem to 2rem) and every fluid `clamp()` became whole steps at the 40rem, 64rem and 80rem breakpoints |
 | Hero text legibility | `npm run hero` | **Pass at 900, 1024, 1280, 1440, 1920 and 2560 px** (the landscape widths, where the copy overlays the photograph; phones and portrait or square windows stack the copy on a solid panel). The copy is hidden, what sits behind it is captured, and contrast is taken against the brightest 1% of those pixels: headline 4.1:1 or better (large text needs 3:1), lead paragraph 6.5:1 or better (needs 4.5:1), on the supplied hero image. The lowest figures are at the narrowest and widest-overlap widths, and the check must be re-run on every replacement hero photograph. Axe cannot sample photographs, so this is the only check of text over the hero image |
 | Static bundle from a nested sub-path | `npm run e2e:static` | **10 of 10 steps pass**: styles, fonts and islands load from `/a/b/c/`; static and React-created links navigate; every generated link is a real `href` under the prefix and a Ctrl-click opens a new tab inside it; five nested missing URLs return 404 with the branded, styled page and working recovery links; every page loads; compare and the gallery work; the demo form sends no request; the mobile menu works; and **no request escaped the prefix** |
 | Logo SVG validity | `npm run logo` | All 25 files are well-formed XML |

@@ -27,7 +27,7 @@ const controls = [
 
   <section class="section section--flush-top" aria-labelledby="how-title">
     <div class="container grid-12">
-      <div class="c-5">
+      <div class="c-5 side">
         <p class="label muted">How it works</p>
         <h2 id="how-title">Built by specialists, looked after by us.</h2>
       </div>
@@ -65,7 +65,7 @@ const controls = [
 
   <section class="section" aria-labelledby="quality-title">
     <div class="container grid-12">
-      <div class="c-5">
+      <div class="c-5 side">
         <p class="label muted">Quality</p>
         <h2 id="quality-title">Quality, in specifics</h2>
       </div>
@@ -79,13 +79,12 @@ const controls = [
 
   <section class="section is-surface" aria-labelledby="team-title">
     <div class="container grid-12">
-      <div class="c-5">
+      <div class="c-5 side">
         <p class="label muted">The team</p>
         <h2 id="team-title">A small team, with clear roles</h2>
       </div>
       <div class="c-6 c-start-7 prose">
         <p>We are seven people. Sales looks after your questions and enquiry. Operations confirms specifications, fulfilment and installation details. Marketing looks after what you read and see here, and the founder is responsible for the direction of the business.</p>
-        <p class="muted">Profiles and photographs of the team will be added when they have been approved.</p>
       </div>
     </div>
   </section>
@@ -103,12 +102,12 @@ const controls = [
 
 <style is:global>
   .about-head__lead { max-width: 34em; }
-  .about-grid { display: grid; gap: 0; border-top: var(--border); margin-top: var(--s-6); }
-  .about-grid li { display: grid; gap: var(--s-2); padding: var(--s-5) 0; border-bottom: var(--border); align-content: start; }
+  .about-grid { display: grid; gap: 0; border-top: var(--border); margin-top: var(--sp-2); }
+  .about-grid li { display: grid; gap: var(--sp-05); padding: var(--sp-2) 0; border-bottom: var(--border); align-content: start; }
   .about-grid__n { font-size: var(--fs-small); font-weight: 700; letter-spacing: 0.06em; color: var(--c-timber); }
   .about-grid__t { font-size: var(--fs-h3); }
   @media (min-width: 47.5rem) {
-    .about-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-7); }
+    .about-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--sp-3); }
   }
   @media (min-width: 68.75rem) {
     .about-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

@@ -205,7 +205,7 @@ export default function FindYourFit({ models, initial = 'alder' }: Props) {
         </dl>
 
         <div className="fyf__price">
-          <span className="label muted">Starting price{m.priceWorking ? ' (working figure)' : ''}</span>
+          <span className="label muted">Starting price</span>
           <span className="fyf__price-value">
             {m.price ? (
               <>

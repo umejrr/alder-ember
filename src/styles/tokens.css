@@ -45,26 +45,37 @@
   --lh-heading: 1.15;
   --lh-body: 1.6;
 
-  /* space (4px base) */
-  --s-1: 0.25rem;
-  --s-2: 0.5rem;
-  --s-3: 0.75rem;
-  --s-4: 1rem;
-  --s-5: 1.5rem;
-  --s-6: 2rem;
-  --s-7: 3rem;
-  --s-8: 4.5rem;
-  --s-9: 6rem;
-  --section: clamp(3.5rem, 2rem + 6.5vw, 8.5rem); /* 56-136 */
-  --section-tight: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  /*
+    space: ONE scale for padding, margin, gap and offsets. 0.5rem is the smallest step and every step after it is
+    a whole rem (1, 2, 3, 4, ...). No other length is used for spacing: tests/spacing.test.ts fails the build if one appears.
+  */
+  --sp-05: 0.5rem;
+  --sp-1: 1rem;
+  --sp-2: 2rem;
+  --sp-3: 3rem;
+  --sp-4: 4rem;
+  --sp-5: 5rem;
+  --sp-6: 6rem;
+  --sp-7: 7rem;
+  --sp-8: 8rem;
+
+  /* responsive steps. Every one is on the scale at every width and moves in whole steps at the breakpoints below, never fluidly */
+  --rs-1: var(--sp-1);
+  --rs-2: var(--sp-2);
+  --rs-3: var(--sp-3);
+  --rs-4: var(--sp-4);
+  --gutter: var(--sp-1);
+  --col-gap: var(--sp-1);
+  --section: var(--sp-4);
+  --section-tight: var(--sp-3);
+  --nav-gap: var(--sp-1);
+  --sticky-top: calc(var(--header-h) + var(--sp-2)); /* where a sticky side column sits under the site header */
 
   /* layout */
-  --gutter: clamp(1.25rem, 0.6rem + 3.4vw, 4.5rem); /* 20-72 */
-  --col-gap: clamp(1rem, 0.5rem + 2vw, 2rem);
   --w-content: 1320px;
   --w-wide: 1680px;
   --w-prose: 40rem;
-  --header-h: 72px;
+  --header-h: 80px;
 
   /* shape */
   --radius: 2px;
@@ -80,5 +91,34 @@
 @media (max-width: 40rem) {
   :root {
     --header-h: 64px;
+  }
+}
+@media (min-width: 40rem) {
+  :root {
+    --rs-1: var(--sp-2);
+    --rs-2: var(--sp-3);
+    --rs-3: var(--sp-4);
+    --rs-4: var(--sp-6);
+    --gutter: var(--sp-2);
+    --col-gap: var(--sp-2);
+    --section: var(--sp-5);
+  }
+}
+@media (min-width: 64rem) {
+  :root {
+    --rs-2: var(--sp-4);
+    --rs-3: var(--sp-5);
+    --rs-4: var(--sp-8);
+    --gutter: var(--sp-3);
+    --section: var(--sp-6);
+    --section-tight: var(--sp-4);
+  }
+}
+@media (min-width: 80rem) {
+  :root {
+    --gutter: var(--sp-4);
+    --section: var(--sp-8);
+    --section-tight: var(--sp-5);
+    --nav-gap: var(--sp-2);
   }
 }
