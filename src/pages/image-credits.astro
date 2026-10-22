@@ -10,7 +10,7 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
 ---
 <Base
   title="Image credits | Alder & Ember"
-  description="Credits and licences for the preview images used on this preview site."
+  description="Credits and licences for the images used on this site."
   breadcrumbs={crumbs}
   noindex
 >
@@ -18,7 +18,9 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
     <Breadcrumbs items={crumbs} />
     <h1>Image credits</h1>
     <p class="lead">
-      Apart from the image marked “awaiting approval”, the photographs on this preview are openly licensed stock images from Wikimedia Commons, standing in until Alder &amp; Ember’s own photography is ready. They are not photographs of our saunas, projects or customers.
+      {stock.length === 0
+        ? 'Every photograph on this preview was supplied by Alder & Ember. No stock photography is in use, so no third-party credits are due.'
+        : 'Apart from the photographs supplied by Alder & Ember, the images on this preview are openly licensed stock photographs from Wikimedia Commons, standing in until our own photography is ready. They are not photographs of our saunas, projects or customers.'}
     </p>
   </header>
 
@@ -31,10 +33,11 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
           </p>
         </div>
       )}
+      {stock.length > 0 && (
+        <>
       <p class="muted" style="max-width: 44rem; margin-bottom: var(--s-6)">
         Images were resized and converted to WebP for the web (one also had its colour saturation reduced). Where a licence is “BY-SA”, the adapted image is shared under that same licence.
       </p>
-      {stock.length === 0 && <p>No stock photographs are in use.</p>}
       <div class="table-wrap">
         <table class="data credits">
           <caption class="sr-only">Photograph credits</caption>
@@ -51,6 +54,8 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Image credits' }];
           </tbody>
         </table>
       </div>
+        </>
+      )}
     </div>
   </section>
 </Base>

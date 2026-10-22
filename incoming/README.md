@@ -1,4 +1,6 @@
-# Shoot photographs: drop them in this folder
+# Photographs: the originals as received
+
+Status (22 October 2026): the first set of photographs supplied by the owner is here and is on the site (see `notes.txt`). New photographs from a shoot go in this folder in the same way.
 
 Upload the finished photographs here. A scheduled run places them on the site, checks them, and publishes the preview.
 Nothing in this folder is published as it is: the site only ever serves the resized copies the run builds.

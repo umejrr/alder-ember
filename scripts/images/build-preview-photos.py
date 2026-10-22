@@ -120,6 +120,7 @@ def main():
     for p in manifest["photos"]:
         key = p["key"]
         g = {**shared, **p.get("grade", {})}
+        q = {**QUALITY, **p.get("quality", {})}  # an entry can ask for higher quality (owner photographs are encoded generously)
         aspect = p["aspect"]
         widths = p["widths"]
         if only and key not in only:
@@ -137,15 +138,15 @@ def main():
                 if w > im.width:
                     continue
                 r = im if w == im.width else im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
-                r.save(OUT / f"{key}-{w}.webp", "WEBP", quality=QUALITY["webp"], method=6)
-                r.save(OUT / f"{key}-{w}.avif", "AVIF", quality=QUALITY["avif"], speed=6)
+                r.save(OUT / f"{key}-{w}.webp", "WEBP", quality=q["webp"], method=6)
+                r.save(OUT / f"{key}-{w}.avif", "AVIF", quality=q["avif"], speed=6)
                 emitted.append(w)
             if not emitted:
                 emitted = [im.width]
-                im.save(OUT / f"{key}-{im.width}.webp", "WEBP", quality=QUALITY["webp"], method=6)
-                im.save(OUT / f"{key}-{im.width}.avif", "AVIF", quality=QUALITY["avif"], speed=6)
+                im.save(OUT / f"{key}-{im.width}.webp", "WEBP", quality=q["webp"], method=6)
+                im.save(OUT / f"{key}-{im.width}.avif", "AVIF", quality=q["avif"], speed=6)
             t = im.resize((THUMB_W, round(im.height * THUMB_W / im.width)), Image.LANCZOS)
-            t.save(OUT / f"{key}-{THUMB_W}.webp", "WEBP", quality=QUALITY["thumb"], method=6)
+            t.save(OUT / f"{key}-{THUMB_W}.webp", "WEBP", quality=q["thumb"], method=6)
             # drop outputs from an earlier treatment of this photo (other widths), so nothing stale is shipped
             keep = {f"{key}-{w}.{ext}" for w in emitted for ext in ("webp", "avif")} | {f"{key}-{THUMB_W}.webp"}
             for old in OUT.glob(f"{key}-*"):

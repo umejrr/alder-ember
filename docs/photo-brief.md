@@ -2,7 +2,7 @@
 
 For Alder & Ember and the photographer. It lists each photograph the website needs, where each one appears, how the site crops it, and what must be in the frame. It is written from the layouts that are built, so finished files can go straight in.
 
-**Status.** The homepage hero is approved (a real photograph, dark timber cabin with a glazed front, lit at dusk, with a hedge and silver birch behind it). It is the **look benchmark for everything below**. The other 16 slots still show clearly labelled stock photographs, which are not Alder & Ember's saunas and must be replaced before launch. For the hero's own specification, and the optional higher-resolution or vertical version, see [hero-photo-brief.md](hero-photo-brief.md).
+**Status.** All 17 image slots, the hero and the link-preview image now show photographs supplied by the owner and approved on 22 October 2026 (dark timber cabin, glazed front, dusk, a clipped hedge and silver birch). They are the look benchmark for any new work. They are 1448 to 1884 px wide, and the photographer, licence terms and which sauna each shows are not yet recorded, so this brief remains the specification for a professional shoot or higher-resolution replacements. For the hero's own specification, see Appendix A.
 
 ## 1. The look, in one paragraph
 

@@ -152,9 +152,9 @@ const baseAssets: Asset[] = [
     id: 'detail-timber',
     role: 'detail-timber',
     label: 'Detail: thermally modified exterior timber',
-    ratio: '4:5',
+    ratio: '3:2',
     alt: 'Close-up of the thermally modified exterior timber cladding.',
-    intendedCrop: 'Portrait close-up showing grain and board joints.',
+    intendedCrop: 'Close-up showing grain, board joints and a corner (a vertical 4:5 frame is also held in incoming/).',
     intendedUse: 'Homepage "Considered in every detail" chapter',
     tone: 'timber',
     evidence: 'product-evidence',
@@ -233,27 +233,10 @@ interface Stock {
   mobileFocal?: { x: number; y: number };
 }
 
-/** Which stock preview photo fills which slot, with accurate alt text and focal points. */
-const STOCK: Record<string, Stock> = {
-  'rowan-exterior': { photo: 'rowan-exterior', focal: { x: 50, y: 52 }, alt: 'A compact, weathered log sauna with a white-framed window and a metal chimney, standing among birch and spruce trees.' },
-  'alder-exterior': { photo: 'alder-exterior', focal: { x: 48, y: 58 }, alt: 'A dark timber cabin with a steep gable and a large glazed front, at the edge of a grassy clearing among pine trees.' },
-  'ember-exterior': { photo: 'ember-exterior', focal: { x: 72, y: 55 }, alt: 'A larger octagonal timber cabin lit warmly from inside at dusk, on a lawn beside a wooden hot tub.' },
-  'rowan-interior': { photo: 'rowan-interior', focal: { x: 50, y: 55 }, alt: 'Inside a small sauna: a long bench along a pine-panelled wall and a stainless heater in the corner.' },
-  'alder-interior': { photo: 'alder-interior', focal: { x: 50, y: 50 }, alt: 'A sauna interior panelled in warm timber, with stepped benches and a heater, lit by wall lights.' },
-  'ember-interior': { photo: 'ember-interior', focal: { x: 50, y: 58 }, alt: 'A large sauna with wide stepped benches along timber walls, two small windows and a stone-clad heater.' },
-  'rowan-detail': { photo: 'rowan-detail', focal: { x: 50, y: 50 }, alt: 'Close-up of vertical larch boards with a knot in the grain.' },
-  'alder-detail': { photo: 'alder-detail', focal: { x: 50, y: 40 }, alt: 'Looking out through a tall triangular glazed gable of a timber-lined cabin towards a lake.' },
-  'ember-detail': { photo: 'ember-detail', focal: { x: 50, y: 45 }, alt: 'A modern black heater topped with grey sauna stones.' },
-  'detail-timber': { photo: 'detail-timber', focal: { x: 62, y: 50 }, alt: 'Weathered timber cladding on a wall with a small window, in low sunlight.' },
-  'detail-interior-finish': { photo: 'detail-interior-finish', focal: { x: 50, y: 50 }, alt: 'Close-up of a smooth timber bench against the pine-panelled wall of a sauna.' },
-  'detail-construction': { photo: 'detail-construction', focal: { x: 50, y: 50 }, alt: 'Two walls of horizontal timber cladding meeting at an outside corner.' },
-  'detail-glazing-heater': { photo: 'detail-glazing-heater', focal: { x: 50, y: 50 }, alt: 'Inside a barrel sauna: benches, a heater and an arched window looking out to trees.' },
-  'site-access': { photo: 'site-access', focal: { x: 50, y: 64 }, alt: 'A weathered timber gate at the top of stone garden steps between old walls.' },
-  'closing-warmth': { photo: 'alder-interior', focal: { x: 50, y: 50 }, alt: 'A sauna interior panelled in warm timber, with stepped benches and a heater, lit by wall lights.' },
-  'installation-process': { photo: 'installation-process', focal: { x: 50, y: 55 }, alt: 'A small red timber cabin on a twin-axle trailer, parked on a lawn.' },
-};
+/** Which stock preview photo fills which slot, with accurate alt text and focal points. None is in use: every slot has an owner photograph. */
+const STOCK: Record<string, Stock> = {};
 
-/** Images supplied by the owner. Labelled previews until an approval record travels with the photograph; atmosphere until the model shown is recorded. */
+/** Photographs supplied by the owner. Labelled previews until an approval record travels with the photograph; atmosphere until the model shown is recorded. */
 const SUPPLIED: Record<string, Stock> = {
   'hero-wide': {
     photo: 'hero',
@@ -266,6 +249,22 @@ const SUPPLIED: Record<string, Stock> = {
     focal: { x: 50, y: 30 },
     alt: 'A dark timber garden sauna with a glazed front, lit warmly from inside at dusk, on gravel at the end of a lawn, with a clipped hedge and silver birch trees behind.',
   },
+  'rowan-exterior': { photo: 'rowan-exterior', focal: { x: 50, y: 55 }, alt: 'A compact dark timber sauna cabin with a glazed door and a narrow glazed panel, lit warmly from inside at dusk, on gravel edging beside a lawn, with birch trees and a clipped hedge behind.' },
+  'alder-exterior': { photo: 'alder-exterior', focal: { x: 56, y: 55 }, alt: 'A dark timber sauna cabin with a large glazed front, lit warmly from inside at dusk, on gravel at the edge of a lawn, with silver birch and a clipped hedge behind.' },
+  'ember-exterior': { photo: 'ember-exterior', focal: { x: 72, y: 55 }, alt: 'A long dark timber cabin at dusk: a glazed sauna front lit from inside, and to its left a solid door and a small window to a changing area, with birch trees and a hedge behind.' },
+  'rowan-interior': { photo: 'rowan-interior', focal: { x: 50, y: 55 }, alt: 'Inside the sauna: a stone-topped electric heater in a slatted timber guard, two bench levels with a folded towel and a wooden bucket and ladle, and a warm strip light under the benches.' },
+  'alder-interior': { photo: 'alder-interior', focal: { x: 50, y: 50 }, alt: 'Inside the sauna, looking along two bench levels with a folded towel and a wooden bucket, the heater beside the glazed door and the garden visible through the glass.' },
+  'ember-interior': { photo: 'ember-interior', focal: { x: 55, y: 55 }, alt: 'A sauna interior with an L-shaped bench in two levels, a wooden bucket and a folded towel, the heater in a slatted guard beside the glazed front, and spotlights in the ceiling.' },
+  'rowan-detail': { photo: 'rowan-detail', focal: { x: 40, y: 50 }, alt: 'Close-up of the electric heater with dark stones in a slatted timber guard, its black control dial on the panelled wall and the glowing bench beside it.' },
+  'alder-detail': { photo: 'alder-detail', focal: { x: 50, y: 50 }, alt: 'Looking out through the glazed front of the sauna at dusk: the door handle, a birch tree, a clipped hedge and the lawn beyond, with the heater inside to the right.' },
+  'ember-detail': { photo: 'ember-detail', focal: { x: 50, y: 50 }, alt: 'The changing area of the cabin: a timber bench below a window, three black coat hooks on panelled walls, and a glazed door through to the sauna.' },
+  'detail-timber': { photo: 'detail-timber', focal: { x: 50, y: 50 }, alt: 'Close-up of the corner of a dark timber cabin: vertical boards with black fixings, a horizontal fascia board and a dark metal roof edge against the sky.' },
+  'detail-interior-finish': { photo: 'detail-interior-finish', focal: { x: 50, y: 55 }, alt: 'Close-up of a smooth timber sauna bench and panelled wall, showing the grain and the board joints.' },
+  'detail-construction': { photo: 'detail-construction', focal: { x: 50, y: 50 }, alt: 'A cut-away sample of a cabin wall: dark outer cladding boards, a timber frame filled with mineral wool and foil, and tongue-and-groove panelling on the inside.' },
+  'detail-glazing-heater': { photo: 'detail-glazing-heater', focal: { x: 50, y: 50 }, alt: 'The glazed front of the sauna at dusk, seen from outside: a black bar door handle, the heater and the lit benches inside, and the garden reflected in the glass.' },
+  'site-access': { photo: 'site-access', focal: { x: 50, y: 50 }, alt: 'A tape measure held across the opening of a timber garden gate to check access, with a sauna cabin visible on the lawn beyond.' },
+  'installation-process': { photo: 'installation-process', focal: { x: 50, y: 50 }, alt: 'Three installers in hard hats and dark work clothes standing wall panels onto the gravel base of a sauna cabin, one kneeling to check the floor frame with a spirit level.' },
+  'closing-warmth': { photo: 'closing-warmth', focal: { x: 50, y: 50 }, alt: 'The view from inside the sauna at dusk, through the glazed front to a lawn, a birch tree and a clipped hedge.' },
 };
 
 function withPhoto(a: Asset): Asset {

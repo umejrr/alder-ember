@@ -33,7 +33,7 @@ export const site = {
    * Social sharing image (1200 x 630). Must be approved photography of Alder & Ember's own product or work.
    * Never a stock preview: a stock house must not stand in for a photographed installation in a link preview.
    */
-  socialImage: missing<string>('APPROVED_SOCIAL_IMAGE_REQUIRED (absolute path of an approved 1200x630 image)'),
+  socialImage: field('/images/social-share.jpg', 'approved', 'The owner-approved dusk photograph (1200 x 630), approved with the other supplied photographs on 22 October 2026'),
 };
 
 export interface NavItem {

@@ -9,7 +9,7 @@ const md = `# Image credits
 
 Generated from \`src/content/assets.ts\` by \`npm run manifest\`. Do not edit by hand.
 
-Apart from the supplied image described below, the preview site uses openly licensed stock photographs from [Wikimedia Commons](https://commons.wikimedia.org/) in place of Alder & Ember's own photography, which has not been supplied. They are **not** photographs of Alder & Ember's saunas, projects or customers. Each is labelled on the page, and the live site lists them at \`/image-credits\`.
+${stock.length ? "Apart from the photographs supplied by Alder & Ember (listed below), the preview site uses openly licensed stock photographs from [Wikimedia Commons](https://commons.wikimedia.org/) in place of Alder & Ember's own photography. They are **not** photographs of Alder & Ember's saunas, projects or customers. Each is labelled on the page, and the live site lists them at `/image-credits`." : 'No stock photography is in use: every image on the preview was supplied by Alder & Ember (listed below), so no third-party credits are due.'}
 
 Licences: **CC0** needs no credit; **CC BY** requires credit; **CC BY-SA** requires credit and that adapted copies are shared under the same licence (resizing, cropping and format conversion count as adaptation, so those copies are BY-SA too). Remove or replace an image to be free of its terms.
 

@@ -37,7 +37,10 @@ await step('Find your fit: tabs change the model, data and links together', asyn
   // image, facts and links agree: the active image is the Ember's, and the panel names the Ember
   await page.waitForFunction(() => document.querySelector('.fyf__img.is-active img')?.getAttribute('alt')?.length > 0);
   assert.equal(await page.locator('.fyf').getAttribute('data-model'), 'ember');
-  assert.match(await page.locator('.fyf__img.is-active .pic__tag').innerText(), /not the ember/i);
+  const activeSrc = await page.locator('.fyf__img.is-active img').evaluate((i) => i.currentSrc || i.src);
+  assert.match(activeSrc, /ember-exterior/, "the active image must be the Ember's own photograph");
+  const tag = page.locator('.fyf__img.is-active .pic__tag'); // an unapproved image carries a label; if there is one it must not name another model
+  if (await tag.count()) assert.doesNotMatch(await tag.innerText(), /not the (rowan|alder)/i);
   await tab('Ember').focus();
   await page.keyboard.press('ArrowLeft');
   assert.equal(await tab('Alder').getAttribute('aria-selected'), 'true');

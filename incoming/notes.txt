@@ -1,5 +1,5 @@
-Received through the chat on 22 October 2026, batch 1 of 4 (5 of 20 images). Saved byte-for-byte as received (WebP); nothing was re-compressed or resized.
+Received through the chat on 22 October 2026 in four batches (20 distinct images), saved byte-for-byte as received (WebP); nothing was re-compressed or resized.
 File names were assigned from what each image shows, using the slot names in the photography brief.
-Provenance (real photograph, render or generated), photographer and licence terms have NOT been confirmed by the owner (asked twice).
-Until they are, these go on the site only as "Preview image · awaiting approval", as atmosphere, never as proof of a model or a real job.
-Still to arrive (shown mid-task but not saved as files): the installation crew, the gate measurement, the glazing exterior detail, the bench grain, the wall cross-section, the second cladding corner, the view out with heater, the changing room, the heater close-up, two interiors, and the three exteriors.
+The owner confirmed on 22 October 2026 that these are real photographs and asked for them to be approved; they are on the site on that basis.
+NOT recorded: the photographer, the licence terms, and which sauna each image shows. Model and interior assignments follow the owner's brief and what each image shows, and are to be confirmed by the owner.
+Not used on the site: detail-timber-vertical_01 (a 4:5 version of the cladding corner), rowan-detail_02 (a 4:3 version of the heater close-up) and social-share_02 (a brighter variant of the link-preview image); they are kept here as alternates.
