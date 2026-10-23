@@ -9,9 +9,6 @@ import { faqs, homeFaqIds } from '@/content/faqs';
 import { toModelView } from '@/lib/model-view';
 import { getAsset } from '@/content/assets';
 
-// the phone crop sets how tall the image panel is, so a square crop is shown whole instead of being cropped to a fixed height
-const heroM = getAsset('hero-mobile');
-const heroMRatio = heroM?.width && heroM?.height ? (heroM.width / heroM.height).toFixed(3) : '1';
 
 // an image that is not an approved photograph is always labelled, in preview and in production, so it can never pass as one
 const heroKind = getAsset('hero-wide')?.kind;
@@ -41,7 +38,7 @@ const details = [
   preloadFonts
 >
   <!-- Arrive: one large image, a short offer -->
-  <section class="hero is-forest" data-hero aria-labelledby="hero-title" style={`--hero-m-ratio:${heroMRatio}`}>
+  <section class="hero is-forest" data-hero aria-labelledby="hero-title">
     <div class="hero__media">
       <Picture id="hero-wide" art={{ id: 'hero-mobile', media: '(max-width: 40rem)' }} priority fill class="hero__pic" quiet />
       <div class="hero__scrim" aria-hidden="true"></div>
@@ -263,7 +260,8 @@ const details = [
   .hero {
     position: relative;
     display: grid;
-    min-height: min(92svh, 58rem);
+    min-height: 100vh;
+    min-height: 100svh;
     isolation: isolate;
   }
   .hero__media {
@@ -338,8 +336,7 @@ const details = [
      photograph would put the headline across the cabin's glazing. Only phones swap to the square crop (see <picture>). */
   @media (max-width: 40rem), (max-aspect-ratio: 5/4) {
     .hero {
-      min-height: 0;
-      grid-template-rows: min(64svh, 30rem) auto;
+      grid-template-rows: minmax(20rem, 1fr) auto; /* the photograph takes whatever height the copy panel leaves */
     }
     .hero__media { position: relative; grid-row: 1; }
     .hero__scrim {
@@ -355,10 +352,6 @@ const details = [
       padding-top: var(--sp-2);
     }
   }
-  @media (max-width: 40rem) {
-    .hero { grid-template-rows: min(64svh, 30rem, calc(100vw / var(--hero-m-ratio, 1))) auto; }
-  }
-
   /* ---------- bridge ---------- */
   .intro { padding-block: var(--rs-4) var(--rs-3); }
   .intro__statement {
