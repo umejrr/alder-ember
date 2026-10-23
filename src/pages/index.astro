@@ -276,8 +276,8 @@ const details = [
     inset: 0;
     background:
       radial-gradient(64% 58% at 22% 76%, rgba(10, 16, 12, 0.5) 0%, rgba(10, 16, 12, 0) 74%),
-      linear-gradient(0deg, rgba(10, 16, 12, 0.66) 0%, rgba(10, 16, 12, 0.28) 28%, rgba(10, 16, 12, 0) 52%),
-      linear-gradient(90deg, rgba(10, 16, 12, 0.34) 0%, rgba(10, 16, 12, 0.16) 36%, rgba(10, 16, 12, 0) 58%);
+      linear-gradient(0deg, rgba(10, 16, 12, 0.7) 0%, rgba(10, 16, 12, 0.4) 28%, rgba(10, 16, 12, 0) 54%),
+      linear-gradient(90deg, rgba(10, 16, 12, 0.34) 0%, rgba(10, 16, 12, 0.22) 48%, rgba(10, 16, 12, 0) 82%);
   }
   /* where the copy reaches over the glazed front (tablet widths), the scrim is stronger; the photograph is bright there */
   @media (min-width: 40.0625rem) and (max-width: 56rem) {
@@ -323,7 +323,7 @@ const details = [
   }
   /* sized so the headline ends before the cabin's doorway; the scrim keeps it legible where it meets the wall (npm run hero measures this) */
   .hero__headline { max-width: 13ch; font-size: clamp(2.375rem, 1.1rem + 3.9vw, 4.25rem); }
-  .hero__copy .lead { color: var(--c-on-forest); max-width: 28em; }
+  .hero__copy .lead { color: var(--c-on-forest); max-width: 34em; text-wrap: balance; }
   .hero .btn--secondary { --btn-border: rgba(244, 240, 232, 0.7); }
   /* a short entrance for the copy only: the photograph is there immediately and the actions are reachable throughout */
   @keyframes hero-in { from { opacity: 0; transform: translateY(12px); } }
